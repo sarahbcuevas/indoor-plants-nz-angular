@@ -1,0 +1,96 @@
+<div class="container-fluid bg-white">
+  <!-- <h6 class="sub-title row text-uppercase mb-5 justify-content-center">Contact Us</h6> -->
+  <div class="row">
+  <div class="col-md-9 py-5">
+    <div class="row justify-content-center">
+      <div class="col-auto alert alert-danger text-center" role="alert">
+        <h4 class="alert-heading">This Page Is Under Construction!</h4>
+        <p>In the mean time, you may reach us thru:</p>
+        <hr>
+        <p class="mb-0">Contact: <a class="alert-link">{{ contactDetails?.contactNo }}</a></p>
+        <p class="mb-0">Email: <a class="alert-link">{{ contactDetails?.email }}</a></p>
+        <p class="mb-0">Instagram: <a href="{{ socialMedia?.instagram }}" class="alert-link">{{ socialMedia?.instagram }}</a></p>
+      </div>
+    </div>
+    <h4 class="title text-center mb-5">We'd love to hear from you!</h4>
+    <form [formGroup]="contactUsFormGroup" class="container">
+      <fieldset disabled>
+        <div class="form-group row justify-content-center">
+          <label for="name" class="col-sm-2 col-form-label text-left">Name</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="name" formControlName="name" placeholder="Name">
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="contact" class="col-sm-2 col-form-label text-left">Contact</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="contact" formControlName="contact" placeholder="Contact">
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="email" class="col-sm-2 col-form-label text-left">Email *</label>
+          <div class="col-sm-8">
+            <input type="email" class="form-control form-control-sm" id="email" formControlName="email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+            <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.email.errors?.pattern && submitted">Invalid email</p>
+            <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.email.errors?.required && submitted">Email is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="type" class="col-sm-2 col-form-label text-left">Type *</label>
+          <div class="col-sm-8">
+            <select class="form-control form-control-sm" id="type" formControlName="type">
+              <option value="Inquiry">Inquiry</option>
+              <option value="Feedback">Feedback</option>
+              <option value="Others">Others</option>
+            </select>
+            <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.type.errors?.required && submitted">Type is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="message" class="col-sm-2 col-form-label text-left">Message *</label>
+          <div class="col-sm-8">
+            <textarea rows="5" class="form-control form-control-sm" id="message" formControlName="message" placeholder="Type your message here"></textarea>
+            <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.message.errors?.required && submitted">Message is required</p>
+          </div>
+        </div>
+        <div class="row justify-content-center">* Required</div>
+        <div class="row justify-content-center mt-3">
+          <button type="button" class="btn btn-secondary btn-sm mr-1" [disabled]="true" (click)="resetForm()">Reset</button>
+          <button type="button" class="btn btn-primary btn-sm" [disabled]="true" (click)="submit()">Send Message</button>
+          <!-- <button type="button" class="btn btn-primary btn-sm" [disabled]="this.contactUsFormGroup.invalid || loading" (click)="submit()">Send Message</button> -->
+          <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="col-md-3 bg-light text-secondary">
+    <div class="container-fluid pt-4">
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <img src="../assets/defaultprofileimage.svg" class="rounded-circle" width="150px">
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <div class="col">
+          <p class="text-center"><strong>Hey there! I am Juan Dela Cruz.</strong></p>
+          <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nam et leo scelerisque dolor hendrerit varius. Integer eget nunc vitae metus sagittis scelerisque. Praesent vel est quis mauris placerat fermentum at quis turpis.</p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <button type="button" class="btn btn-outline-secondary btn-sm text-uppercase" [routerLink]="['/aboutus']">To know more about us</button>
+        </div>
+      </div>
+      <hr class="mt-5">
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <a class="btn btn-social" *ngIf="socialMedia?.facebook" [href]="socialMedia?.facebook"><i class="fab fa-facebook-f"></i></a>
+          <a class="btn btn-social" *ngIf="socialMedia?.instagram" [href]="socialMedia?.instagram"><i class="fab fa-instagram"></i></a>
+          <a class="btn btn-social" *ngIf="socialMedia?.twitter" [href]="socialMedia?.twitter"><i class="fab fa-twitter"></i></a>
+          <a class="btn btn-social" *ngIf="socialMedia?.youtube" [href]="socialMedia?.youtube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+.accordion {
+  a {
+    border: 0;
+    background: transparent;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+
+    i::before {
+      content: "\f068";
+    }
+  }
+
+  a.collapsed {
+    i::before {
+      content: "\f067";
+    }
+  }
+}
+
+.add-btn:focus {
+  outline-style: none;
+  box-shadow: none;
+}
+
+.categories {
+  font-weight: 400;
+  letter-spacing: 1.5px;
+
+  .list-group-item {
+    border: 0px;
+    padding: 0.5rem 0;
+    cursor: pointer;
+
+    .fas {
+      font-size: 0.6rem;
+      align-self: center;
+      line-height: 1.5rem;
+    }
+  }
+
+  .sub-list {
+    padding-left: 1.5rem;
+    padding-top: 0.25rem;
+    .list-group-item {
+      padding: 0.2rem 0;
+    }
+  }
+}

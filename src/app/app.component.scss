@@ -1,0 +1,169 @@
+.btn.btn-social {
+    color: black;
+    background-color: transparent;
+    font-size: 1rem;
+}
+
+.dashboard {
+  font-weight: 400;
+  letter-spacing: 1.5px;
+
+  .active-link {
+    border: 0;
+  }
+
+  .list-group-item {
+      border: 0px;
+      padding: 0.5rem 0;
+      cursor: pointer;
+  }
+
+  .list-group-item:hover {
+    text-decoration: underline;
+  }
+
+  .list-group-item:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+  .head {
+      font-weight: 300;
+  }
+}
+
+.navbar-profile {
+  display: flex!important;
+  flex-basis: auto;
+  flex-grow: 1;
+
+  .nav-link {
+    letter-spacing: 2px;
+  }
+}
+
+.nav-link {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: black;
+    letter-spacing: 3px;
+
+    @media (max-width: 767.98px) {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+.navbar-toggler {
+    font-size: 0.8rem;
+}
+
+.navbar {
+    padding-top: 0px!important;
+    padding-bottom: 0px!important;
+    .btn {
+        color: white;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        background: transparent;
+    }
+
+    .btn:hover {
+        background: #262626;
+        text-decoration: none;
+    }
+
+    .navbar-brand {
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+
+    .navbar-collapse {
+        .nav-link {
+            letter-spacing: 2px;
+        }
+
+        .nav-link:hover {
+            background: #262626;
+            text-decoration: none;
+        }
+    }
+}
+
+#sidebar.collapse {
+
+  @media (min-width: 768px) {
+      display: block;
+  }
+}
+
+#sidebar-row {
+  @media (min-width: 768px) {
+      display: none;
+  }
+}
+
+#sidebar-toggler {
+  @media (max-width: 767.98px) {
+      visibility: visible;
+  }
+  @media (min-width: 768px) {
+      visibility: collapse;
+  }
+}
+
+#subscribeEmailInput {
+    border: none;
+    border-radius: 0;
+}
+
+#subscribeEmailInput:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.top-bottom-bar {
+    height: 35px;
+    line-height: 35px;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+
+    @media (max-width: 767.98px) {
+        font-size: 0.5rem;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.text-body {
+    @media (max-width: 767.98px) {
+        font-size: 0.8rem;
+    }
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        font-size: 0.9rem;
+    }
+    font-size: 1rem;
+}
+
+.title {
+    font-family: 'Pacifico', sans-serif;
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.content {
+    flex: 1;
+    flex-grow: 1;
+}

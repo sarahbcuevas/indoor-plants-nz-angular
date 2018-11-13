@@ -1,0 +1,289 @@
+<div class="container-fluid bg-white text-center">
+    <div class="row" id="sidebar-row">
+      <div class="col-12 col-md-4 col-lg-3 bg-white py-2" id="sidebar-toggler">
+        <button type="button" class="btn bg-transparent text-dark float-left collapsed" data-toggle="collapse" data-target="#sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-4 col-lg-3 text-left categories pt-3 pl-lg-4 bg-light collapse" id="sidebar">
+            <h5 class="title">Categories</h5>
+            <p *ngIf="(categories | async)?.length == 0">No available categories.</p>
+            <div *ngIf="(categories | async)?.length > 0">
+                <ul class="list-group list-unstyled accordion" id="accordion-parent">
+                    <li class="list-group-item bg-transparent">
+                      <span (click)="getAllProducts()">Show All Products</span>
+                    </li>
+                </ul>
+              <ul class="list-group list-unstyled accordion" id="accordion-parent" *ngFor="let category of categories | async; index as i">
+                <li class="list-group-item bg-transparent" *ngIf="category.parent===null">
+                  <span [routerLink]="['/products']" [queryParams]="{category:category._id}">{{ category.name }}</span>
+                    <a class="float-right collapsed" data-toggle="collapse" data-target="{{ '#category' + i + '-list' }}" href="{{ '#category' + i + '-list' }}" *ngIf="hasSubCategory(category._id)">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                    <div class="pt-1"></div>
+                    <ul class="list-group list-unstyled sub-list collapse" id="{{ 'category' + i + '-list' }}" *ngFor="let subcategory of categories | async; index as j">
+                        <li class="list-group-item  bg-transparent" *ngIf="subcategory.parent!==null && subcategory.parent._id===category._id">
+                          <span [routerLink]="['/products']" [queryParams]="{category:subcategory._id}">{{ subcategory.name }}</span>
+                            <a class="float-right collapsed" data-toggle="collapse" data-target="{{ '#subcategory' + j + '-list' }}" href="{{ '#subcategory' + j + '-list' }}" *ngIf="hasSubCategory(subcategory._id)">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            <ul class="list-group list-unstyled sub-list collapse" id="{{ 'subcategory' + j + '-list' }}" *ngFor="let subsubcategory of categories | async">
+                                <li class="list-group-item  bg-transparent" *ngIf="subsubcategory.parent!==null && subsubcategory.parent._id===subcategory._id">
+                                  <span [routerLink]="['/products']" [queryParams]="{category:subsubcategory._id}">{{ subsubcategory.name }}</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+              </ul>
+            </div>
+
+            <h5 class="title mt-3">Filters</h5>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkBox" [(ngModel)]="filterBestseller" (click)="getAllProducts()">
+              <label class="form-check-label" for="checkBox">Bestseller</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkBox" [(ngModel)]="filterOutOfStock" (click)="getAllProducts()">
+              <label class="form-check-label" for="checkBox">Out Of Stock</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkBox" [(ngModel)]="filterForPickUpOnly" (click)="getAllProducts()">
+              <label class="form-check-label" for="checkBox">For Pick Up Only</label>
+            </div>
+
+            <h5 class="title mt-3">Shopping Cart</h5>
+            <div *ngIf="orderItems?.length === 0">No products in the cart.</div>
+            <div *ngIf="orderItems?.length > 0" class="container-fluid px-0" id="shoppingCart">
+              <div *ngFor="let orderItem of orderItems" class="item">
+                <div class="row d-flex mr-4 ml-2">
+                  <div class="flex-grow-1">
+                      {{ orderItem?.product.name }} x {{ orderItem?.quantity }}
+                  </div>
+                  <div>
+                    {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}
+                  </div>
+                </div>
+                <div class="row ml-3 mr-4 d-flex" *ngIf="!orderItem.product.forPickupOnly">
+                  <div class="flex-grow-1">
+                    Shipping Fee
+                  </div>
+                  <div>
+                    {{ (orderItem?.product.deliveryFee * orderItem?.quantity / 100).toFixed(2) }}
+                  </div>
+                </div>
+                <button type="button" class="close-btn pointer" aria-label="Remove" (click)="removeFromCart(orderItem.product._id)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="row mt-3 mr-4 ml-2 d-flex">
+                <div class="flex-grow-1">
+                  Total Amount:
+                </div>
+                <div>
+                  {{ (totalAmount / 100) | currency: 'NZD' }}
+                </div>
+              </div>
+              <div class="row justify-content-center mt-4">
+                <button type="button" class="btn btn-outline-dark btn-sm text-uppercase" [routerLink]="['/checkout']" [disabled]="true">
+                  <i class="fas fa-sign-out-alt"></i> Proceed to Checkout
+                </button>
+              </div>
+              <div class="row justify-content-center">
+                <p class="text-danger text-center">* Order Checkout Is Under Construction</p>
+              </div>
+            </div>
+
+        </div>
+        <div class="col-12 col-md-8 col-lg-9 pt-4">
+            <h6 class="sub-title text-uppercase mb-4">Products</h6>
+            <div class="alert alert-danger alert-dismissible text-center" role="alert">
+              <strong>'Add to Cart' Is Under Construction!</strong>
+              In the mean time, you may place your orders thru:
+              mobile: <a class="alert-link">{{ contactDetails?.contactNo }}</a> or
+              email: <a class="alert-link">{{ contactDetails?.email }}</a>.
+              You may also check our listings on Trademe <a class="alert-link">@indoorplantsnz</a>.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="container mb-4">
+                <div class="row justify-content-between align-items-center flex-column-reverse flex-lg-row">
+                    <div class="col-md-12 col-lg-4 text-lg-left mt-3 mt-lg-0">
+                        <span class="results-text text-uppercase text-nowrap">Showing all {{ noOfProducts }} results</span>
+                    </div>
+                    <div class="col-md-12 col-lg-7 col-xl-5 form-inline d-flex">
+                        <div class="search input-group flex-grow-1 mr-1">
+                            <label for="searchInput" class="sr-only">Search Plant</label>
+                            <input type="search" class="form-control border-right-0" id="searchInput" aria-describedby="searchPlant" placeholder="Search Plant">
+                            <span class="input-group-append">
+                                <div class="input-group-text bg-transparent"><i class="fas fa-search"></i></div>
+                            </span>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary btn-light bg-transparent text-dark border rounded-border-25" data-toggle="modal" data-target="#sortFilterModal"><i class="fas fa-sort"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-light bg-transparent text-dark border rounded-border-25" (click)="toggleView()">
+                              <i class="fas fa-list" *ngIf="!viewAsList"></i>
+                              <i class="fas fa-th" *ngIf="viewAsList"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container d-flex justify-content-center" *ngIf="(products | async)?.length == 0">
+                <p>No available products.</p>
+            </div>
+            <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products | async)?.length > 0 && !viewAsList">
+              <div class="card border-light" *ngFor="let product of products | async">
+                <img class="card-img-top img-fluid" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image" [routerLink]="['/products', product._id]">
+                <img class="card-img-top img-fluid" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image" [routerLink]="['/products', product._id]">
+                <div class="card-badge" *ngIf="product.isBestseller">
+                  <span class="badge badge-secondary float-right">Bestseller</span>
+                </div>
+                <div class="card-badge" *ngIf="product.isSoldout">
+                  <span class="badge badge-danger float-right">Out of Stock</span>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-title text-truncate" [routerLink]="['/products', product._id]">{{ product.name }}</h6>
+                  <span class="price" [routerLink]="['/products', product._id]">{{ (product.price/100) | currency:'NZD' }}</span>
+                  <p class="card-text text-muted text-truncate" [routerLink]="['/products', product._id]">{{ product.description }}</p>
+                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="container" *ngIf="(products | async)?.length > 0 && viewAsList">
+              <ul class="list-unstyled mx-md-1 mx-lg-5">
+                <li class="media my-5" *ngFor="let product of products | async">
+                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image">
+                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image">
+                  <div class="media-body text-left">
+                    <h5 class="my-0">
+                      <div class="row">
+                        <span class="col-xs-12 col-sm-12 col-xl-auto pb-1">{{ product.name }}</span>
+                        <div class="col-xs-12 col-sm-auto col-xl-auto pr-0">
+                          <span class="badge badge-secondary" *ngIf="product.isBestseller">Bestseller</span>
+                        </div>
+                        <div class="col-xs-12 col-sm-auto col-xl-auto">
+                          <span class="badge badge-danger" *ngIf="product.isSoldout">Out Of Stock</span>
+                        </div>
+                      </div>
+                    </h5>
+                    <small class="font-weight-light text-muted">{{ product.category[0].name }} | {{ (product.price/100) | currency:'NZD' }}</small>
+                    <p class="description mb-5 text-justify">{{ product.description }}</p>
+                    <div class="media-button">
+                      <a class="btn btn-black text-light text-uppercase" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- <div class="container-fluid my-4">
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<!-- Sort / Filter Modal -->
+<div class="modal fade" id="sortFilterModal" tabindex="-1" role="dialog" aria-labelledby="sortFilterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sortFilterTitle">Refine Results</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-uppercase text-left">Sort by</h6>
+        <div class="sort-by">
+          <nav aria-label="Pagination">
+            <ul class="pagination" id="sortByOptions">
+              <li class="page-item active text-nowrap" id="{{ SORT_BY_PRODUCT_A_TO_Z }}" (click)="selectSortBy(SORT_BY_PRODUCT_A_TO_Z)"><a class="page-link">Product Name (a - z)</a></li>
+              <li class="page-item text-nowrap" id="{{ SORT_BY_PRODUCT_Z_TO_A }}" (click)="selectSortBy(SORT_BY_PRODUCT_Z_TO_A)"><a class="page-link">Product Name (z - a)</a></li>
+              <li class="page-item text-nowrap" id="{{ SORT_BY_PRICE_LOW_TO_HIGH }}" (click)="selectSortBy(SORT_BY_PRICE_LOW_TO_HIGH)"><a class="page-link">Price (low - high)</a></li>
+              <li class="page-item text-nowrap" id="{{ SORT_BY_PRICE_HIGH_TO_LOW }}" (click)="selectSortBy(SORT_BY_PRICE_HIGH_TO_LOW)"><a class="page-link">Price (high - low)</a></li>
+            </ul>
+          </nav>
+        </div>
+        <hr>
+        <h6 class="text-left">
+          <span class="text-uppercase">Plant Category</span>
+          <small>
+            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(false)" *ngIf="isCheckAllCategories">Remove All</a>
+            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(true)" *ngIf="!isCheckAllCategories">Select All</a>
+          </small>
+        </h6>
+        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories | async; index as i">
+          <label class="form-check-label" for="checkBox">
+            <span *ngIf="category.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span *ngIf="category.parent!==null && category.parent.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            {{ category.name }}
+          </label>
+          <input class="form-check-input checkbox-category" type="checkbox" id="{{ category._id }}" (click)="clickCategory(category._id, i)" [(ngModel)]="isCategoryChecked[i]">
+        </div>
+        <hr>
+        <h6 class="text-left">
+          <span class="text-uppercase">Filter</span>
+          <small>
+            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllFilters(false)" *ngIf="isCheckAllFilters">Remove All</a>
+            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllFilters(true)" *ngIf="!isCheckAllFilters">Select All</a>
+          </small>
+        </h6>
+        <div class="form-check justify-content-between text-left mr-3 my-2">
+          <label class="form-check-label" for="checkBox">Bestseller</label>
+          <input class="form-check-input" type="checkbox" id="checkbox-bestseller" [(ngModel)]="isBestsellerChecked" (click)="clickFilter()">
+        </div>
+        <div class="form-check justify-content-between text-left mr-3 my-2">
+          <label class="form-check-label" for="checkBox">Out of Stock</label>
+          <input class="form-check-input" type="checkbox" id="checkbox-soldout" [(ngModel)]="isSoldoutChecked" (click)="clickFilter()">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add to Card Modal -->
+<div class="modal fade" id="addToCartModal" tabindex="-1" role="dialog" aria-labelledby="addToCartTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title" id="addToCartTitle">Add to Cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-uppercase text-center mb-2">{{ selectedProduct?.name }}</h6>
+        <div class="form-group text-center">
+          <label for="quantity" class="mr-1">Quantity</label>
+          <input type="number" name="quantity" min="1" max="5" [(ngModel)]="noOfItemsCart" value="1" class="text-center">
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-black text-uppercase" (click)="addToCart()" [disabled]="noOfItemsCart < 1 || noOfItemsCart > 5">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>

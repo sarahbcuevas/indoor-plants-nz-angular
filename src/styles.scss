@@ -1,0 +1,257 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    padding-right: 0 !important;
+}
+
+.badge {
+  border-radius: 0;
+  padding: 8px 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn:focus, button:focus {
+  outline-style: none;
+  box-shadow: none;
+}
+
+.btn-black {
+    border: none;
+    color: white;
+    background-color: black;
+    border-radius: 0;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.bg-light-yellow {
+    background: #ffffe6;
+}
+
+.card {
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 210px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  .card-badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .card-body {
+      padding: 0.5rem;
+      line-height: 1rem;
+
+      a:hover {
+          color: white;
+          background: dimgray;
+      }
+  }
+
+  .card-text {
+      font-size: 1rem;
+  }
+
+  .card-title {
+      margin-bottom: 0;
+  }
+
+  .price {
+      font-weight: 500;
+      font-size: 1rem;
+  }
+}
+
+.card:hover {
+  background: rgba(153, 153, 102, 0.1);
+
+  img {
+      opacity: 0.75;
+  }
+}
+
+.loading-img {
+  size: 0.25rem;
+  width: 16px;
+  height: 16px;
+}
+
+.image-upload-input {
+  border: 0;
+  padding-left: 0;
+  padding-top: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.rounded-border-25 {
+    border-radius: 0.25rem;
+}
+
+.form-control:disabled {
+  background-color: #e9ecef !important;
+  opacity: 1 !important;
+//   transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill {
+  // background-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.modal {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.page-item {
+  .page-link {
+      color: black;
+  }
+}
+
+.page-item.active .page-link {
+  background: transparent;
+  border-color: black;
+  color: black;
+}
+
+.results-text {
+  letter-spacing: 2px;
+}
+
+#searchInput {
+  border-radius: 1.5rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#searchInput:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: lightgray;
+}
+
+.search {
+  .input-group-append {
+    .input-group-text {
+        border-radius: 1.5rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.sort-by {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+.sort-by::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent;
+}
+
+#sortFilterModal {
+  // padding-left: 0;
+
+  .form-check {
+    .form-check-input {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+.sub-title {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.accordion {
+  a {
+      border: 0;
+      background: transparent;
+      color: black;
+      padding-left: 10px;
+      padding-right: 10px;
+      cursor: pointer;
+
+      i::before {
+          content: "\f068";
+      }
+  }
+
+  a.collapsed {
+      i::before {
+          content: "\f067";
+      }
+  }
+}
+
+.categories {
+  font-weight: 400;
+  letter-spacing: 1.5px;
+
+  .form-check {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+  }
+
+  .list-group-item {
+      border: 0px;
+      padding: 0.5rem 0rem;
+      cursor: pointer;
+
+      .fas {
+          font-size: 0.6rem;
+          align-self: center;
+          line-height: 1.5rem;
+      }
+  }
+
+  .sub-list {
+      padding-left: 1.5rem;
+  }
+
+  .title {
+      font-weight: 300;
+  }
+}
+
+#sidebar.collapse {
+
+  @media (min-width: 768px) {
+      display: block;
+  }
+}
+
+#sidebar-row {
+  @media (min-width: 768px) {
+      display: none;
+  }
+}
+
+#sidebar-toggler {
+  @media (max-width: 767.98px) {
+      visibility: visible;
+  }
+  @media (min-width: 768px) {
+      visibility: collapse;
+  }
+}

@@ -1,0 +1,132 @@
+<h6 class="sub-title text-uppercase mb-4">Manage Categories</h6>
+
+<div class="container px-lg-5 d-flex justify-content-between">
+  <div class="categories mx-sm-3 mx-md-5 flex-grow-1 text-left">
+    <ul class="list-group list-unstyled accordion" *ngFor="let category of categories | async">
+      <li class="list-group-item bg-transparent" *ngIf="category.parent===null">
+        <span *ngIf="!(isEditOn && selectedCategoryId === category._id)">{{ category.name }}</span>
+        <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === category._id">
+          <div class="form-group flex-grow-1 mr-1 mb-0">
+            <label for="name" class="sr-only">Category Name</label>
+            <input type="text" formControlName="name" class="form-control form-control-sm flex-grow-1">
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm mr-1" (click)="editMode(false)">Cancel</button>
+          <button type="button" class="btn btn-info btn-sm add-btn" (click)="saveChanges(category._id)" [disabled]="loading || !!editCategoryFormGroup.controls.name.errors?.required">Save Changes</button>
+          <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </form>
+        <div class="btn-group ml-3" role="group" *ngIf="!isEditOn">
+          <button type="button" class="btn btn-light btn-sm" (click)="selectCategoryForEdit(category._id, category.name)"><i class="fas fa-pencil-alt"></i></button>
+          <button type="button" class="btn btn-light btn-sm" (click)="selectCategory(category._id, category.name)" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <div class="sub-list">
+          <ul class="list-group list-unstyled" *ngFor="let subcategory of categories | async">
+            <li class="list-group-item  bg-transparent" *ngIf="subcategory.parent!==null && subcategory.parent._id===category._id">
+              <span *ngIf="!(isEditOn && selectedCategoryId === subcategory._id)">{{ subcategory.name }}</span>
+              <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === subcategory._id">
+                <div class="form-group flex-grow-1 mr-1 mb-0">
+                  <label for="name" class="sr-only">Category Name</label>
+                  <input type="text" formControlName="name" class="form-control form-control-sm flex-grow-1">
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm mr-1" (click)="editMode(false)">Cancel</button>
+                <button type="button" class="btn btn-info btn-sm add-btn" (click)="saveChanges(subcategory._id)" [disabled]="loading || !!editCategoryFormGroup.controls.name.errors?.required">Save Changes</button>
+                <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+              </form>
+              <div class="btn-group ml-3" role="group" *ngIf="!isEditOn">
+                <button type="button" class="btn btn-light btn-sm" (click)="selectCategoryForEdit(subcategory._id, subcategory.name)"><i class="fas fa-pencil-alt"></i></button>
+                <button type="button" class="btn btn-light btn-sm" (click)="selectCategory(subcategory._id, subcategory.name)" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fas fa-trash-alt"></i></button>
+              </div>
+              <div class="sub-list">
+                <ul class="list-group list-unstyled" *ngFor="let subsubcategory of categories | async">
+                  <li class="list-group-item  bg-transparent" *ngIf="subsubcategory.parent!==null && subsubcategory.parent._id===subcategory._id">
+                    <span *ngIf="!(isEditOn && selectedCategoryId === subsubcategory._id)">{{ subsubcategory.name }}</span>
+                    <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === subsubcategory._id">
+                      <div class="form-group flex-grow-1 mr-1 mb-0">
+                        <label for="name" class="sr-only">Category Name</label>
+                        <input type="text" formControlName="name" class="form-control form-control-sm flex-grow-1">
+                      </div>
+                      <button type="button" class="btn btn-secondary btn-sm mr-1" (click)="editMode(false)">Cancel</button>
+                      <button type="button" class="btn btn-info btn-sm add-btn" (click)="saveChanges(subsubcategory._id)" [disabled]="loading || !!editCategoryFormGroup.controls.name.errors?.required">Save Changes</button>
+                      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                    </form>
+                    <div class="btn-group ml-3" role="group" *ngIf="!isEditOn">
+                      <button type="button" class="btn btn-light btn-sm" (click)="selectCategoryForEdit(subsubcategory._id, subsubcategory.name)"><i class="fas fa-pencil-alt"></i></button>
+                      <button type="button" class="btn btn-light btn-sm" (click)="selectCategory(subsubcategory._id, subsubcategory.name)" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                  </li>
+                </ul>
+                <form [formGroup]="categoryFormGroup" class="form-inline">
+                  <div class="form-group flex-grow-1 mr-1 mb-0">
+                    <label for="name" class="sr-only">Category Name</label>
+                    <input type="text" id="name" formControlName="name" class="form-control form-control-sm flex-grow-1" placeholder="{{ 'Add ' + subcategory.name + ' Subcategory' }}">
+                  </div>
+                  <button type="button" class="btn btn-outline-dark btn-sm add-btn" (click)="addCategory(subcategory._id)"><i class="fas fa-plus"></i> Add</button>
+                  <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                </form>
+              </div>
+            </li>
+          </ul>
+          <form [formGroup]="categoryFormGroup" class="form-inline">
+              <div class="form-group flex-grow-1 mr-1 mb-0">
+                <label for="name" class="sr-only">Category Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control form-control-sm flex-grow-1" placeholder="{{ 'Add ' +  category.name + ' Subcategory' }}">
+              </div>
+              <button type="button" class="btn btn-outline-dark btn-sm add-btn" (click)="addCategory(category._id)"><i class="fas fa-plus"></i> Add</button>
+              <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+            </form>
+        </div>
+      </li>
+    </ul>
+    <form [formGroup]="categoryFormGroup" class="form-inline">
+        <div class="form-group flex-grow-1 mr-1 mb-0">
+          <label for="name" class="sr-only">Category Name</label>
+          <input type="text" id="name" formControlName="name" class="form-control form-control-sm flex-grow-1" placeholder="Add Parent Category">
+        </div>
+        <button type="button" class="btn btn-outline-dark btn-sm add-btn" (click)="addCategory(null)"><i class="fas fa-plus"></i> Add</button>
+        <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+      </form>
+  </div>
+</div>
+<button type="button" class="btn btn-danger btn-sm add-btn my-5" *ngIf="(categories | async)?.length > 0" data-toggle="modal" data-target="#deleteAllCategoriesModal"><i class="fas fa-trash-alt"></i> Delete All Categories</button>
+
+<!-- Delete Category Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCategoryTitle">Delete Category</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete category <strong>{{ selectedCategoryName }}</strong>?<br>
+          Warning: This will also delete all subcategories.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="deleteCategory()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete All Categories Modal -->
+<div class="modal fade" id="deleteAllCategoriesModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllCategoriesTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteAllCategoriesTitle">Delete All Categories</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete all categories?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="deleteAllCategories()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

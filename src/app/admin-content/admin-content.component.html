@@ -1,0 +1,143 @@
+<h6 class="sub-title text-uppercase mb-4">Manage Website Content</h6>
+<div class="container text-left">
+  <h5 class="title">Homepage Content</h5>
+  <form [formGroup]="editContentFormGroup">
+    <div class="form-group row">
+      <label for="shopName" class="col-lg-2 col-form-label col-form-label-sm">Shop Name</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="shopName" id="shopName" placeholder="Shop Name" value="{{ content?.shopName }}">
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.shopName.errors?.required && submitted">Shop Name is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="shopSubtitle" class="col-lg-2 col-form-label col-form-label-sm">Shop Name Subtitle</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="shopSubtitle" id="shopSubtitle" placeholder="Shop Name Subtitle" value="{{ content?.shopSubtitle }}">
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.shopSubtitle.errors?.required && submitted">Shop Subtitle is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="jumbotronImage" class="col-lg-2 col-form-label col-form-label-sm">Jumbotron Image</label>
+      <div class="col-lg-10">
+        <input type="file" class="form-control form-control-sm image-upload-input" formControlName="jumbotronImage" id="jumbotronImage" placeholder="Jumbotron Image" ng2FileSelect [uploader]="uploader" accept="image/*">
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.jumbotronImage.errors?.required && content?.jumbotronImage === null && submitted">Jumbotron Image is required</p>
+        <img src="{{ BaseURL + content?.jumbotronImage }}" class="img-fluid" *ngIf="content?.jumbotronImage">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="jumbotronTitle" class="col-lg-2 col-form-label col-form-label-sm">Jumbotron Title</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="jumbotronTitle" id="jumbotronTitle" placeholder="Jumbotron Title" value="{{ content?.jumbotronTitle }}">
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.jumbotronTitle.errors?.required && submitted">Jumbotron Title is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="jumbotronDescription" class="col-lg-2 col-form-label col-form-label-sm">Jumbotron Description</label>
+      <div class="col-lg-10">
+        <textarea rows="3" class="form-control form-control-sm" formControlName="jumbotronDescription" id="jumbotronDescription" placeholder="Jumbotron Description" value="{{ content?.jumbotronDescription }}"></textarea>
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.jumbotronDescription.errors?.required && submitted">Jumbotron Description is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="footerDescription" class="col-lg-2 col-form-label col-form-label-sm">Footer Description</label>
+      <div class="col-lg-10">
+        <textarea rows="3" class="form-control form-control-sm" formControlName="footerDescription" id="footerDescription" placeholder="Footer Description" value="{{ content?.footerDescription }}"></textarea>
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.footerDescription.errors?.required && submitted">Footer Description is required</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <button type="submit" class="btn btn-secondary btn-sm mr-1" (click)="resetContent()">Reset</button>
+      <button type="submit" class="btn btn-primary btn-sm" [disabled]="loading" (click)="saveContent()">Save Homepage Content</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </form>
+
+  <hr class="mt-5">
+
+  <h5 class="title">Contact Details</h5>
+  <form [formGroup]="editContactFormGroup">
+    <div class="form-group row">
+      <label for="contactNo" class="col-lg-2 col-form-label col-form-label-sm">Contact No.</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="contactNo" id="contactNo" placeholder="Contact No.">
+        <p class="text-danger" *ngIf="!!editContactFormGroup.controls.contactNo.errors?.required && submitted">Contact No. is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="address" class="col-lg-2 col-form-label col-form-label-sm">Address</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="address" id="address" placeholder="Address">
+        <p class="text-danger" *ngIf="!!editContactFormGroup.controls.address.errors?.required && submitted">Address is required</p>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="email" class="col-lg-2 col-form-label col-form-label-sm">Email</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="email" id="email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+        <p class="text-danger" *ngIf="!!editContactFormGroup.controls.email.errors?.pattern && submitted">Invalid email</p>
+        <p class="text-danger" *ngIf="!!editContactFormGroup.controls.email.errors?.required && submitted">Email is required</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <button type="submit" class="btn btn-secondary btn-sm mr-1" (click)="resetContact()">Reset</button>
+      <button type="submit" class="btn btn-primary btn-sm" [disabled]="loading" (click)="saveContact()">Save Contact Details</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </form>
+
+  <hr class="mt-5">
+
+  <h5 class="title">Social Media Accounts</h5>
+  <form [formGroup]="editSocialMediaFormGroup" class="mb-5">
+    <div class="form-group row">
+      <label for="facebook" class="col-lg-2 col-form-label col-form-label-sm">Facebook</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="facebook" id="facebook" placeholder="Facebook">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="instagram" class="col-lg-2 col-form-label col-form-label-sm">Instagram</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="instagram" id="instagram" placeholder="Instagram">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="twitter" class="col-lg-2 col-form-label col-form-label-sm">Twitter</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="twitter" id="twitter" placeholder="Twitter">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="youtube" class="col-lg-2 col-form-label col-form-label-sm">Youtube</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="youtube" id="youtube" placeholder="Youtube">
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <button type="submit" class="btn btn-secondary btn-sm mr-1" (click)="resetSocialMedia()">Reset</button>
+      <button type="submit" class="btn btn-primary btn-sm" [disabled]="loading" (click)="saveSocialMedia()">Save Social Media Accounts</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </form>
+
+</div>
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalTitle">Content Saved</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Homepage Content Saved
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

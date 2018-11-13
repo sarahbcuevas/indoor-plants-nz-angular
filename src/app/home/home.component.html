@@ -1,0 +1,115 @@
+<div class="jumbotron-fluid d-flex align-items-center">
+  <img src="{{ BaseURL + content?.jumbotronImage }}" class="jumbotron">
+    <div class="container jumbotron-content text-center">
+        <h3 class="display-4">{{ content?.jumbotronTitle }}</h3>
+        <p class="lead">{{ content?.jumbotronDescription }}</p>
+        <button type="button" class="btn btn-black" [routerLink]="['/products']">SHOP NOW</button>
+    </div>
+</div>
+
+<div class="container-fluid pt-5 pb-5 bg-light-yellow" *ngIf="(bestsellers | async)?.length > 0">
+    <h6 class="sub-title text-uppercase mb-3">Featured Products</h6>
+    <div class="row justify-content-around d-flex justify-content-center">
+        <div class="col-lg-1"></div>
+        <ng-container *ngFor="let bestseller of bestsellers | async; let i=index">
+          <div class="col-10 col-sm-4 col-lg-3 text-center" *ngIf="i<3">
+            <div class="container category">
+                <img src="{{ BaseURL + bestseller.image }}" class="img-fluid" *ngIf="bestseller.image">
+                <img src="{{ '../../assets/default-plant.jpg' }}" class="img-fluid" *ngIf="!bestseller.image">
+                <button type="button" class="btn btn-light text-uppercase results-text" [routerLink]="['/products', bestseller._id]">
+                  {{ bestseller.name }}
+                </button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row justify-content-center mt-4">
+      <button type="button" class="btn btn-black" [routerLink]="['/products']">SHOW MORE</button>
+    </div>
+</div>
+
+<div class="container-fluid bg-white pt-5 pb-5 text-center">
+    <h6 class="sub-title text-uppercase mb-3">Customer Feedback</h6>
+    <div id="feedbackCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="container">
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-12 col-lg-2">
+                            <img src="../assets/defaultprofileimage.svg" class="rounded-circle" width="150px">
+                        </div>
+                        <div class="col-sm-12 col-lg-auto d-flex align-items-center justify-content-center">
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0">"Thanks so well packaged was in perfect condition and very healthy. Love it."</p>
+                                <footer class="blockquote-footer">61chevy</footer>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container">
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-12 col-lg-2">
+                            <img src="../assets/defaultprofileimage.svg" class="rounded-circle" width="150px">
+                        </div>
+                        <div class="col-sm-12 col-lg-auto d-flex align-items-center justify-content-center">
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0">"Excellent trade, thank you! The plant was very well packaged. Would definitely trade again."</p>
+                                <footer class="blockquote-footer">1 winner</footer>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container">
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-12 col-lg-2">
+                            <img src="../assets/defaultprofileimage.svg" class="rounded-circle" width="150px">
+                        </div>
+                        <div class="col-sm-12 col-lg-auto d-flex align-items-center justify-content-center">
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0">"Very prompt delivery &amp; plants were well packaged. Many thanks for a great trade. :&#41;"</p>
+                                <footer class="blockquote-footer">makinmoney</footer>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="container">
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-12 col-lg-2">
+                            <img src="../assets/defaultprofileimage.svg" class="rounded-circle" width="150px">
+                        </div>
+                        <div class="col-sm-12 col-lg-auto d-flex align-items-center justify-content-center">
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-0">"Great communication thank you!"</p>
+                                <footer class="blockquote-footer">hollycoreyx</footer>
+                            </blockquote>
+                         </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev text-dark" href="#feedbackCarousel" role="button" data-slide="prev">
+            <i class="fas fa-angle-left"></i>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next text-dark" href="#feedbackCarousel" role="button" data-slide="next">
+            <i class="fas fa-angle-right"></i>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <button type="button" class="btn btn-black">SHOW MORE</button>
+</div>

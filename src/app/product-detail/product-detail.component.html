@@ -1,0 +1,29 @@
+<div class="container-fluid bg-white pb-5">
+  <div class="row ml-1 ml-md-3"><a class="btn btn-outline-secondary btn-sm" (click)="goBack()">Go Back</a></div>
+  <div class="row justify-content-center mt-3">
+    <img class="card-img-top product-image mt-3 img-fluid" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image">
+    <img class="card-img-top product-image mt-3 img-fluid" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image">
+  </div>
+  <div class="row justify-content-center pt-2">
+    <h6 class="sub-title text-uppercase mb-3">{{ product?.name }}<br>
+      <small class="text-muted">{{ product?.category[0].name }}</small>
+    </h6>
+  </div>
+  <div class="row justify-content-center">
+    <h5>{{ (product?.price/100) | currency: 'NZD' }}</h5>
+  </div>
+  <div class="row justify-content-center">
+    <span class="badge badge-secondary text-uppercase" *ngIf="product?.isBestseller">Bestseller</span>&nbsp;
+    <span class="badge badge-danger text-uppercase" *ngIf="product?.isSoldout">Out of Stock</span>
+  </div>
+  <div class="row justify-content-center">
+    <span class="text-muted" *ngIf="product?.forPickupOnly">* This plant is for pick up only</span>
+    <span class="text-muted" *ngIf="!product?.forPickupOnly">Delivery Fee: {{ (product?.deliveryFee/100) | currency: 'NZD' }}</span>
+  </div>
+  <div class="row justify-content-center mt-3 mx-2 mx-md-5 px-lg-5">
+    <p class="results-text text-justify">{{ product?.description }}</p>
+  </div>
+  <div class="row justify-content-center mt-5 mb-3">
+    <a class="btn btn-black text-light text-uppercase">Add to Cart</a>
+  </div>
+</div>

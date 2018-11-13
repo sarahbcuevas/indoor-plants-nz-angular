@@ -1,0 +1,108 @@
+<h6 class="sub-title text-uppercase mb-4">PRODUCT DETAIL</h6>
+<div class="container mt-3">
+  <div *ngIf="product">
+    <div class="row justify-content-center">
+      <div class="alert alert-danger alert-dismissable fade show" *ngIf="editProductError" role="alert">
+        {{ editProductError }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <form [formGroup]="editProductFormGroup">
+      <fieldset disabled>
+        <div class="form-group row justify-content-center">
+          <label for="name" class="col-sm-2 col-form-label">Product Name</label>
+          <div class="col-sm-7">
+            <input type="text" id="name" formControlName="name" class="form-control form-control-sm" value="{{ product.name }}">
+            <p class="text-danger" *ngIf="!!editProductFormGroup.controls.name.errors?.required && submitted">Product name is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="category" class="col-sm-2 col-form-label">Category</label>
+          <div class="col-sm-7">
+            <select class="form-control form-control-sm" id="category" formControlName="category">
+              <option *ngFor="let category of categories | async" [attr.id]="category._id" [attr.value]="category._id" [attr.selected]="product.category[0]._id === category._id ? true : null">
+                <span *ngIf="category.parent!==null"><pre>&emsp;</pre></span>
+                <span *ngIf="category.parent!==null && category.parent.parent!==null"><pre>&emsp;</pre></span>
+                {{ category.name }}
+              </option>
+            </select>
+            <p class="text-danger" *ngIf="!!editProductFormGroup.controls.category.errors?.required && submitted">Category is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="description" class="col-sm-2 col-form-label">Description</label>
+          <div class="col-sm-7">
+            <textarea rows="5" id="description" formControlName="description" class="form-control form-control-sm" value="{{ product.description }}"></textarea>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="price" class="col-sm-2 col-form-label">Price</label>
+          <div class="col-sm-7">
+            <input type="text" id="price" formControlName="price" class="form-control form-control-sm" value="{{ (product.price / 100).toFixed(2) }}">
+            <p class="text-danger" *ngIf="!!editProductFormGroup.controls.price.errors?.required && submitted">Price is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center d-flex align-items-center">
+          <label for="deliveryFee" class="col-sm-2 col-form-label">Delivery Fee (optional)</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control form-control-sm" id="deliveryFee" formControlName="deliveryFee" placeholder="Delivery Fee" value="{{ (product.deliveryFee / 100).toFixed(2) }}">
+          </div>
+          <div class="col-sm-3 form-check">
+            <input class="form-check-input" type="checkbox" id="forPickupOnly" formControlName="forPickupOnly" [attr.checked]="product.forPickupOnly ? true : null">
+            <label class="form-check-label" for="forPickupOnly">For Pick Up Only</label>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label class="col-sm-2 col-form-label">Image</label>
+          <div class="col-sm-7">
+            <input type="text" id="image" formControlName="image" class="form-control form-control-sm" *ngIf="!isEditOn" value="{{ product.image }}">
+            <input type="file" id="image" formControlName="image" class="form-control form-control-sm image-upload-input" *ngIf="isEditOn" ng2FileSelect [uploader]="uploader" accept="image/*">
+            <div><img class="card-img-top product-image mt-3" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image"></div>
+            <button class="btn btn-link" *ngIf="isEditOn && product.image" (click)="removeImage()"><span aria-hidden="true">&times;</span> Remove Image</button>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <div class="col form-check">
+            <input class="form-check-input" type="checkbox" id="isBestseller" formControlName="isBestseller" [attr.checked]="product.isBestseller ? true : null">
+            <label class="form-check-label" for="isBestseller">Is Bestseller?</label>
+          </div>
+          <div class="col form-check">
+            <input class="form-check-input" type="checkbox" id="isSoldout" formControlName="isSoldout" [attr.checked]="product.isSoldout ? true : null">
+            <label class="form-check-label" for="isSoldout">Is Soldout?</label>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <div class="row justify-content-center my-5">
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="goBack()" *ngIf="!isEditOn">Go Back</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="cancel()" *ngIf="isEditOn">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="editMode(true)" *ngIf="!isEditOn"><i class="fas fa-pencil-alt"></i> Edit Product Details</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="save()" *ngIf="isEditOn" [disabled]="loading"><i class="fas fa-save"></i> Save Product Details</button>
+      <button type="button" class="btn btn-danger btn-sm" *ngIf="!isEditOn" data-toggle="modal" data-target="#deleteProductModal"><i class="fas fa-trash-alt"></i> Delete Product</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </div>
+</div>
+
+<!-- Delete Product Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteProductTitle">Delete Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete product <strong>{{ product?.name }}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

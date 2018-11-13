@@ -1,0 +1,174 @@
+<div class="wrapper" *ngIf="!isAdmin && !isLogin">
+    <div class="header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="navbar-brand">
+                <a class="btn btn-link" *ngIf="socialMedia?.facebook" [href]="socialMedia?.facebook"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-link" *ngIf="socialMedia?.instagram" [href]="socialMedia?.instagram"><i class="fab fa-instagram"></i></a>
+                <a class="btn btn-link" *ngIf="socialMedia?.twitter" [href]="socialMedia?.twitter"><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-link" *ngIf="socialMedia?.youtube" [href]="socialMedia?.youtube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggler">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-center font-weight-light" href="#">{{ contact?.email }} <i class="fas fa-envelope"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-center font-weight-light" href="#">SHOPPING CART <i class="fas fa-shopping-cart"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white text-center font-weight-light" routerLink="/login">LOGIN <i class="fas fa-user-circle"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid pt-5 pb-4 bg-light-yellow">
+            <h2 class="title">{{ content?.shopName }}</h2>
+            <p class="sub-title text-uppercase"><small>{{ content?.shopSubtitle }}</small></p>
+        </div>
+
+        <div class="container-fluid bg-white text-center">
+            <ul class="row nav justify-content-around no-gutters">
+                <div class="col-lg-2"></div>
+                <li class="col-12 col-sm-auto col-lg-2 nav-item">
+                    <a class="nav-link text-uppercase text-center text-nowrap active" routerLink="/">Home</a>
+                </li>
+                <li class="col-12 col-sm-auto col-lg-2 nav-item">
+                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/aboutus">About Us</a>
+                </li>
+                <li class="col-12 col-sm-auto col-lg-2 nav-item">
+                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/products">Products</a>
+                </li>
+                <li class="col-12 col-sm-auto col-lg-2 nav-item">
+                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/contactus">Contact Us</a>
+                </li>
+                <div class="col-lg-2"></div>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+
+    <div class="footer">
+        <div class="container-fluid bg-light pt-4 pb-5">
+            <div class="row justify-content-around d-flex align-items-center">
+                <div class="col-lg-1"></div>
+                <div class="col-sm-4 col-lg-3">
+                    <h6 class="sub-title text-uppercase"><small><strong>Buy Now</strong></small></h6>
+                    <h2 class="title">{{ content?.shopName }}</h2>
+                    <div class="text-center">
+                        <p><small>{{ content?.footerDescription }}</small></p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-lg-3">
+                    <h6 class="sub-title text-uppercase"><small><strong>Quick Links</strong></small></h6>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="#" class="text-body">Home</a><br>
+                                <a href="#" class="text-body">About Us</a><br>
+                                <a href="#" class="text-body">Products</a><br>
+                                <a href="#" class="text-body">Contact Us</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="#" class="text-body">Track Order</a><br>
+                                <a href="#" class="text-body">Shopping Cart</a><br>
+                                <a href="#" class="text-body">Feedback</a><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-lg-3 text-center">
+                    <h6 class="sub-title text-uppercase"><small><strong>Subscribe Now</strong></small></h6>
+                    <form [formGroup]="">
+                        <div class="form-group">
+                            <label for="subscribeEmailInput" class="sr-only">E-mail address</label>
+                            <input type="email" class="form-control text-center" id="subscribeEmailInput" placeholder="E-mail address">
+                        </div>
+                        <button type="button" class="btn btn-black text-uppercase">Sign Up</button>
+                    </form>
+                    <hr>
+                    <a class="btn btn-social" *ngIf="socialMedia?.facebook" [href]="socialMedia?.facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-social" *ngIf="socialMedia?.instagram" [href]="socialMedia?.instagram"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-social" *ngIf="socialMedia?.twitter" [href]="socialMedia?.twitter"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-social" *ngIf="socialMedia?.youtube" [href]="socialMedia?.youtube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+
+        <div class="container-fluid top-bottom-bar text-center bg-dark text-white text-uppercase">
+            {{ contact?.address }} | {{ contact?.contactNo }} | {{ contact?.email }}
+        </div>
+    </div>
+</div>
+
+<div class="wrapper" *ngIf="isLogin">
+  <div class="header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <div class="navbar-brand">
+        <!-- <h6 class="title">Indoor Plants NZ</h6> -->
+      </div>
+    </nav>
+  </div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div class="wrapper" *ngIf="isAdmin">
+    <div class="header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark py-2">
+        <div class="navbar-brand">
+          <h6 class="title mb-0">{{ content?.shopName }}</h6>
+        </div>
+        <div class="navbar-profile d-flex align-items-center">
+          <ul class="navbar-nav ml-auto mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link text-white text-center font-weight-light" href="#">Hello, <u>{{ currentUser?.username }}</u>!</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="content">
+      <div class="container-fluid bg-white text-center wrapper">
+        <div class="row" id="sidebar-row">
+          <div class="col-12 col-md-4 col-lg-3 bg-white py-2" id="sidebar-toggler">
+            <button type="button" class="btn bg-transparent text-dark float-left collapsed" data-toggle="collapse" data-target="#sidebar">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+        <div class="row content">
+          <div class="col-12 col-md-4 col-lg-3 text-left dashboard pt-3 pl-lg-4 bg-light collapse" id="sidebar">
+            <h5 class="head">Dashboard</h5>
+            <ul class="list-group list-unstyled">
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}">Overview</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Admin Accounts</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/content']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Website Content</li>
+            </ul>
+            <h5 class="head mt-4">Products</h5>
+            <ul class="list-group list-unstyled">
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/categories']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Categories</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/products']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Products</li>
+              <li class="list-group-item bg-transparent">Manage Orders</li>
+            </ul>
+            <h5 class="head mt-4">Account</h5>
+            <ul class="list-group list-unstyled">
+              <li class="list-group-item bg-transparent">Profile Settings</li>
+              <li class="list-group-item bg-transparent" (click)="logout()">Logout</li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-8 col-lg-9 pt-4">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
