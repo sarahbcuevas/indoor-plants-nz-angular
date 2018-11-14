@@ -11,7 +11,8 @@
     "experimentalDecorators": true,
     "target": "es5",
     "types": [
-      "jquery"
+      "jquery",
+      "node"
     ],
     "typeRoots": [
       "node_modules/@types"
