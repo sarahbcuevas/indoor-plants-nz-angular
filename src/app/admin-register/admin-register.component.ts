@@ -13,6 +13,7 @@ import { PasswordValidator } from '../_helpers/password.validator';
 export class AdminRegisterComponent implements OnInit {
 
   registerError: string;
+  registerSuccess: string;
   registerUserFormGroup: FormGroup;
   passwordFormGroup: FormGroup;
   loading: boolean;
@@ -46,6 +47,7 @@ export class AdminRegisterComponent implements OnInit {
 
   createNewUser() {
     this.registerError = null;
+    this.registerSuccess = null;
     this.submitted = true;
     // stop here if form is invalid
     if (this.registerUserFormGroup.invalid) {
@@ -62,6 +64,7 @@ export class AdminRegisterComponent implements OnInit {
       .subscribe(
         data => {
           this.resetForm();
+          this.registerSuccess = 'Successfully registered new user!';
         },
         error => {
           this.registerError = 'Username already exists';
@@ -73,6 +76,7 @@ export class AdminRegisterComponent implements OnInit {
     this.registerUserFormGroup.reset();
     this.submitted = false;
     this.registerError = null;
+    this.registerSuccess = null;
     this.loading = false;
   }
 

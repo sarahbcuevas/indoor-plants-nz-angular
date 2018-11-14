@@ -1,7 +1,20 @@
 <div class="container">
   <h2 class="title mt-5">Indoor Plants NZ</h2>
   <div class="d-flex justify-content-center align-items-center">
-    <form  [formGroup]="registerUserFormGroup">
+    <form  [formGroup]="registerUserFormGroup" class="col-md-10 col-lg-8 border text-center mt-3 py-4 px-3">
+      <h6>Register New User</h6>
+      <div class="alert alert-danger alert-dismissable fade show" *ngIf="registerError" role="alert">
+        {{ registerError }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="alert alert-success alert-dismissable fade show" *ngIf="registerSuccess" role="alert">
+        {{ registerSuccess }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <div class="form-group row">
         <label for="username" class="col-sm-4 col-form-label text-left">Username</label>
         <div class="col-sm-8">
@@ -55,8 +68,8 @@
           <p class="text-danger" *ngIf="!!registerUserFormGroup.controls.address.errors?.required && submitted">Address is required</p>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetForm()">Reset</button>
+      <div class="row justify-content-center">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetForm()">Reset</button>&nbsp;
         <button type="button" class="btn btn-primary btn-sm" [disabled]="loading" (click)="createNewUser()">Create New User</button>
         <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
       </div>
