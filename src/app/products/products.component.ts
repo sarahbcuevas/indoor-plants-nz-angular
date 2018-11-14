@@ -116,6 +116,9 @@ export class ProductsComponent implements OnInit {
     this.totalAmount = 0;
     this.orderItems = [];
     const cart = JSON.parse(localStorage.getItem('cart'));
+    if (cart === null) {
+      return;
+    }
     for (let i = 0; i < cart.length; i++) {
       const item = JSON.parse(cart[i]);
       this.orderItems.push({
