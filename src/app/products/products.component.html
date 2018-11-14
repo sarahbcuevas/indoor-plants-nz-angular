@@ -66,7 +66,7 @@
                     {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}
                   </div>
                 </div>
-                <div class="row ml-3 mr-4 d-flex" *ngIf="!orderItem.product.forPickupOnly">
+                <div class="row ml-3 mr-4 d-flex" *ngIf="!orderItem?.product.forPickupOnly">
                   <div class="flex-grow-1">
                     Shipping Fee
                   </div>
@@ -74,7 +74,7 @@
                     {{ (orderItem?.product.deliveryFee * orderItem?.quantity / 100).toFixed(2) }}
                   </div>
                 </div>
-                <button type="button" class="close-btn pointer" aria-label="Remove" (click)="removeFromCart(orderItem.product._id)">
+                <button type="button" class="close-btn pointer" aria-label="Remove" (click)="removeFromCart(orderItem?.product._id)">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -138,18 +138,18 @@
             </div>
             <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products | async)?.length > 0 && !viewAsList">
               <div class="card border-light" *ngFor="let product of products | async">
-                <img class="card-img-top img-fluid" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image" [routerLink]="['/products', product._id]">
-                <img class="card-img-top img-fluid" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image" [routerLink]="['/products', product._id]">
-                <div class="card-badge" *ngIf="product.isBestseller">
+                <img class="card-img-top img-fluid" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image" [routerLink]="['/products', product?._id]">
+                <img class="card-img-top img-fluid" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image" [routerLink]="['/products', product?._id]">
+                <div class="card-badge" *ngIf="product?.isBestseller">
                   <span class="badge badge-secondary float-right">Bestseller</span>
                 </div>
-                <div class="card-badge" *ngIf="product.isSoldout">
+                <div class="card-badge" *ngIf="product?.isSoldout">
                   <span class="badge badge-danger float-right">Out of Stock</span>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-title text-truncate" [routerLink]="['/products', product._id]">{{ product.name }}</h6>
-                  <span class="price" [routerLink]="['/products', product._id]">{{ (product.price/100) | currency:'NZD' }}</span>
-                  <p class="card-text text-muted text-truncate" [routerLink]="['/products', product._id]">{{ product.description }}</p>
+                  <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>
+                  <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span>
+                  <p class="card-text text-muted text-truncate" [routerLink]="['/products', product?._id]">{{ product?.description }}</p>
                   <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
                 </div>
               </div>
@@ -158,22 +158,22 @@
             <div class="container" *ngIf="(products | async)?.length > 0 && viewAsList">
               <ul class="list-unstyled mx-md-1 mx-lg-5">
                 <li class="media my-5" *ngFor="let product of products | async">
-                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image">
-                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image">
+                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image">
+                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image">
                   <div class="media-body text-left">
                     <h5 class="my-0">
                       <div class="row">
-                        <span class="col-xs-12 col-sm-12 col-xl-auto pb-1">{{ product.name }}</span>
+                        <span class="col-xs-12 col-sm-12 col-xl-auto pb-1">{{ product?.name }}</span>
                         <div class="col-xs-12 col-sm-auto col-xl-auto pr-0">
-                          <span class="badge badge-secondary" *ngIf="product.isBestseller">Bestseller</span>
+                          <span class="badge badge-secondary" *ngIf="product?.isBestseller">Bestseller</span>
                         </div>
                         <div class="col-xs-12 col-sm-auto col-xl-auto">
-                          <span class="badge badge-danger" *ngIf="product.isSoldout">Out Of Stock</span>
+                          <span class="badge badge-danger" *ngIf="product?.isSoldout">Out Of Stock</span>
                         </div>
                       </div>
                     </h5>
-                    <small class="font-weight-light text-muted">{{ product.category[0].name }} | {{ (product.price/100) | currency:'NZD' }}</small>
-                    <p class="description mb-5 text-justify">{{ product.description }}</p>
+                    <small class="font-weight-light text-muted">{{ product?.category[0].name }} | {{ (product?.price/100) | currency:'NZD' }}</small>
+                    <p class="description mb-5 text-justify">{{ product?.description }}</p>
                     <div class="media-button">
                       <a class="btn btn-black text-light text-uppercase" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
                     </div>
