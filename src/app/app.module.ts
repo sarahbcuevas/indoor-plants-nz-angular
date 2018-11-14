@@ -35,6 +35,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { AdminContentComponent } from './admin-content/admin-content.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { AdminRegisterComponent } from './admin-register/admin-register.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { CheckoutComponent } from './checkout/checkout.component';
     ProductDetailComponent,
     ContactUsComponent,
     AdminContentComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    AdminRegisterComponent
   ],
   imports: [
     BrowserModule,

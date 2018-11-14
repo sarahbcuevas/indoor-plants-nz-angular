@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
         if (event instanceof NavigationEnd) {
           const url = event.url.split('/')[1];
           this.isAdmin = url.startsWith('admin');
-          this.isLogin = url.startsWith('login');
+          this.isLogin = url.startsWith('login') || url.startsWith('register');
           if (this.isAdmin) {
             this.getCurrentUser();
           }

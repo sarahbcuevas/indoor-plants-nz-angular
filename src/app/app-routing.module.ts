@@ -16,6 +16,7 @@ import { AdminCategoriesComponent } from './admin-categories/admin-categories.co
 import { AdminContentComponent } from './admin-content/admin-content.component';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 import { AdminProductDetailComponent } from './admin-product-detail/admin-product-detail.component';
+import { AdminRegisterComponent } from './admin-register/admin-register.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
     { path: 'admin/content', component: AdminContentComponent, canActivate: [AuthGuard] },
     { path: 'admin/products', component: AdminProductsComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
+    { path: 'register', component: AdminRegisterComponent },
     { path: 'checkout', component: CheckoutComponent },
     { path: 'contactus', component: ContactUsComponent },
     { path: 'products', component: ProductsComponent },
