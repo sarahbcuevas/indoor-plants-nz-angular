@@ -50,7 +50,7 @@ export class AdminCategoriesComponent implements OnInit {
     this.loading = true;
     const category: Category = this.categoryFormGroup.value;
     if (parentId !== null) {
-      category.parent._id = parentId;
+      category.parent = {_id: parentId, name: null, parent: null};
     }
     this.categoryService.addCategory(category)
       .pipe(finalize(() => {
