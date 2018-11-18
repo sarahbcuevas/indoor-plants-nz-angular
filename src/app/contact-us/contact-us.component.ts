@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ContactService } from '../_services/contact.service';
+import { ContentService } from '../_services/content.service';
 import { SocialmediaService } from '../_services/socialmedia.service';
 import { Contact } from '../_models/contact';
+import { Content } from '../_models/content';
 import { SocialMedia } from '../_models/socialmedia';
 import { SendMailService } from '../_services/send-mail.service';
 import { Message } from '../_models/message';
@@ -20,10 +22,12 @@ export class ContactUsComponent implements OnInit {
   loading: boolean;
   socialMedia: SocialMedia;
   contactDetails: Contact;
+  content: Content;
 
   constructor(
     private formBuilder: FormBuilder,
     private contactService: ContactService,
+    private contentService: ContentService,
     private sendMailService: SendMailService,
     private socialMediaService: SocialmediaService
   ) {
@@ -39,8 +43,7 @@ export class ContactUsComponent implements OnInit {
   ngOnInit() {
     this.getSocialMedia();
     this.getContactDetails();
-
-    // TODO: Update message on right side
+    this.getContent();
   }
 
   getContactDetails() {
@@ -50,6 +53,15 @@ export class ContactUsComponent implements OnInit {
           this.contactDetails = contact[0];
         })
       ).subscribe();
+  }
+
+  getContent() {
+    this.contentService.getContent()
+      .subscribe(
+        content => {
+          this.content = content[0];
+        }
+      );
   }
 
   getSocialMedia() {
