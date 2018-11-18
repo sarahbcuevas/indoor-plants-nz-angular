@@ -71,6 +71,7 @@ export class AdminContentComponent implements OnInit {
     this.editSocialMediaFormGroup = this.formBuilder.group({
       facebook: [''],
       instagram: [''],
+      trademe: [''],
       twitter: [''],
       youtube: ['']
     });
@@ -340,6 +341,7 @@ export class AdminContentComponent implements OnInit {
 
     this.editSocialMediaFormGroup.get('facebook').setValue(this.socialMedia.facebook);
     this.editSocialMediaFormGroup.get('instagram').setValue(this.socialMedia.instagram);
+    this.editSocialMediaFormGroup.get('trademe').setValue(this.socialMedia.trademe);
     this.editSocialMediaFormGroup.get('twitter').setValue(this.socialMedia.twitter);
     this.editSocialMediaFormGroup.get('youtube').setValue(this.socialMedia.youtube);
   }
