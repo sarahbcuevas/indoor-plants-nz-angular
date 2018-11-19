@@ -1,10 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Category } from '../_models/category';
 import { Contact } from '../_models/contact';
+import { SocialMedia } from '../_models/socialmedia';
 import { Product } from '../_models/product';
 import { CategoryService } from '../_services/category.service';
 import { ContactService } from '../_services/contact.service';
 import { ProductService } from '../_services/product.service';
+import { SocialmediaService } from '../_services/socialmedia.service';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, map } from 'rxjs/operators/';
 import { ActivatedRoute } from '@angular/router';
@@ -24,6 +26,7 @@ export class ProductsComponent implements OnInit {
   isProductsLoading = false;
   viewAsList = false;
   contactDetails: Contact;
+  socialMedia: SocialMedia;
 
   /** Add to Cart */
   selectedProduct: Product;
@@ -51,6 +54,7 @@ export class ProductsComponent implements OnInit {
     private categoryService: CategoryService,
     private contactService: ContactService,
     private productService: ProductService,
+    private socialMediaService: SocialmediaService,
     private route: ActivatedRoute,
     @Inject('BaseURL') public BaseURL
   ) { }
@@ -58,6 +62,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.getAllCategories();
     this.getContactDetails();
+    this.getSocialMedia();
     this.loadCart();
     this.route.queryParams.subscribe(params => {
       if (params['category'] === undefined || params['category'] === '' || params['category'] === null) {
@@ -294,6 +299,15 @@ export class ProductsComponent implements OnInit {
           this.contactDetails = contact[0];
         })
       ).subscribe();
+  }
+
+  getSocialMedia() {
+    this.socialMediaService.getSocialMedia()
+      .subscribe(
+        socialMedia => {
+          this.socialMedia = socialMedia[0];
+        }
+      );
   }
 
   hasSubCategory(id: string): boolean {
