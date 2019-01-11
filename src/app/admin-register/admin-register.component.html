@@ -68,6 +68,13 @@
           <p class="text-danger" *ngIf="!!registerUserFormGroup.controls.address.errors?.required && submitted">Address is required</p>
         </div>
       </div>
+      <div class="form-group row">
+        <label for="role" class="col-sm-4 col-form-label text-left">Role</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control form-control-sm" id="role" formControlName="role" placeholder="Role">
+          <p class="text-danger" *ngIf="!!registerUserFormGroup.controls.role.errors?.required && submitted">Role is required</p>
+        </div>
+      </div>
       <div class="row justify-content-center">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetForm()">Reset</button>&nbsp;
         <button type="button" class="btn btn-primary btn-sm" [disabled]="loading" (click)="createNewUser()">Create New User</button>
