@@ -41,7 +41,8 @@ export class AdminAccountsComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', Validators.required],
       contact: ['', Validators.required],
-      address: ['', Validators.required]
+      address: ['', Validators.required],
+      role: ['', Validators.required]
     });
   }
 

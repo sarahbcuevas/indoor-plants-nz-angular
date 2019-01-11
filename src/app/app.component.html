@@ -154,7 +154,7 @@
             <h5 class="head">Dashboard</h5>
             <ul class="list-group list-unstyled">
               <li class="list-group-item bg-transparent" [routerLink]="['/admin']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}">Overview</li>
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Admin Accounts</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" *ngIf="currentUser?.role === 'superuser'">Manage Admin Accounts</li>
               <li class="list-group-item bg-transparent" [routerLink]="['/admin/content']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Website Content</li>
             </ul>
             <h5 class="head mt-4">Products</h5>

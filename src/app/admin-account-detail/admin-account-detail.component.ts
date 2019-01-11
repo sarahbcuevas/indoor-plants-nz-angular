@@ -33,7 +33,8 @@ export class AdminAccountDetailComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', Validators.required],
       contact: ['', Validators.required],
-      address: ['', Validators.required]
+      address: ['', Validators.required],
+      role: ['', Validators.required]
     });
   }
 
@@ -71,6 +72,7 @@ export class AdminAccountDetailComponent implements OnInit {
     this.editUserFormGroup.get('email').setValue(this.user.email);
     this.editUserFormGroup.get('contact').setValue(this.user.contact);
     this.editUserFormGroup.get('address').setValue(this.user.address);
+    this.editUserFormGroup.get('role').setValue(this.user.role);
     this.editMode(false);
     this.submitted = false;
   }
