@@ -9,19 +9,10 @@ import { Contact } from '../_models/contact';
 import { Category } from '../_models/category';
 import { SocialMedia } from '../_models/socialmedia';
 import { Observable, of } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, tap, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { baseURL } from '../_helpers/baseurl';
-import { literal } from '@angular/compiler/src/output/output_ast';
-
-const URL = baseURL + '/uploads';
-
-interface UploadResponse {
-  success: boolean;
-  path: string;
-}
 
 @Component({
   selector: 'app-admin-content',
@@ -32,6 +23,7 @@ export class AdminContentComponent implements OnInit {
 
   submitted = false;
   loading: boolean;
+  isImageUploading: boolean;
   content: Content;
   contact: Contact;
   socialMedia: SocialMedia;
@@ -41,8 +33,6 @@ export class AdminContentComponent implements OnInit {
   editSocialMediaFormGroup: FormGroup;
   tempImage: string;
   categories: Observable<Category[]>;
-
-  public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'photo'});
 
   constructor(
     private contentService: ContentService,
@@ -82,9 +72,6 @@ export class AdminContentComponent implements OnInit {
     this.getContact();
     this.getSocialMedia();
     this.getAllCategories();
-    this.uploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
   }
 
   save(content: Content) {
@@ -182,27 +169,9 @@ export class AdminContentComponent implements OnInit {
     if (this.content !== null && this.content !== undefined) {
       content._id = this.content._id;
     }
-    // If a new image has been selected, upload image then set content jumbotronImage to the path of the uploaded image
-    if (content.jumbotronImage !== null && content.jumbotronImage !== '' && content.jumbotronImage !== undefined) {
-      this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-        const resp: UploadResponse = JSON.parse(response);
-        if (resp.success) {
-          // Delete old jumbotron image to conserve storage
-          if (this.content !== null && this.content !== undefined &&
-            this.content.jumbotronImage !== null && this.content.jumbotronImage !== '' && this.content.jumbotronImage !== undefined) {
-            const pathToDelete = this.content.jumbotronImage.replace('/images/', '');
-            this.uploadService.deleteUpload(pathToDelete).subscribe();
-          }
-          content.jumbotronImage = resp.path;
-        }
-        this.save(content);
-      };
-      this.uploader.uploadAll();
-    } else {
-      // If user did not select new image, retain the old image.
-      content.jumbotronImage = this.content.jumbotronImage;
-      this.save(content);
-    }
+
+    content.jumbotronImage = this.content.jumbotronImage;
+    this.save(content);
   }
 
   saveSocialMedia() {
@@ -344,5 +313,48 @@ export class AdminContentComponent implements OnInit {
     this.editSocialMediaFormGroup.get('trademe').setValue(this.socialMedia.trademe);
     this.editSocialMediaFormGroup.get('twitter').setValue(this.socialMedia.twitter);
     this.editSocialMediaFormGroup.get('youtube').setValue(this.socialMedia.youtube);
+  }
+
+  onFileChange(fileInput) {
+    const files = (<HTMLInputElement>document.getElementById('jumbotronImage')).files;
+    const file = files[0];
+    if (file === null) {
+      return console.log('No file selected.');
+    }
+    this.isImageUploading = true;
+    this.getSignedRequest(file);
+  }
+
+  getSignedRequest(file) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `${baseURL}/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          this.uploadFile(file, response.signedRequest, response.url);
+        } else {
+          console.log('Could not get signed URL.');
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  uploadFile(file, signedRequest, url) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', signedRequest);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          (<HTMLImageElement>document.getElementById('jumbotronPreview')).src = url;
+          this.content.jumbotronImage = url;
+        } else {
+          console.log('Could not upload file.');
+        }
+        this.isImageUploading = false;
+      }
+    };
+    xhr.send(file);
   }
 }

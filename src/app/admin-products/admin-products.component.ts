@@ -6,16 +6,16 @@ import { Product } from '../_models/product';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, filter, map } from 'rxjs/operators/';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
-import { HttpErrorResponse } from '@angular/common/http';
+// import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
+// import { HttpErrorResponse } from '@angular/common/http';
 import { baseURL } from '../_helpers/baseurl';
 
-const URL = baseURL + '/uploads';
+// const URL = baseURL + '/uploads';
 
-interface UploadResponse {
-  success: boolean;
-  path: string;
-}
+// interface UploadResponse {
+//   success: boolean;
+//   path: string;
+// }
 
 @Component({
   selector: 'app-admin-products',
@@ -28,6 +28,7 @@ export class AdminProductsComponent implements OnInit {
   noOfProducts: number;
   isProductsLoading: boolean;
   loading: boolean;
+  isImageUploading: boolean;
   submitted = false;
   products: Observable<Product[]>;
   categories: Observable<Category[]>;
@@ -41,6 +42,7 @@ export class AdminProductsComponent implements OnInit {
   isBestsellerChecked = true;
   isSoldoutChecked = true;
   isCategoryChecked: boolean[] = [];
+  productImageUrl: string;
 
   /** For sort by */
   SORT_BY_PRODUCT_A_TO_Z = 0;
@@ -49,7 +51,7 @@ export class AdminProductsComponent implements OnInit {
   SORT_BY_PRICE_HIGH_TO_LOW = 3;
   sortBy = this.SORT_BY_PRODUCT_A_TO_Z;
 
-  public uploader: FileUploader = new FileUploader({url: URL, itemAlias: 'photo'});
+  // public uploader: FileUploader = new FileUploader({url: URL, itemAlias: 'photo'});
 
   constructor(
     private productService: ProductService,
@@ -74,9 +76,9 @@ export class AdminProductsComponent implements OnInit {
     this.getAllProducts();
     this.getAllCategories();
 
-    this.uploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    };
+    // this.uploader.onAfterAddingFile = (file) => {
+    //   file.withCredentials = false;
+    // };
   }
 
   addProduct(product: Product) {
@@ -161,18 +163,19 @@ export class AdminProductsComponent implements OnInit {
             }
           }
           product.category = categories;
-          if (product.image) {
-            this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-              const resp: UploadResponse = JSON.parse(response);
-              if (resp.success) {
-                product.image = resp.path;
-              }
-              this.addProduct(product);
-            };
-            this.uploader.uploadAll();
-          } else {
+          // if (product.image) {
+          //   this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
+          //     const resp: UploadResponse = JSON.parse(response);
+          //     if (resp.success) {
+          //       product.image = resp.path;
+          //     }
+          //     this.addProduct(product);
+          //   };
+          //   this.uploader.uploadAll();
+          // } else {
+            product.image = this.productImageUrl;
             this.addProduct(product);
-          }
+          // }
         })
       ).subscribe();
   }
@@ -330,5 +333,51 @@ export class AdminProductsComponent implements OnInit {
 
   toggleView() {
     this.viewAsList = !this.viewAsList;
+  }
+
+  onFileChange(fileInput) {
+    const files = (<HTMLInputElement>document.getElementById('image')).files;
+    const file = files[0];
+    if (file === null) {
+      return console.log('No file selected.');
+    }
+    this.isImageUploading = true;
+    this.getSignedRequest(file);
+  }
+
+  getSignedRequest(file) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `${baseURL}/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    xhr.onreadystatechange = () => {
+      console.log('xhr: ', xhr);
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          console.log('response: ', response);
+          this.uploadFile(file, response.signedRequest, response.url);
+        } else {
+          console.log('Could not get signed URL.');
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  uploadFile(file, signedRequest, url) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', signedRequest);
+    xhr.onreadystatechange = () => {
+      console.log('PUT xhr: ', xhr);
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          (<HTMLImageElement>document.getElementById('productImage')).src = url;
+          this.productImageUrl = url;
+        } else {
+          console.log('Could not upload file.');
+        }
+        this.isImageUploading = false;
+      }
+    };
+    xhr.send(file);
   }
 }

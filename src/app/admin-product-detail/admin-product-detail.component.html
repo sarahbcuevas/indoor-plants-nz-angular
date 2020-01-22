@@ -59,7 +59,7 @@
           <div class="col-sm-7">
             <input type="text" id="image" formControlName="image" class="form-control form-control-sm" *ngIf="!isEditOn" value="{{ product.image }}">
             <input type="file" id="image" formControlName="image" class="form-control form-control-sm image-upload-input" *ngIf="isEditOn" ng2FileSelect [uploader]="uploader" accept="image/*">
-            <div><img class="card-img-top product-image mt-3" *ngIf="product.image" src="{{ BaseURL + product.image }}" alt="Plant image"></div>
+            <div><img class="card-img-top product-image mt-3" *ngIf="product.image" src="{{ product.image }}" alt="Plant image"></div>
             <button class="btn btn-link" *ngIf="isEditOn && product.image" (click)="removeImage()"><span aria-hidden="true">&times;</span> Remove Image</button>
           </div>
         </div>
