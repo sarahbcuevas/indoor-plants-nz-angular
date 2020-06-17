@@ -9,7 +9,7 @@ import { finalize, map, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { Location } from '@angular/common';
-import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
+import { FileUploader } from 'ng2-file-upload';
 import { baseURL } from '../_helpers/baseurl';
 
 const URL = baseURL + '/uploads';
