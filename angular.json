@@ -129,7 +129,7 @@
   "defaultProject": "my-app",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
     }
   },
   "cli": {
