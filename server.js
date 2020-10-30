@@ -9,7 +9,7 @@ app.use(express.static(__dirname + '/dist/my-app'));
 
 // CORS config
 var corsOptions = {
-  'origin': 'https://indoorplantsnz-assets.s3.us-east-2.amazonaws.com',
+  'origin': 'https://indoor-plants-nz-assets.s3.ap-southeast-2.amazonaws.com',
   'optionsSuccessStatus': 200,
   'credentials': true,
   'methods': ['GET', 'POST', 'PUT', 'DELETE'],

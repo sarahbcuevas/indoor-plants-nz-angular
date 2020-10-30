@@ -168,9 +168,13 @@ export class AdminContentComponent implements OnInit {
     // If there is an existing content, set new content id with the current id.
     if (this.content !== null && this.content !== undefined) {
       content._id = this.content._id;
+      content.jumbotronImage = this.content.jumbotronImage;
+    } else {
+      if (this.tempImage !== null && this.tempImage !== undefined) {
+        content.jumbotronImage = this.tempImage;
+      }
     }
 
-    content.jumbotronImage = this.content.jumbotronImage;
     this.save(content);
   }
 
@@ -326,11 +330,16 @@ export class AdminContentComponent implements OnInit {
   }
 
   getSignedRequest(file) {
+    console.log('File: ', file);
     const xhr = new XMLHttpRequest();
+    console.log('xhr: ', xhr);
     xhr.open('GET', `${baseURL}/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    console.log('xhr: ', xhr);
     xhr.onreadystatechange = () => {
+      console.log('xhr: ', xhr);
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
+          console.log('Response: ', xhr.responseText);
           const response = JSON.parse(xhr.responseText);
           this.uploadFile(file, response.signedRequest, response.url);
         } else {
@@ -343,16 +352,24 @@ export class AdminContentComponent implements OnInit {
 
   uploadFile(file, signedRequest, url) {
     const xhr = new XMLHttpRequest();
+    console.log('uploadFile xhr: ', xhr);
     xhr.open('PUT', signedRequest);
+    console.log('uploadFile xhr open: ', xhr);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           (<HTMLImageElement>document.getElementById('jumbotronPreview')).src = url;
-          this.content.jumbotronImage = url;
+          if (this.content !== undefined && this.content !== null) {
+            this.content.jumbotronImage = url;
+          } else {
+            this.tempImage = url;
+          }
         } else {
           console.log('Could not upload file.');
         }
         this.isImageUploading = false;
+        this.loading = false;
+        (<HTMLImageElement>document.getElementById('jumbotronImageUploadLoading')).style.visibility = 'hidden';
       }
     };
     xhr.send(file);
