@@ -137,7 +137,7 @@
             </div>
             <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products | async)?.length > 0 && !viewAsList">
               <div class="card border-light" *ngFor="let product of products | async">
-                <img class="card-img-top img-fluid" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image" [routerLink]="['/products', product?._id]">
+                <img class="card-img-top img-fluid" *ngIf="product?.image" src="{{ product?.image }}" alt="Plant image" [routerLink]="['/products', product?._id]">
                 <img class="card-img-top img-fluid" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image" [routerLink]="['/products', product?._id]">
                 <div class="card-badge" *ngIf="product?.isBestseller">
                   <span class="badge badge-secondary float-right">Bestseller</span>
@@ -157,7 +157,7 @@
             <div class="container" *ngIf="(products | async)?.length > 0 && viewAsList">
               <ul class="list-unstyled mx-md-1 mx-lg-5">
                 <li class="media my-5" *ngFor="let product of products | async">
-                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image">
+                  <img class="mr-3 align-self-center img-thumbnail" *ngIf="product?.image" src="{{ product?.image }}" alt="Plant image">
                   <img class="mr-3 align-self-center img-thumbnail" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image">
                   <div class="media-body text-left">
                     <h5 class="my-0">

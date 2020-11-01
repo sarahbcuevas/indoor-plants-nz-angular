@@ -1,7 +1,7 @@
 <div class="container-fluid bg-white pb-5">
   <div class="row ml-1 ml-md-3"><a class="btn btn-outline-secondary btn-sm" (click)="goBack()">Go Back</a></div>
   <div class="row justify-content-center mt-3">
-    <img class="card-img-top product-image mt-3 img-fluid" *ngIf="product?.image" src="{{ BaseURL + product?.image }}" alt="Plant image">
+    <img class="card-img-top product-image mt-3 img-fluid" *ngIf="product?.image" src="{{ product?.image }}" alt="Plant image">
     <img class="card-img-top product-image mt-3 img-fluid" *ngIf="!product?.image" src="../../assets/default-plant.jpg" alt="Plant image">
   </div>
   <div class="row justify-content-center pt-2">

@@ -370,12 +370,15 @@ export class AdminProductsComponent implements OnInit {
       console.log('PUT xhr: ', xhr);
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          (<HTMLImageElement>document.getElementById('productImage')).src = url;
           this.productImageUrl = url;
+          (<HTMLImageElement>document.getElementById('productImage')).src = url;
+          
         } else {
           console.log('Could not upload file.');
         }
         this.isImageUploading = false;
+        this.loading = false;
+        (<HTMLImageElement>document.getElementById('productImageUploadLoading')).style.visibility = 'hidden';
       }
     };
     xhr.send(file);
