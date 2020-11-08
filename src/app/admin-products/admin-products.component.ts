@@ -28,7 +28,7 @@ export class AdminProductsComponent implements OnInit {
   noOfProducts: number;
   isProductsLoading: boolean;
   loading: boolean;
-  isImageUploading: boolean;
+  isImageUploading = false;
   submitted = false;
   products: Observable<Product[]>;
   categories: Observable<Category[]>;
@@ -371,14 +371,10 @@ export class AdminProductsComponent implements OnInit {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           this.productImageUrl = url;
-          (<HTMLImageElement>document.getElementById('productImage')).src = url;
-          
         } else {
           console.log('Could not upload file.');
         }
         this.isImageUploading = false;
-        this.loading = false;
-        (<HTMLImageElement>document.getElementById('productImageUploadLoading')).style.visibility = 'hidden';
       }
     };
     xhr.send(file);
