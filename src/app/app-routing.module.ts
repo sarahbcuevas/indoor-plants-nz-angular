@@ -17,6 +17,7 @@ import { AdminContentComponent } from './admin-content/admin-content.component';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 import { AdminProductDetailComponent } from './admin-product-detail/admin-product-detail.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
+import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
     { path: 'admin/products', component: AdminProductsComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
     // { path: 'register', component: AdminRegisterComponent },
+    { path: 'admin/profile', component: AdminProfileComponent, canActivate: [AuthGuard] },
     { path: 'checkout', component: CheckoutComponent },
     { path: 'contactus', component: ContactUsComponent },
     { path: 'products', component: ProductsComponent },

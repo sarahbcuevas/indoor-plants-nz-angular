@@ -165,7 +165,7 @@
             </ul>
             <h5 class="head mt-4">Account</h5>
             <ul class="list-group list-unstyled">
-              <li class="list-group-item bg-transparent">Profile Settings</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/profile']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Profile Settings</li>
               <li class="list-group-item bg-transparent" (click)="logout()">Logout</li>
             </ul>
           </div>

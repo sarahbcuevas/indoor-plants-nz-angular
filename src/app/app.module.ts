@@ -36,6 +36,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { AdminContentComponent } from './admin-content/admin-content.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
+import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { AdminRegisterComponent } from './admin-register/admin-register.componen
     ContactUsComponent,
     AdminContentComponent,
     CheckoutComponent,
-    AdminRegisterComponent
+    AdminRegisterComponent,
+    AdminProfileComponent
   ],
   imports: [
     BrowserModule,

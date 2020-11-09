@@ -1,0 +1,84 @@
+<h6 class="sub-title text-uppercase mb-4">PROFILE DETAILS</h6>
+<div class="container mt-3">
+  <div *ngIf="user">
+    <div class="row justify-content-center">
+      <div class="alert alert-danger alert-dismissable fade show" *ngIf="editUserError" role="alert">
+        {{ editUserError }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <form [formGroup]="editProfileFormGroup">
+      <fieldset disabled>
+        <div class="form-group row justify-content-center">
+          <label for="username" class="col-sm-2 col-form-label">Username</label>
+          <div class="col-sm-7">
+            <input type="text" id="username" formControlName="username" class="form-control form-control-sm" value="{{ user.username }}">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.username.errors?.required && submitted && isEditOn">Username is required</p>
+          </div>
+        </div>
+        <div [formGroup]="passwordFormGroup">
+            <div class="form-group row justify-content-center">
+              <label for="password" class="col-sm-2 col-form-label text-left">Password</label>
+              <div class="col-sm-7">
+                <input type="password" class="form-control form-control-sm" id="password" formControlName="password" placeholder="Password">
+                <p class="text-danger" *ngIf="!!passwordFormGroup.controls.password.errors?.required && submitted">Password is required</p>
+              </div>
+            </div>
+            <div class="form-group row justify-content-center">
+              <label for="repeatPassword" class="col-sm-2 col-form-label text-left">Re-type Password</label>
+              <div class="col-sm-7">
+                <input type="password" class="form-control form-control-sm" id="repeatPassword" formControlName="repeatPassword" placeholder="Re-type Password">
+                <p class="text-danger" *ngIf="!!passwordFormGroup.controls.repeatPassword.errors?.required && submitted">Re-type password is required</p>
+                <p class="text-danger" *ngIf="!!passwordFormGroup.errors?.doesMatchPassword">Password does not match</p>
+              </div>
+            </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="name" class="col-sm-2 col-form-label">Name</label>
+          <div class="col-sm-7">
+            <input type="text" id="name" formControlName="name" class="form-control form-control-sm" value="{{ user.name }}">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.name.errors?.required && submitted && isEditOn">Name is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-7">
+            <input type="email" id="email" formControlName="email" class="form-control form-control-sm" value="{{ user.email }}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.email.errors?.pattern && !!editProfileFormGroup.controls.email.touched && isEditOn">Invalid email</p>
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.email.errors?.required && submitted && isEditOn">Email is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+          <div class="col-sm-7">
+            <input type="text" id="contact" formControlName="contact" class="form-control form-control-sm" value="{{ user.contact }}">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.contact.errors?.required && submitted && isEditOn">Contact is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="address" class="col-sm-2 col-form-label">Address</label>
+          <div class="col-sm-7">
+            <input type="text" id="address" formControlName="address" class="form-control form-control-sm" value="{{ user.address }}">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.address.errors?.required && submitted && isEditOn">Address is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <label for="role" class="col-sm-2 col-form-label">Role</label>
+          <div class="col-sm-7">
+            <input type="text" id="address" formControlName="role" class="form-control form-control-sm" value="{{ user.role }}">
+            <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.role.errors?.required && submitted && isEditOn">Role is required</p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <div class="row justify-content-center mt-4">
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="goBack()" *ngIf="!isEditOn">Go Back</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="cancel()" *ngIf="isEditOn">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="editMode(true)" *ngIf="!isEditOn"><i class="fas fa-pencil-alt"></i> Edit User Info</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="save()" *ngIf="isEditOn" [disabled]="loading || (!!editProfileFormGroup.controls.email.errors?.pattern && !!editProfileFormGroup.controls.email.touched)"><i class="fas fa-save"></i> Save User Info</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </div>
+</div>
