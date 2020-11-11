@@ -133,10 +133,6 @@ export class AdminProfileComponent implements OnInit {
     this.changePasswordLoading = true;
     var oldPassword = this.passwordFormGroup.get('oldPassword').value;
     var newPassword = this.passwordFormGroup.get('password').value;
-    var repeatNewPassword = this.passwordFormGroup.get('repeatPassword').value;
-    console.log('Old Password: ', oldPassword);
-    console.log('New Password: ', newPassword);
-    console.log('Repeat New Password: ', repeatNewPassword);
     this.userService.updateUserPassword(oldPassword, newPassword)
       .pipe(finalize(() => {
         this.changePasswordLoading = false;
@@ -148,7 +144,6 @@ export class AdminProfileComponent implements OnInit {
           this.resetPasswordForm();
         },
         err => {
-          console.log('Error: ', err);
           this.editPasswordError = 'Password is incorrect!';
         }
       );
