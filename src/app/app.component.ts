@@ -74,7 +74,9 @@ export class AppComponent implements OnInit {
       .subscribe(
         content => {
           this.content = content[0];
-          document.title = this.content.shopName;
+          if (this.content) {
+            document.title = this.content.shopName;
+          }
         }
       );
   }
