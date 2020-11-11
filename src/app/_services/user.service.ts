@@ -65,6 +65,19 @@ export class UserService {
       );
   }
 
+  /** Update user password */
+  updateUserPassword(oldPassword: String, newPassword: String) {
+    const password = {
+      'oldPassword': oldPassword,
+      'newPassword': newPassword
+    };
+    const url = this.usersUrl + 'changePassword';
+    return this.http.post(url, password)
+      .pipe(
+        tap((updated_user: User) => console.log(`updated password`))
+      );
+  }
+
   /** DELETE user by id */
   deleteUserById(id: string) {
     const url = this.usersUrl + id;

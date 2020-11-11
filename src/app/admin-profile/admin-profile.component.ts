@@ -17,9 +17,13 @@ export class AdminProfileComponent implements OnInit {
   passwordFormGroup: FormGroup;
   editProfileFormGroup: FormGroup;
   editUserError: string;
+  editPasswordError: string;
+  editPasswordSuccess: string;
   isEditOn: boolean;
   submitted: boolean;
+  submittedPassword: boolean;
   loading: boolean;
+  changePasswordLoading: boolean;
   isProfileLoading = false;
 
   constructor(
@@ -29,6 +33,7 @@ export class AdminProfileComponent implements OnInit {
     @Inject('BaseURL') public BaseURL
   ) {
     this.passwordFormGroup = this.formBuilder.group({
+      oldPassword: ['', Validators.required],
       password: ['', Validators.required],
       repeatPassword: ['', Validators.required]
     }, {
@@ -37,7 +42,6 @@ export class AdminProfileComponent implements OnInit {
     this.editProfileFormGroup = this.formBuilder.group({
       _id: ['', Validators.required],
       username: ['', Validators.required],
-      passwordFormGroup: this.passwordFormGroup,
       name: ['', Validators.required],
       email:['', Validators.required],
       contact: ['', Validators.required],
@@ -51,6 +55,7 @@ export class AdminProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProfile();
+    this.resetPasswordForm();
   }
 
   getProfile(): void {
@@ -59,7 +64,6 @@ export class AdminProfileComponent implements OnInit {
       .pipe(map(user => {
         this.user = user;
         this.cancel();
-        console.log('User: ', user);
       }))
       .subscribe();
   }
@@ -76,8 +80,6 @@ export class AdminProfileComponent implements OnInit {
   cancel() {
     this.editProfileFormGroup.get('_id').setValue(this.user._id);
     this.editProfileFormGroup.get('username').setValue(this.user.username);
-    this.editProfileFormGroup.get('passwordFormGroup').get('password').setValue(this.user.password);
-    this.editProfileFormGroup.get('passwordFormGroup').get('repeatPassword').setValue(this.user.password);
     this.editProfileFormGroup.get('name').setValue(this.user.name);
     this.editProfileFormGroup.get('email').setValue(this.user.email);
     this.editProfileFormGroup.get('contact').setValue(this.user.contact);
@@ -99,7 +101,6 @@ export class AdminProfileComponent implements OnInit {
     }
     this.loading = true;
     const user: User = this.editProfileFormGroup.value;
-    user.password = this.editProfileFormGroup.get('passwordFormGroup').get('password').value;
     this.userService.updateUser(user)
       .pipe(finalize(() => {
         this.loading = false;
@@ -112,6 +113,43 @@ export class AdminProfileComponent implements OnInit {
         },
         error => {
           this.editUserError = 'Username already exists';
+        }
+      );
+  }
+
+  resetPasswordForm() {
+    this.passwordFormGroup.get('oldPassword').setValue('');
+    this.passwordFormGroup.get('password').setValue('');
+    this.passwordFormGroup.get('repeatPassword').setValue('');
+    this.submittedPassword = false;
+  }
+
+  savePassword() {
+    this.submittedPassword = true;
+    this.editPasswordError = null;
+    if (this.passwordFormGroup.invalid) {
+      return;
+    }
+    this.changePasswordLoading = true;
+    var oldPassword = this.passwordFormGroup.get('oldPassword').value;
+    var newPassword = this.passwordFormGroup.get('password').value;
+    var repeatNewPassword = this.passwordFormGroup.get('repeatPassword').value;
+    console.log('Old Password: ', oldPassword);
+    console.log('New Password: ', newPassword);
+    console.log('Repeat New Password: ', repeatNewPassword);
+    this.userService.updateUserPassword(oldPassword, newPassword)
+      .pipe(finalize(() => {
+        this.changePasswordLoading = false;
+      }))
+      .subscribe(
+        data => {
+          this.editPasswordError = null;
+          this.editPasswordSuccess = "Successfully updated password!";
+          this.resetPasswordForm();
+        },
+        err => {
+          console.log('Error: ', err);
+          this.editPasswordError = 'Password is incorrect!';
         }
       );
   }

@@ -11,38 +11,21 @@
     </div>
     <form [formGroup]="editProfileFormGroup">
       <fieldset disabled>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="username" class="col-sm-2 col-form-label">Username</label>
           <div class="col-sm-7">
             <input type="text" id="username" formControlName="username" class="form-control form-control-sm" value="{{ user.username }}">
             <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.username.errors?.required && submitted && isEditOn">Username is required</p>
           </div>
         </div>
-        <div [formGroup]="passwordFormGroup">
-            <div class="form-group row justify-content-center">
-              <label for="password" class="col-sm-2 col-form-label text-left">Password</label>
-              <div class="col-sm-7">
-                <input type="password" class="form-control form-control-sm" id="password" formControlName="password" placeholder="Password">
-                <p class="text-danger" *ngIf="!!passwordFormGroup.controls.password.errors?.required && submitted">Password is required</p>
-              </div>
-            </div>
-            <div class="form-group row justify-content-center">
-              <label for="repeatPassword" class="col-sm-2 col-form-label text-left">Re-type Password</label>
-              <div class="col-sm-7">
-                <input type="password" class="form-control form-control-sm" id="repeatPassword" formControlName="repeatPassword" placeholder="Re-type Password">
-                <p class="text-danger" *ngIf="!!passwordFormGroup.controls.repeatPassword.errors?.required && submitted">Re-type password is required</p>
-                <p class="text-danger" *ngIf="!!passwordFormGroup.errors?.doesMatchPassword">Password does not match</p>
-              </div>
-            </div>
-        </div>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="name" class="col-sm-2 col-form-label">Name</label>
           <div class="col-sm-7">
             <input type="text" id="name" formControlName="name" class="form-control form-control-sm" value="{{ user.name }}">
             <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.name.errors?.required && submitted && isEditOn">Name is required</p>
           </div>
         </div>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="email" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-7">
             <input type="email" id="email" formControlName="email" class="form-control form-control-sm" value="{{ user.email }}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
@@ -50,21 +33,21 @@
             <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.email.errors?.required && submitted && isEditOn">Email is required</p>
           </div>
         </div>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="contact" class="col-sm-2 col-form-label">Contact</label>
           <div class="col-sm-7">
             <input type="text" id="contact" formControlName="contact" class="form-control form-control-sm" value="{{ user.contact }}">
             <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.contact.errors?.required && submitted && isEditOn">Contact is required</p>
           </div>
         </div>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="address" class="col-sm-2 col-form-label">Address</label>
           <div class="col-sm-7">
             <input type="text" id="address" formControlName="address" class="form-control form-control-sm" value="{{ user.address }}">
             <p class="text-danger" *ngIf="!!editProfileFormGroup.controls.address.errors?.required && submitted && isEditOn">Address is required</p>
           </div>
         </div>
-        <div class="form-group row justify-content-center">
+        <div class="form-group row justify-content-center align-items-center">
           <label for="role" class="col-sm-2 col-form-label">Role</label>
           <div class="col-sm-7">
             <input type="text" id="address" formControlName="role" class="form-control form-control-sm" value="{{ user.role }}">
@@ -78,7 +61,65 @@
       <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="cancel()" *ngIf="isEditOn">Cancel</button>
       <button type="button" class="btn btn-primary btn-sm mr-2" (click)="editMode(true)" *ngIf="!isEditOn"><i class="fas fa-pencil-alt"></i> Edit User Info</button>
       <button type="button" class="btn btn-primary btn-sm mr-2" (click)="save()" *ngIf="isEditOn" [disabled]="loading || (!!editProfileFormGroup.controls.email.errors?.pattern && !!editProfileFormGroup.controls.email.touched)"><i class="fas fa-save"></i> Save User Info</button>
+      <button type="button" class="btn btn-success btn-sm mr-2" *ngIf="!isEditOn" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
       <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordTitle">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissable fade show" *ngIf="editPasswordError" role="alert">
+          {{ editPasswordError }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="alert alert-success alert-dismissable fade show" *ngIf="editPasswordSuccess" role="alert">
+          {{ editPasswordSuccess }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form  [formGroup]="passwordFormGroup">
+          <div class="form-group row align-items-top">
+            <label for="oldPassword" class="col-sm-4 col-form-label text-left">Old Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="oldPassword" formControlName="oldPassword" placeholder="Old Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.oldPassword.errors?.required && submittedPassword">Old Password is required</p>
+            </div>
+          </div>
+          <div class="form-group row align-items-top">
+            <label for="password" class="col-sm-4 col-form-label text-left">New Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="password" formControlName="password" placeholder="New Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.password.errors?.required && submittedPassword">New Password is required</p>
+            </div>
+          </div>
+          <div class="form-group row align-items-top">
+            <label for="repeatPassword" class="col-sm-4 col-form-label text-left">Repeat New Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="repeatPassword" formControlName="repeatPassword" placeholder="Repeat New Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.repeatPassword.errors?.required && submittedPassword">Repeat New Password is required</p>
+              <p class="text-danger" *ngIf="!!passwordFormGroup.errors?.doesMatchPassword">Password does not match</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetPasswordForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="changePasswordLoading" (click)="savePassword()">Change Password</button>
+            <img *ngIf="changePasswordLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
