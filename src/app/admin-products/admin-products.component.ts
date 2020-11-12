@@ -329,6 +329,7 @@ export class AdminProductsComponent implements OnInit {
     this.createProductFormGroup.reset();
     this.submitted = false;
     this.createProductError = null;
+    this.productImageUrl = null;
   }
 
   toggleView() {
