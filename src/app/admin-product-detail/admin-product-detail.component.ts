@@ -51,6 +51,7 @@ export class AdminProductDetailComponent implements OnInit {
       name: ['', Validators.required],
       category: ['', Validators.required],
       description: [''],
+      stock: [0],
       price: [0, Validators.required],
       deliveryFee: [0],
       forPickupOnly: [false],
@@ -124,6 +125,7 @@ export class AdminProductDetailComponent implements OnInit {
     this.editProductFormGroup.get('name').setValue(this.product.name);
     this.editProductFormGroup.get('category').setValue(this.product.category[0]);
     this.editProductFormGroup.get('description').setValue(this.product.description);
+    this.editProductFormGroup.get('stock').setValue(this.product.stock);
     this.editProductFormGroup.get('price').setValue((this.product.price / 100).toFixed(2));
     this.editProductFormGroup.get('deliveryFee').setValue((this.product.deliveryFee / 100).toFixed(2));
     this.editProductFormGroup.get('forPickupOnly').setValue(this.product.forPickupOnly);

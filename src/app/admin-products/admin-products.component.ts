@@ -63,6 +63,7 @@ export class AdminProductsComponent implements OnInit {
       name: ['', Validators.required],
       category: ['', Validators.required],
       description: [''],
+      stock: [0],
       price: [0, Validators.required],
       deliveryFee: [0],
       forPickupOnly: [false],

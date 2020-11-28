@@ -142,15 +142,15 @@
                 <div class="card-badge" *ngIf="product?.isBestseller">
                   <span class="badge badge-secondary float-right">Bestseller</span>
                 </div>
-                <div class="card-badge" *ngIf="product?.isSoldout">
+                <div class="card-badge" *ngIf="product?.isSoldout || product?.stock === 0">
                   <span class="badge badge-danger float-right">Out of Stock</span>
                 </div>
                 <div class="card-body">
                   <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>
                   <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span>
                   <p class="card-text text-muted text-truncate" [routerLink]="['/products', product?._id]">{{ product?.description }}</p>
-                  <a class="btn btn-black text-uppercase text-white disabled" *ngIf="product?.isSoldout">Add to Cart</a>
-                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="!product?.isSoldout">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white disabled" *ngIf="product?.isSoldout || product?.stock === 0">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="!product?.isSoldout && product?.stock > 0">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -276,13 +276,16 @@
       </div>
       <div class="modal-body">
         <h6 class="text-uppercase text-center mb-2">{{ selectedProduct?.name }}</h6>
-        <div class="form-group text-center">
+        <div class="form-group text-center mb-1">
           <label for="quantity" class="mr-1">Quantity</label>
-          <input type="number" name="quantity" min="1" max="5" [(ngModel)]="noOfItemsCart" value="1" class="text-center">
+          <input type="number" name="quantity" min="1" [max]="selectedProduct?.stock" [(ngModel)]="noOfItemsCart" value="1" class="text-center">
+        </div>
+        <div class="text-center">
+          <span class="text-muted"><em>Stock: {{ selectedProduct?.stock }}</em></span>
         </div>
       </div>
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-black text-uppercase" (click)="addToCart()" [disabled]="noOfItemsCart < 1 || noOfItemsCart > 5">Add to Cart</button>
+        <button type="button" class="btn btn-black text-uppercase" (click)="addToCart()" [disabled]="noOfItemsCart < 1 || noOfItemsCart > selectedProduct?.stock">Add to Cart</button>
       </div>
     </div>
   </div>

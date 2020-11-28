@@ -38,6 +38,13 @@
           </div>
         </div>
         <div class="form-group row justify-content-center">
+          <label for="price" class="col-sm-2 col-form-label">No. of Stocks</label>
+          <div class="col-sm-7">
+            <input type="text" id="stock" formControlName="stock" class="form-control form-control-sm" value="{{ product.stock }}">
+            <p class="text-danger" *ngIf="!!editProductFormGroup.controls.stock.errors?.required && submitted">Stock is required</p>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
           <label for="price" class="col-sm-2 col-form-label">Price</label>
           <div class="col-sm-7">
             <input type="text" id="price" formControlName="price" class="form-control form-control-sm" value="{{ (product.price / 100).toFixed(2) }}">

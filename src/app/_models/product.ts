@@ -10,6 +10,7 @@ export class Product {
   deliveryFee: number;
   forPickupOnly: boolean;
   image: string;
+  stock: number;
   isBestseller: boolean;
   isSoldout: boolean;
 }
