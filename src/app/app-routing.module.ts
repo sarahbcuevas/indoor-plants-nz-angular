@@ -8,6 +8,7 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ProductsComponent } from './products/products.component';
 import { LoginComponent } from './login/login.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { TrackOrderComponent } from './track-order/track-order.component';
 
 import { AdminOverviewComponent } from './admin-overview/admin-overview.component';
 import { AdminAccountsComponent } from './admin-accounts/admin-accounts.component';
@@ -19,6 +20,7 @@ import { AdminProductDetailComponent } from './admin-product-detail/admin-produc
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -33,6 +35,8 @@ const routes: Routes = [
     // { path: 'register', component: AdminRegisterComponent },
     { path: 'admin/profile', component: AdminProfileComponent, canActivate: [AuthGuard] },
     { path: 'checkout', component: CheckoutComponent },
+    { path: 'order-confirmation', component: OrderConfirmationComponent },
+    { path: 'track-order', component: TrackOrderComponent },
     { path: 'contactus', component: ContactUsComponent },
     { path: 'products', component: ProductsComponent },
     { path: 'products/:id', component: ProductDetailComponent},

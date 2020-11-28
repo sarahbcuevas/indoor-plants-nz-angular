@@ -87,19 +87,19 @@
                 </div>
               </div>
               <div class="row justify-content-center mt-4">
-                <button type="button" class="btn btn-outline-dark btn-sm text-uppercase" [routerLink]="['/checkout']" [disabled]="true">
+                <button type="button" class="btn btn-dark btn-sm text-uppercase" [routerLink]="['/checkout']">
                   <i class="fas fa-sign-out-alt"></i> Proceed to Checkout
                 </button>
               </div>
-              <div class="row justify-content-center">
+              <!-- <div class="row justify-content-center">
                 <p class="text-danger text-center">* Order Checkout Is Under Construction</p>
-              </div>
+              </div> -->
             </div>
 
         </div>
         <div class="col-12 col-md-8 col-lg-9 pt-4">
             <h6 class="sub-title text-uppercase mb-4">Products</h6>
-            <div class="alert alert-danger alert-dismissible text-center" role="alert">
+            <!-- <div class="alert alert-danger alert-dismissible text-center" role="alert">
               <strong>'Add to Cart' Is Under Construction!</strong>
               In the mean time, you may place your orders thru:
               email: <a class="alert-link">{{ contactDetails?.email }}</a>.
@@ -107,7 +107,7 @@
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
+            </div> -->
             <div class="container mb-4">
                 <div class="row justify-content-between align-items-center flex-column-reverse flex-lg-row">
                     <div class="col-md-12 col-lg-4 text-lg-left mt-3 mt-lg-0">
@@ -149,7 +149,8 @@
                   <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>
                   <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span>
                   <p class="card-text text-muted text-truncate" [routerLink]="['/products', product?._id]">{{ product?.description }}</p>
-                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white disabled" *ngIf="product?.isSoldout">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="!product?.isSoldout">Add to Cart</a>
                 </div>
               </div>
             </div>

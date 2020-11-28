@@ -3,6 +3,58 @@
   line-height: 1.2;
   margin-bottom: .5rem;
   text-align: left;
-  font-weight: 300;
-  letter-spacing: .1rem;
+  font-weight: 400;
+  letter-spacing: 0rem;
+}
+
+.btn-disabled {
+   pointer-events: none;
+   cursor: default;
+   color: white;
+   background-color: #28a745;
+}
+
+.paypal-img {
+  width: 60px;
+}
+
+.paypal-logo-img {
+  width: 15px;
+}
+
+.lined { 
+  display: flex; 
+  flex-direction: row;
+  font-size: 0.85em;
+  line-height: 1;
+  text-align: center;
+  color: #737373;
+} 
+
+.lined:before,
+.lined:after {
+  content: ""; 
+  flex: 1 1; 
+  border-bottom: 0.025px solid #e6e6e6; 
+  margin: 0.5em 1em;
+}
+
+.card {
+  width: 100%;
+  margin: 0em;
+}
+
+.card-header {
+  background-color: white;
+}
+
+.card-body,
+.card-body:hover {
+  background-color: #fafafa;
+  padding: 25px 40px;
+}
+
+.fa-paypal {
+  font-size: 8rem;
+  color: #b4b4b4;
 }

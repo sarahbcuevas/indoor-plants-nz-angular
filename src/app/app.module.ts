@@ -37,6 +37,8 @@ import { AdminContentComponent } from './admin-content/admin-content.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
+import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
+import { TrackOrderComponent } from './track-order/track-order.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { AdminProfileComponent } from './admin-profile/admin-profile.component';
     AdminContentComponent,
     CheckoutComponent,
     AdminRegisterComponent,
-    AdminProfileComponent
+    AdminProfileComponent,
+    OrderConfirmationComponent,
+    TrackOrderComponent
   ],
   imports: [
     BrowserModule,

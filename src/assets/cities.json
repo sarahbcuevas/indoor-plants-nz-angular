@@ -1,0 +1,131 @@
+[
+    {
+        "country": "New Zealand",
+        "regions": [
+            {
+                "name": "Auckland",
+                "cities": [
+                    "Auckland",
+                    "Devonport",
+                    "Waiuku"
+                ]
+            },
+            {
+                "name": "Bay Of Plenty",
+                "cities": [
+                    "Rotorua",
+                    "Tauranga"
+                ]
+            },
+            {
+                "name": "Canterbury",
+                "cities": [
+                    "Akaroa",
+                    "Christchurch",
+                    "Lyttelton",
+                    "Timaru"
+                ]
+            },
+            {
+                "name": "Gisborne",
+                "cities": [
+                    "Gisborne"
+                ]
+            },
+            {
+                "name": "Hawke's Bay",
+                "cities": [
+                    "Hastings",
+                    "Napier"
+                ]
+            },
+            {
+                "name": "Manawatu-Wanganui",
+                "cities": [
+                    "Pahiatua",
+                    "Palmerston North",
+                    "Taihape",
+                    "Wanganui"
+                ]
+            },
+            {
+                "name": "Marlborough",
+                "cities": [
+                    "Blenheim",
+                    "Picton"
+                ]
+            },
+            {
+                "name": "Nelson",
+                "cities": [
+                    "Nelson"
+                ]
+            },
+            {
+                "name": "Northland",
+                "cities": [
+                    "Kaitaia",
+                    "Russell"
+                ]
+            },
+            {
+                "name": "Otago",
+                "cities": [
+                    "Alexandra",
+                    "Dunedin",
+                    "Kaitangata",
+                    "Oamaru"
+                ]
+            },
+            {
+                "name": "Southland",
+                "cities": [
+                    "Invercargill"
+                ]
+            },
+            {
+                "name": "Taranaki",
+                "cities": [
+                    "Hawera",
+                    "Kapuni",
+                    "New Plymouth",
+                    "Stratford"
+                ]
+            },
+            {
+                "name": "Tasman",
+                "cities": [
+                    "Tasman"
+                ]
+            },
+            {
+                "name": "Waikato",
+                "cities": [
+                    "Hamilton",
+                    "Paeroa",
+                    "Te Aroha",
+                    "Tokoroa",
+                    "Waihi"
+                ]
+            },
+            {
+                "name": "Wellington",
+                "cities": [
+                    "Lower Hutt",
+                    "Masterton",
+                    "Porirua",
+                    "Upper Hutt",
+                    "Wellington"
+                ]
+            },
+            {
+                "name": "West Coast",
+                "cities": [
+                    "Greymouth",
+                    "Hokitika",
+                    "Westport"
+                ]
+            }
+        ]
+    }
+]
