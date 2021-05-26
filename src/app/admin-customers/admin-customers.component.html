@@ -1,0 +1,165 @@
+<h6 class="admin-title mb-3">Manage Customers</h6>
+<div class="container">
+  <div class="row d-flex justify-content-between align-items-center">
+    <div class="col-sm-8 col-lg-7 col-xl-5 search input-group pl-0">
+      <label for="searchInput" class="sr-only">Search Customer</label>
+      <input type="search" class="form-control form-control-sm border-right-0" id="searchInput" aria-describedby="searchCustomer" placeholder="Search by Name" [(ngModel)]="searchText">
+      <span class="input-group-append">
+          <div class="input-group-text bg-transparent"><i class="fas fa-search"></i></div>
+      </span>
+    </div>
+    <div class="col-3 text-right">
+      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addNewCustomerModal"><i class="fas fa-plus"></i> Create New Customer</button>
+    </div>
+  </div>
+  <div class="row mt-3 bg-white">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Contact</th>
+            <th scope="col">Location</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of customers | async | filter : searchText">
+            <th scope="row" [routerLink]="['/admin/customers', customer._id]" routerLinkActive="router-link-active" routerLink="/admin/customers/{{customer._id}}" routerLinkActive="router-link-active" class="underline pointer">{{ customer.firstname }} {{ customer.lastname }}</th>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.contact }}</td>
+            <td>{{ customer.city }}, {{ customer.region }}</td>
+            <td class="text-danger"><i class="fas fa-minus-circle pointer" (click)="selectCustomer(customer._id, customer.firstname, customer.lastname)" data-toggle="modal" data-target="#deleteCustomerModal"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="justify-content-center" *ngIf="isCustomersLoading">
+    <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving customers
+  </div>
+  <div class="justify-content-center" *ngIf="(customers | async)?.length === 0">
+    No customers available.
+  </div>
+</div>
+
+<!-- Create New Customer Modal -->
+<div class="modal fade" id="addNewCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addNewCustomerTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addNewCustomerTitle">Create New Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetForm()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissable fade show" *ngIf="createCustomerError" role="alert">
+          {{ createCustomerError }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form  [formGroup]="createCustomerFormGroup">
+            <div class="form-group row">
+                <label for="firstname" class="col-sm-4 col-form-label text-left">Firstname</label>
+                <div class="col-sm-8">
+                <input type="text" class="form-control form-control-sm" id="firstname" formControlName="firstname" placeholder="Firstname">
+                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.firstname.errors?.required && submitted">Firstname is required</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="lastname" class="col-sm-4 col-form-label text-left">Lastname</label>
+                <div class="col-sm-8">
+                <input type="text" class="form-control form-control-sm" id="lastname" formControlName="lastname" placeholder="Lastname">
+                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.lastname.errors?.required && submitted">Lastname is required</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="email" class="col-sm-4 col-form-label text-left">Email</label>
+                <div class="col-sm-8">
+                <input type="email" class="form-control form-control-sm" id="email" formControlName="email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.email.errors?.pattern && submitted">Invalid email</p>
+                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.email.errors?.required && submitted">Email is required</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="contact" class="col-sm-4 col-form-label text-left">Contact</label>
+                <div class="col-sm-8">
+                <input type="text" class="form-control form-control-sm" id="contact" formControlName="contact" placeholder="Contact Number">
+                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
+                </div>
+            </div>
+            <div class="form-group row mb-4 justify-content-center">
+                <div class="col-12">
+                    <select class="form-control form-control-sm" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
+                        <option value="" disabled selected>Select Country</option>
+                        <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.country.errors?.required && submitted">Country is required</p>
+                </div>
+            </div>
+             <div class="form-group row mb-4 justify-content-center">
+                <div class="col-12">
+                    <select class="form-control form-control-sm" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
+                        <option value="" disabled selected>Select Region</option>
+                        <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.region.errors?.required && submitted">Region is required</p>
+                </div>
+            </div>
+            <div class="form-group row mb-4 justify-content-center">
+                <div class="col-12">
+                    <select class="form-control form-control-sm" id="city" formControlName="city" (change)="selectCity($event.target.value)">
+                        <option value="" disabled selected>Select City</option>
+                        <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.city.errors?.required && submitted">City is required</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="address" class="col-sm-4 col-form-label text-left">Address</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control form-control-sm" id="address" formControlName="address" placeholder="Address">
+                    <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.address.errors?.required && submitted">Address is required</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="postal" class="col-sm-4 col-form-label text-left">Postal</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control form-control-sm" id="postal" formControlName="postal" placeholder="Postal">
+                    <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.postal.errors?.required && submitted">Postal is required</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetForm()">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" [disabled]="loading" (click)="createNewCustomer()">Create New Customer</button>
+                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Customer Modal -->
+<div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCustomerTitle">Delete Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete customer <strong>{{ selectedCustomerName }}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="deleteCustomer()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

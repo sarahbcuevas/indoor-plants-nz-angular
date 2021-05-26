@@ -127,7 +127,7 @@
 
 <div class="wrapper" *ngIf="isAdmin">
     <div class="header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark py-2">
+      <nav class="navbar navbar-expand-md navbar-dark bg-gradient py-2">
         <div class="navbar-brand">
           <h6 class="title mb-0">{{ content?.shopName }}</h6>
         </div>
@@ -153,23 +153,29 @@
           <div class="col-12 col-md-4 col-lg-3 text-left dashboard pt-3 pl-lg-4 bg-light collapse" id="sidebar">
             <h5 class="head">Dashboard</h5>
             <ul class="list-group list-unstyled">
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}">Overview</li>
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" *ngIf="currentUser?.role === 'superuser'">Manage Admin Accounts</li>
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/content']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Website Content</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}"><i class="fas fa-home text-muted mr-1"></i> Overview</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" *ngIf="currentUser?.role === 'superuser'"><i class="fas fa-users-cog text-muted mr-1"></i> Admin Accounts</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/content']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-info-circle text-muted mr-1"></i> Website Content</li>
             </ul>
-            <h5 class="head mt-4">Products</h5>
+            <h5 class="head mt-4">Store</h5>
             <ul class="list-group list-unstyled">
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/categories']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Categories</li>
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/products']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Manage Products</li>
-              <li class="list-group-item bg-transparent">Manage Orders</li>
+              <li class="list-group-item bg-transparent"><i class="fas fa-download text-muted mr-1"></i> Orders</li>
+                <ul class="list-group list-unstyled sub-list mb-1">
+                  <li class="list-group-item bg-transparent sub-list-item" [routerLink]="['/admin/orders']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}">All orders</li>
+                  <li class="list-group-item bg-transparent sub-list-item" [routerLink]="['/admin/orders']" [queryParams]="{archived: 'true'}" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Archived</li>
+                </ul>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/categories']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fab fa-elementor text-muted mr-1"></i> Categories</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/products']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-tags text-muted mr-1"></i> Products</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/customers']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-user text-muted mr-1"></i> Customers</li>
             </ul>
             <h5 class="head mt-4">Account</h5>
             <ul class="list-group list-unstyled">
-              <li class="list-group-item bg-transparent" [routerLink]="['/admin/profile']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Profile Settings</li>
-              <li class="list-group-item bg-transparent" (click)="logout()">Logout</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/settings']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-cog text-muted mr-1"></i> Settings</li>
+              <li class="list-group-item bg-transparent" [routerLink]="['/admin/profile']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-cog text-muted mr-1"></i> Profile Settings</li>
+              <li class="list-group-item bg-transparent" (click)="logout()"><i class="fas fa-sign-out-alt text-muted mr-1"></i> Logout</li>
             </ul>
           </div>
-          <div class="col-12 col-md-8 col-lg-9 pt-4">
+          <div class="col-12 col-md-8 col-lg-9 pt-4 bg-gray">
             <router-outlet></router-outlet>
           </div>
         </div>

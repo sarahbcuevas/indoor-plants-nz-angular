@@ -16,7 +16,7 @@
     </clipPath>
   </defs>
   
-  <circle cx="300" cy="300" r="280" fill="darkgray" />
+  <circle cx="300" cy="300" r="280" fill="lightblue" />
   <circle cx="300" cy="230" r="100" />
   <circle cx="300" cy="550" r="190" clip-path="url(#circular-border)" />
 </svg>

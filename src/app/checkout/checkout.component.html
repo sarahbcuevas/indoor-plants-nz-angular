@@ -30,8 +30,11 @@
           <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
             <div class="container">
               <div class="row border justify-content-around align-items-center" *ngFor="let orderItem of orderItems">
-                <div class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
+                <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
                   <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
+                </div>
+                <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
+                  <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                 </div>
                 <div class="col text-left">
                   <span class="h5">{{ orderItem?.product.name }}</span>
@@ -85,12 +88,10 @@
         <h4>Customer Information</h4>
         <div class="container align-items-center justify-content-center">
           <div class="row mt-5 justify-content-center align-items-center">
-            <div class="col-12 col-md-10 pl-0 pr-0">
+            <div class="col-12 col-md-10 col-lg-9 col-xl-7 pl-0 pr-0">
               <div class="border pt-1 pb-2">
                 <h6>Express Checkout</h6>
-                <button type="button" class="btn btn-warning pl-5 pr-5">
-                  <img src="../../assets/paypal1.svg" class="paypal-logo-img">&nbsp;<img src="../../assets/paypal2.svg" class="paypal-img">
-                </button>
+                <div id="paypalCheckoutButtons" #paypalCheckoutButtons class="ml-5 mr-5 mt-3 mb-2"></div>
               </div>
             </div>
           </div>
@@ -232,7 +233,7 @@
                       <span class="text-muted">Ship to</span>
                     </div>
                     <div class="col d-flex text-left">
-                      <span>{{ userInfoFormGroup.controls.address.value }}, {{ userInfoFormGroup.controls.city.value }}, {{ userInfoFormGroup.controls.region.value }}, {{ userInfoFormGroup.controls.country.value }} {{ userInfoFormGroup.controls.postal.value }}</span>
+                      <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
                     </div>
                     <div class="col-2 text-left">
                       <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
@@ -272,15 +273,16 @@
                       <div class="col d-flex text-left">
                         <li>
                           <div class="form-check">
-                            <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="shipping" [value]="true">
+                            <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="shipping" [value]="true" [attr.disabled]="isShippingAllowed ? null: false">
                             <label class="form-check-label" for="shipping">
                               Standard Shipping (2-4 days)
                             </label>
+                            <span class="text-danger" *ngIf="!isShippingAllowed"><br>Shipping is not allowed since a product that is "For Pick Up Only" has been selected.</span>
                           </div>
                         </li>
                       </div>
                       <div class="col-2 text-left">
-                        <h6 class="mb-0">{{ totalShippingFee }} NZD</h6>
+                        <h6 class="mb-0" *ngIf="isShippingAllowed">{{ (totalShippingFee/100).toFixed(2) }} NZD</h6>
                       </div>
                     </div>
                   </ul>
@@ -344,7 +346,7 @@
                       <span class="text-muted">Method</span>
                     </div>
                     <div class="col d-flex text-left">
-                      <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping (2-4 days) <strong>{{ totalShippingFee }} NZD</strong></span>
+                      <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping (2-4 days) <strong>{{ (totalShippingFee/100).toFixed(2) }} NZD</strong></span>
                       <span *ngIf="!shippingFormGroup.controls.forShipping.value">For Pick Up</span>
                     </div>
                     <div class="col-2 text-left">
@@ -372,7 +374,7 @@
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                               <li>
                                 <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="cash" formControlName="paymentMethod" value="cash">
+                                  <input class="form-check-input" type="radio" name="paymentMethod" id="cash" formControlName="paymentMethod" value="Cash">
                                   <label class="form-check-label text-dark" for="cash">
                                     <strong>Cash on Delivery / Cash on Pickup</strong>
                                   </label>
@@ -388,7 +390,7 @@
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                               <li>
                                 <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" formControlName="paymentMethod" value="paypal">
+                                  <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" formControlName="paymentMethod" value="Paypal">
                                   <label class="form-check-label" for="paypal">
                                     <img src="../../assets/paypal1.svg" class="paypal-logo-img">&nbsp;<img src="../../assets/paypal2.svg" class="paypal-img">
                                   </label>
@@ -415,7 +417,7 @@
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                               <li>
                                 <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="bank_deposit" formControlName="paymentMethod" value="bank_deposit">
+                                  <input class="form-check-input" type="radio" name="paymentMethod" id="bank_deposit" formControlName="paymentMethod" value="Bank Deposit">
                                   <label class="form-check-label text-dark" for="bank_deposit">
                                     <strong>Bank Deposit</strong>
                                   </label>
@@ -426,7 +428,8 @@
                         </div>
                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                           <div class="card-body">
-                            Available payment method: BPI, BDO, Gcash
+                            An invoice will be emailed upon acknowledgement of this order.<br>
+                            <span class="text-muted regular-text"><em>Please make sure you input correct email.</em></span>
                           </div>
                         </div>
                       </div>
@@ -453,7 +456,7 @@
                           <h5 class="mb-0 text-left">
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="forShipping" id="shipping" formControlName="sameAsShippingAddress" [value]="true">
+                                <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="true">
                                 <label class="form-check-label text-dark" for="shipping">
                                   <strong>Same as shipping address</strong>
                                 </label>
@@ -467,7 +470,7 @@
                           <h5 class="mb-0 text-left">
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                               <div class="form-check">
-                                <input class="form-check-input" type="radio" name="forShipping" id="shipping" formControlName="sameAsShippingAddress" [value]="false">
+                                <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="false">
                                 <label class="form-check-label text-dark" for="shipping">
                                   <strong>Use different billing address</strong>
                                 </label>
@@ -542,7 +545,8 @@
           </div>
           <div class="row mt-md-2 justify-content-center">
             <div class="col-12 col-md-10">
-              <button type="button" class="btn btn-success float-right" (click)="completeOrder()" [disabled]="!billingFormGroup.controls.sameAsShippingAddress.value && !billingAddressFormGroup.valid">Complete Order</button>
+              <button type="button" class="btn btn-success float-right" (click)="completeOrder()" [disabled]="!billingFormGroup.controls.sameAsShippingAddress.value && !billingAddressFormGroup.valid" *ngIf="paymentFormGroup.controls.paymentMethod.value != Payment_Method.PAYPAL">Complete Order</button>
+              <div id="paypalCompleteOrderButton" #paypalCompleteOrderButton class="float-right"></div>
             </div>
           </div>
           <div class="row justify-content-center">

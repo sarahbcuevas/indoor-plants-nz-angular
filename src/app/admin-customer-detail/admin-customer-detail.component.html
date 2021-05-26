@@ -1,0 +1,135 @@
+<h6 class="sub-title text-uppercase mb-4">CUSTOMER DETAIL</h6>
+<div class="container mt-3">
+  <div *ngIf="customer">
+    <div class="row justify-content-center">
+      <div class="alert alert-danger alert-dismissable fade show" *ngIf="editCustomerError" role="alert">
+        {{ editCustomerError }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <form  [formGroup]="editCustomerFormGroup">
+        <fieldset disabled>
+            <div class="form-group row justify-content-center">
+                <label for="firstname" class="col-sm-2 col-form-label text-left">Firstname</label>
+                <div class="col-sm-7">
+                <input type="text" class="form-control form-control-sm" id="firstname" formControlName="firstname">
+                <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.firstname.errors?.required && submitted">Firstname is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <label for="lastname" class="col-sm-2 col-form-label text-left">Lastname</label>
+                <div class="col-sm-7">
+                <input type="text" class="form-control form-control-sm" id="lastname" formControlName="lastname">
+                <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.lastname.errors?.required && submitted">Lastname is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <label for="email" class="col-sm-2 col-form-label text-left">Email</label>
+                <div class="col-sm-7">
+                <input type="email" class="form-control form-control-sm" id="email" formControlName="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.email.errors?.pattern && submitted">Invalid email</p>
+                <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.email.errors?.required && submitted">Email is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <label for="contact" class="col-sm-2 col-form-label text-left">Contact</label>
+                <div class="col-sm-7">
+                <input type="text" class="form-control form-control-sm" id="contact" formControlName="contact">
+                <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+              <label for="company" class="col-sm-2 col-form-label text-left">Company</label>
+              <div class="col-sm-7">
+              <input type="text" class="form-control form-control-sm" id="company" formControlName="company">
+            </div>
+          </div>
+            <div class="form-group row mb-4 justify-content-center">
+                <label for="country" class="col-sm-2 col-form-label text-left">Country</label>
+                <div class="col-sm-7">
+                    <select class="form-control form-control-sm" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
+                        <option value="" disabled selected>Select Country</option>
+                        <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.country.errors?.required && submitted">Country is required</p>
+                </div>
+            </div>
+            <div class="form-group row mb-4 justify-content-center">
+                <label for="region" class="col-sm-2 col-form-label text-left">Region</label>
+                <div class="col-sm-7">
+                    <select class="form-control form-control-sm" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
+                        <option value="" disabled selected>Select Region</option>
+                        <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.region.errors?.required && submitted">Region is required</p>
+                </div>
+            </div>
+            <div class="form-group row mb-4 justify-content-center">
+                <label for="city" class="col-sm-2 col-form-label text-left">City</label>
+                <div class="col-sm-7">
+                    <select class="form-control form-control-sm" id="city" formControlName="city" (change)="selectCity($event.target.value)">
+                        <option value="" disabled selected>Select City</option>
+                        <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                    </select>
+                    <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.city.errors?.required && submitted">City is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <label for="address" class="col-sm-2 col-form-label text-left">Address</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control form-control-sm" id="address" formControlName="address">
+                    <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.address.errors?.required && submitted">Address is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <label for="postal" class="col-sm-2 col-form-label text-left">Postal</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control form-control-sm" id="postal" formControlName="postal">
+                    <p class="text-danger" *ngIf="!!editCustomerFormGroup.controls.postal.errors?.required && submitted">Postal is required</p>
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+              <div class="col">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="subscribe" formControlName="subscribe">
+                    <label class="form-check-label" for="subscribe">
+                      Customer accepts email marketing
+                    </label>
+                  </div>
+            </div>
+          </div>
+        </fieldset>
+    </form>
+    <div class="row justify-content-center mt-4">
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="goBack()" *ngIf="!isEditOn">Go Back</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-2" (click)="cancel()" *ngIf="isEditOn">Cancel</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="editMode(true)" *ngIf="!isEditOn"><i class="fas fa-pencil-alt"></i> Edit Customer Info</button>
+      <button type="button" class="btn btn-primary btn-sm mr-2" (click)="save()" *ngIf="isEditOn" [disabled]="loading || (!!editCustomerFormGroup.controls.email.errors?.pattern && !!editCustomerFormGroup.controls.email.touched)"><i class="fas fa-save"></i> Save Customer Info</button>
+      <button type="button" class="btn btn-danger btn-sm" *ngIf="!isEditOn" data-toggle="modal" data-target="#deleteCustomerModal"><i class="fas fa-trash-alt"></i> Delete Customer</button>
+      <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+    </div>
+  </div>
+</div>
+
+<!-- Delete Customer Modal -->
+<div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCustomerTitle">Delete Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete customer <strong>{{ customer?.firstname }} {{ customer?.lastname }}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

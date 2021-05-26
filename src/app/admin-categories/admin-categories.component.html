@@ -1,6 +1,6 @@
-<h6 class="sub-title text-uppercase mb-4">Manage Categories</h6>
+<h6 class="admin-title mb-3">Manage Categories</h6>
 
-<div class="container px-lg-5 d-flex justify-content-between">
+<div class="container bg-white border pb-3 px-lg-5 d-flex justify-content-between">
   <div class="categories mx-sm-3 mx-md-5 flex-grow-1 text-left">
     <ul class="list-group list-unstyled accordion" *ngFor="let category of categories | async">
       <li class="list-group-item bg-transparent" *ngIf="category.parent===null">
@@ -86,7 +86,7 @@
       </form>
   </div>
 </div>
-<button type="button" class="btn btn-danger btn-sm add-btn my-5" *ngIf="(categories | async)?.length > 0" data-toggle="modal" data-target="#deleteAllCategoriesModal"><i class="fas fa-trash-alt"></i> Delete All Categories</button>
+<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(categories | async)?.length > 0" data-toggle="modal" data-target="#deleteAllCategoriesModal"><i class="fas fa-trash-alt"></i> Delete All Categories</button>
 
 <!-- Delete Category Modal -->
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryTitle" aria-hidden="true">

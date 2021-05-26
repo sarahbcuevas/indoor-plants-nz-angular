@@ -12,5 +12,4 @@ export class Product {
   image: string;
   stock: number;
   isBestseller: boolean;
-  isSoldout: boolean;
 }

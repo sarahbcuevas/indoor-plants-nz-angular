@@ -56,8 +56,7 @@ export class AdminProductDetailComponent implements OnInit {
       deliveryFee: [0],
       forPickupOnly: [false],
       image: [''],
-      isBestseller: [false],
-      isSoldout: [false]
+      isBestseller: [false]
     });
   }
 
@@ -130,7 +129,6 @@ export class AdminProductDetailComponent implements OnInit {
     this.editProductFormGroup.get('deliveryFee').setValue((this.product.deliveryFee / 100).toFixed(2));
     this.editProductFormGroup.get('forPickupOnly').setValue(this.product.forPickupOnly);
     this.editProductFormGroup.get('isBestseller').setValue(this.product.isBestseller);
-    this.editProductFormGroup.get('isSoldout').setValue(this.product.isSoldout);
     // this.editProductFormGroup.get('image').setValue(this.product.image);
     this.editMode(false);
   }

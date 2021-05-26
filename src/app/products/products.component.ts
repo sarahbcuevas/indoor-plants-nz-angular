@@ -10,7 +10,7 @@ import { SocialmediaService } from '../_services/socialmedia.service';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, map } from 'rxjs/operators/';
 import { ActivatedRoute } from '@angular/router';
-import { OrderItem } from '../_models/order_item';
+import { OrderItem } from '../_models/order';
 
 @Component({
   selector: 'app-products',
@@ -237,7 +237,7 @@ export class ProductsComponent implements OnInit {
               if ((!this.isBestsellerChecked || !this.filterBestseller) && product.isBestseller) {
                 isFiltered = false;
               }
-              if ((!this.isSoldoutChecked || !this.filterOutOfStock) && product.isSoldout) {
+              if ((!this.isSoldoutChecked || !this.filterOutOfStock) && product.stock <= 0) {
                 isFiltered = false;
               }
               if (!this.filterForPickUpOnly && product.forPickupOnly) {

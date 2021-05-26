@@ -19,6 +19,13 @@ import { AdminProductsComponent } from './admin-products/admin-products.componen
 import { AdminProductDetailComponent } from './admin-product-detail/admin-product-detail.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { AdminCustomersComponent } from './admin-customers/admin-customers.component';
+import { AdminCustomerDetailComponent } from './admin-customer-detail/admin-customer-detail.component';
+import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
+import { AdminOrderDetailsComponent } from './admin-order-details/admin-order-details.component';
+import { AdminOrderCreateComponent } from './admin-order-create/admin-order-create.component';
+import { AdminOrderEditComponent } from './admin-order-edit/admin-order-edit.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
@@ -31,9 +38,16 @@ const routes: Routes = [
     { path: 'admin/categories', component: AdminCategoriesComponent, canActivate: [AuthGuard] },
     { path: 'admin/content', component: AdminContentComponent, canActivate: [AuthGuard] },
     { path: 'admin/products', component: AdminProductsComponent, canActivate: [AuthGuard] },
+    { path: 'admin/customers', component: AdminCustomersComponent, canActivate: [AuthGuard] },
+    { path: 'admin/customers/:id', component: AdminCustomerDetailComponent, canActivate: [AuthGuard] },
+    { path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AuthGuard] },
+    { path: 'admin/orders/create', component: AdminOrderCreateComponent, canActivate: [AuthGuard] },
+    { path: 'admin/orders/:id', component: AdminOrderDetailsComponent, canActivate: [AuthGuard] },
+    { path: 'admin/orders/:id/edit', component: AdminOrderEditComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
     // { path: 'register', component: AdminRegisterComponent },
     { path: 'admin/profile', component: AdminProfileComponent, canActivate: [AuthGuard] },
+    { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [AuthGuard] },
     { path: 'checkout', component: CheckoutComponent },
     { path: 'order-confirmation', component: OrderConfirmationComponent },
     { path: 'track-order', component: TrackOrderComponent },

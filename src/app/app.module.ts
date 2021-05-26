@@ -15,12 +15,15 @@ import { ContactService } from './_services/contact.service';
 import { ContentService } from './_services/content.service';
 import { SendMailService } from './_services/send-mail.service';
 import { SocialmediaService } from './_services/socialmedia.service';
+import { CustomerService } from './_services/customer.service';
+import { OrderService } from './_services/order.service';
 import { ProductService } from './_services/product.service';
 import { UserService } from './_services/user.service';
 import { UploadService } from './_services/upload.service';
 import { AdminOverviewComponent } from './admin-overview/admin-overview.component';
 import { AdminAccountsComponent } from './admin-accounts/admin-accounts.component';
 import { FilterPipe } from './_helpers/filter.pipe';
+import { OrderFilterPipe } from './_helpers/filterOrder.pipe';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import * as $ from 'jquery';
@@ -39,6 +42,13 @@ import { AdminRegisterComponent } from './admin-register/admin-register.componen
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 import { TrackOrderComponent } from './track-order/track-order.component';
+import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
+import { AdminCustomersComponent } from './admin-customers/admin-customers.component';
+import { AdminCustomerDetailComponent } from './admin-customer-detail/admin-customer-detail.component';
+import { AdminOrderDetailsComponent } from './admin-order-details/admin-order-details.component';
+import { AdminOrderCreateComponent } from './admin-order-create/admin-order-create.component';
+import { AdminOrderEditComponent } from './admin-order-edit/admin-order-edit.component';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +64,7 @@ import { TrackOrderComponent } from './track-order/track-order.component';
     AdminProductsComponent,
     AdminProductDetailComponent,
     FilterPipe,
+    OrderFilterPipe,
     ProductDetailComponent,
     ContactUsComponent,
     AdminContentComponent,
@@ -61,7 +72,14 @@ import { TrackOrderComponent } from './track-order/track-order.component';
     AdminRegisterComponent,
     AdminProfileComponent,
     OrderConfirmationComponent,
-    TrackOrderComponent
+    TrackOrderComponent,
+    AdminOrdersComponent,
+    AdminCustomersComponent,
+    AdminCustomerDetailComponent,
+    AdminOrderDetailsComponent,
+    AdminOrderCreateComponent,
+    AdminOrderEditComponent,
+    AdminSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +101,8 @@ import { TrackOrderComponent } from './track-order/track-order.component';
     ProductService,
     UserService,
     UploadService,
+    CustomerService,
+    OrderService,
     { provide: 'BaseURL', useValue: baseURL }
   ],
   bootstrap: [AppComponent]

@@ -1,4 +1,4 @@
-<h6 class="sub-title text-uppercase mb-4">PROFILE DETAILS</h6>
+<h6 class="admin-title mb-3">Profile Details</h6>
 <div class="container mt-3">
   <div *ngIf="user">
     <div class="row justify-content-center">
@@ -9,7 +9,7 @@
         </button>
       </div>
     </div>
-    <form [formGroup]="editProfileFormGroup">
+    <form [formGroup]="editProfileFormGroup" class="bg-white pt-2">
       <fieldset disabled>
         <div class="form-group row justify-content-center align-items-center">
           <label for="username" class="col-sm-2 col-form-label">Username</label>

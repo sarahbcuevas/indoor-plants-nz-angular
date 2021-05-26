@@ -1,8 +1,8 @@
-<h6 class="sub-title text-uppercase mb-4">Manage Products</h6>
+<h6 class="admin-title mb-3">Manage Products</h6>
 
 <div class="container">
   <div class="row d-flex justify-content-between align-items-center">
-    <div class="col-sm-8 col-lg-7 col-xl-5">
+    <div class="col-sm-8 col-lg-7 col-xl-5 pl-0">
       <div class="row no-gutters">
         <div class="search input-group col mr-1">
           <label for="searchInput" class="sr-only">Search Product</label>
@@ -20,14 +20,14 @@
         </div>
       </div>
     </div>
-    <div class="col-3">
+    <div class="col-3 text-right">
       <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addNewProductModal"><i class="fas fa-plus"></i> Create New Product</button>
     </div>
   </div>
   <div class="row mt-3">
     <span class="results-text text-uppercase text-nowrap">Showing all {{ noOfProducts }} results</span>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 bg-white">
     <div class="table-responsive" *ngIf="viewAsList">
       <table class="table table-hover">
         <thead>
@@ -37,7 +37,6 @@
             <th scope="col">Price</th>
             <th scope="col">Stock</th>
             <th scope="col">Bestseller</th>
-            <th scope="col">Out of Stock</th>
             <th scope="col">Delete</th>
           </tr>
         </thead>
@@ -48,7 +47,6 @@
             <td>{{ (product.price/100) | currency:'NZD' }}</td>
             <td class="text-truncate" style="max-width: 150px;">{{ product.stock }}</td>
             <td><i class="far fa-check-square" *ngIf="product.isBestseller"></i></td>
-            <td><i class="far fa-check-square" *ngIf="product.isSoldout"></i></td>
             <td class="text-danger"><i class="fas fa-minus-circle pointer" (click)="selectProduct(product._id, product.name)" data-toggle="modal" data-target="#deleteProductModal"></i></td>
           </tr>
         </tbody>
@@ -62,7 +60,7 @@
         <div class="card-badge" *ngIf="product.isBestseller">
           <span class="badge badge-secondary float-right">Bestseller</span>
         </div>
-        <div class="card-badge" *ngIf="product.isSoldout">
+        <div class="card-badge" *ngIf="product.stock <= 0">
           <span class="badge badge-danger float-right">Out of Stock</span>
         </div>
         <div class="card-body">
@@ -77,13 +75,13 @@
 
   </div>
 </div>
-<div class="justify-content-center" *ngIf="isProductsLoading">
+<div class="justify-content-center bg-white" *ngIf="isProductsLoading">
   <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving products
 </div>
-<div class="justify-content-center" *ngIf="(products | async)?.length === 0">
+<div class="justify-content-center bg-white" *ngIf="(products | async)?.length === 0">
   No products available.
 </div>
-<button type="button" class="btn btn-danger btn-sm add-btn my-5" *ngIf="(products | async)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
+<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products | async)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
 
 <!-- Create New Product Modal -->
 <div class="modal fade" id="addNewProductModal" tabindex="-1" role="dialog" aria-labelledby="addNewProductTitle" aria-hidden="true">
@@ -167,10 +165,6 @@
             <div class="col form-check">
               <input class="form-check-input" type="checkbox" id="isBestseller" formControlName="isBestseller">
               <label class="form-check-label" for="checkBox">Is Bestseller?</label>
-            </div>
-            <div class="col form-check">
-              <input class="form-check-input" type="checkbox" id="isSoldout" formControlName="isSoldout">
-              <label class="form-check-label" for="checkBox">Is Soldout?</label>
             </div>
           </div>
           <div class="modal-footer">

@@ -1,0 +1,555 @@
+<div class="pb-3">
+
+  <h6 class="admin-title mb-2 pt-1 pb-2">Order Details</h6>
+
+  <div class="alert alert-warning fade show ml-1 mr-1 text-left" role="alert" *ngIf="editOrderErrorDesc || editOrderErrorTitle">
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="col">
+          <strong>{{ editOrderErrorTitle }}</strong><br>
+          {{ editOrderErrorDesc }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning fade show ml-1 mr-1 text-left" role="alert" *ngIf="isFulfillItemsError">
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="col">
+          <strong>Is still pending for customer's payment</strong><br>
+          To make sure, please wait for the payment to be successful before fulfilling this order.<br>
+          <button type="button" class="btn btn-link pl-0 pt-0 btn-sm" (click)="fulfillOrder()">Continue fulfilling items</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-success fade show ml-1 mr-1 text-left" role="alert" *ngIf="isNewOrder && !editOrderErrorTitle && !editOrderErrorDesc">
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="col">
+          <strong>Order #{{ order?.code }} created</strong><br>
+          <button type="button" class="btn btn-link pl-0 pt-0 btn-sm" [routerLink]="['/admin/orders/create']">Create another order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning fade show ml-1 mr-1 mb-0 text-left" role="alert" *ngIf="isOrderCanceled()">
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="col">
+          <strong>This order has been canceled!</strong><br>
+          <button type="button" class="btn btn-link pl-0 pt-0 btn-sm" (click)="undoCancelOrder()">Undo cancel order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warning fade show ml-1 mr-1 mb-0 text-left" role="alert" *ngIf="isOrderArchived()">
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="col">
+          <strong>This order has been archived!</strong><br>
+          <button type="button" class="btn btn-link pl-0 pt-0 btn-sm" (click)="unarchiveOrder()">Undo archive order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-2">
+    <div class="row text-left">
+      <div class="col-sm-12 col-md ml-1 mr-1 pl-0 pr-0 bg-white border">
+        <div class="container">
+          <div class="row border">
+            <div class="col pt-3">
+              <div class="container">
+              <div class="row">
+                <div class="col pl-0">
+                  <span class="title">Order Details</span>
+                  <span class="title text-muted"> / #{{ order?.code }}</span>
+                  <span class="badge-pill badge-danger ml-3" *ngIf="isOrderCanceled()">Order canceled</span>
+                  <span class="badge-pill badge-warning ml-3" *ngIf="isOrderArchived()">Order archived</span>
+                </div>
+                <div class="col pr-0 text-right text-blue">
+                  <span class="order-id">Tracking No.: {{ order?._id }}</span>
+                </div>
+              </div>
+              <div class="row mt-3 mb-3">
+                <div class="col">
+                  <i class="fas fa-clipboard-check text-blue mr-2"></i><span class="status"><strong> {{ order?.fulfillmentStatus }}</strong></span>
+                </div>
+                <div class="col text-right">
+                  <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      More Actions
+                    </button>
+                    <div class="dropdown-menu regular-text" aria-labelledby="dropdownMenuButton1">
+                      <button class="dropdown-item btn btn-link btn-sm" *ngIf="!isOrderCanceled() && !isOrderArchived()"><i class="far fa-copy mr-2"></i> Duplicate</button>
+                      <button class="dropdown-item btn btn-link btn-sm" data-toggle="modal" data-target="#cancelOrderModal" *ngIf="order?.orderStatus == orderStatuses.OPEN"><i class="fas fa-times mr-2"></i> Cancel order</button>
+                      <button class="dropdown-item btn btn-link btn-sm" *ngIf="isOrderCanceled()" (click)="undoCancelOrder()"><i class="fas fa-undo mr-2"></i> Undo cancel order</button>
+                      <button class="dropdown-item btn btn-link btn-sm" *ngIf="!isOrderCanceled() && !isOrderArchived()" [routerLink]="['/admin/orders', order?._id, 'edit']"><i class="fas fa-pencil-alt mr-2"></i> Edit order</button>
+                      <button class="dropdown-item btn btn-link btn-sm" *ngIf="!isOrderArchived()" (click)="archiveOrder()"><i class="fas fa-archive mr-2"></i> Archive order</button>
+                      <button class="dropdown-item btn btn-link btn-sm" *ngIf="isOrderArchived()" (click)="unarchiveOrder()"><i class="fas fa-archive mr-2"></i> Unarchive order</button>
+                      <button class="dropdown-item btn btn-link btn-sm" data-toggle="modal" data-target="#deleteOrderModal"><i class="fas fa-trash-alt mr-2"></i> Permanently delete order</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="row border">
+            <div class="col">
+              <div class="container mt-3 align-items-center justify-content-center">
+                <div class="row border pt-4 pb-4 justify-content-center align-items-center" *ngIf="orderItems?.length === 0">
+                  <div class="col-12">No products in the cart.</div>
+                </div>
+                <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
+                  <div class="container">
+                    <div class="row justify-content-around align-items-center mb-1 pb-1 border-bottom" *ngFor="let orderItem of orderItems; let i=index">
+                      <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                        <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
+                      </div>
+                      <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                        <img src="../../assets/default-plant.jpg" class="img-thumbnail">
+                      </div>
+                      <div class="col text-left">
+                        <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
+                        <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em></span>
+                      </div>
+                      <div class="col text-center">
+                        <span class="text-muted ml-2">{{ (orderItem?.product.price/100).toFixed(2) }} x {{ orderItem?.quantity }}</span>
+                      </div>
+                      <div class="col-3 align-middle text-right">NZD {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center mt-2">
+                  <div class="col-12 col-md-7 col-lg-7 offset-md-5 offset-lg-5 pr-0">
+                    <table class="table table-borderless text-right regular-text">
+                      <tbody>
+                        <tr>
+                          <td scope="row" class="regular-text pt-1 pb-1">Sub-total</td>
+                          <td class="pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
+                        </tr>
+                        <tr>
+                          <td scope="row" class="regular-text pt-1 pb-1 text-right">
+                            <span class="text-blue">Discount</span>
+                            <div class="row text-right" *ngIf="order?.discount">
+                              <span class="col text-muted"><em>{{ order?.discount.reason }}</em></span>
+                            </div>
+                          </td>
+                          <td class="pt-1 pb-1" *ngIf="!order?.discount">--</td>
+                          <td class="pt-1 pb-1" *ngIf="order?.discount">
+                            ( 
+                            <span *ngIf="order?.discount?.mode == Discount_Method.DOLLAR">NZ$ </span>
+                            {{ order?.discount?.discount }}
+                            <span *ngIf="order?.discount?.mode == Discount_Method.PERCENT"> %</span>
+                            )
+                          </td>
+                        </tr>
+                        <tr>
+                          <td scope="row" class="regular-text pt-1 pb-1">
+                            <span class="text-blue">Shipping Fee</span>
+                            <div class="row text-right" *ngIf="order?.shipping?.customName">
+                              <span class="col text-muted"><em>{{ order?.shipping?.customName }}</em></span>
+                            </div>
+                          </td>
+                          <td class="pt-1 pb-1" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP">NZD {{ (shippingFee/100).toFixed(2) }}</td>
+                          <td class="pt-1 pb-1 text-muted" *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><em>(For pickup)</em></td>
+                        </tr>
+                        <tr>
+                          <td scope="row" class="h5 pt-1 pb-1">Total</td>
+                          <td class="h6 pt-1 pb-1">NZD {{ (totalAmount/100).toFixed(2) }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row border justify-content-around align-items-center pt-3 pb-3" *ngIf="order?.paymentStatus == Payment_Status.PENDING">
+            <div class="col">
+              <span class="h6 align-middle"><i class="fas fa-credit-card text-blue mr-3"></i> Accept Payment</span>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-primary" (click)="markAsPaid()" [disabled]="isOrderCanceled() || isOrderArchived()">Mark as paid</button>
+            </div>
+          </div>
+          <div class="row border justify-content-around align-items-center pt-3 pb-3 bg-light-gray" *ngIf="order?.paymentStatus == Payment_Status.PAID">
+            <div class="col">
+              <span><i class="fas fa-check text-green mr-3"></i> Payment of NZ${{ (totalAmount/100).toFixed(2) }} was accepted.</span>
+            </div>
+            <div class="col-auto text-right">
+              <button class="btn btn-link text-blue" [disabled]="isOrderCanceled() || isOrderArchived()">Refund</button>
+            </div>
+          </div>
+          <div class="row border pt-3 pb-3 bg-light-gray" *ngIf="order?.fulfillmentStatus == Fulfillment_Status.FULFILLED">
+            <div class="col">
+              <span *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP"><i class="fas fa-check text-green mr-3"></i> All items were shipped.</span>
+              <span *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><i class="fas fa-check text-green mr-3"></i> All items were fulfilled and ready for pick up.</span>
+            </div>
+          </div>
+          <div class="row border justify-content-around align-items-center pt-3 pb-3" *ngIf="order?.fulfillmentStatus == Fulfillment_Status.UNFULFILLED">
+            <div class="col">
+              <span class="h6 align-middle" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP"><i class="fas fa-truck text-blue mr-3"></i> Ship Order</span>
+              <span class="h6 align-middle" *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><i class="fas fa-people-carry text-blue mr-3"></i> Ready for Pickup</span>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-primary" (click)="fulfillItems()" [disabled]="isOrderCanceled() || isOrderArchived()">Fulfill items</button>
+            </div>
+          </div>
+          <div class="row bg-gray">
+            <div class="col pb-3"></div>
+          </div>
+          <div class="row border pt-3 pb-4">
+            <div class="col">
+              <div class="container">
+                <div class="row">
+                  <div class="col pl-0">
+                    <span class="title">Additional Details</span>
+                  </div>
+                </div>
+                <div class="row regular-text">
+                  <form [formGroup]="additionalDetailsFormGroup" class="col pl-0 pr-0">
+                    <fieldset>
+                      <div class="row justify-content-center mt-3">
+                        <label for="notes" class="col text-left mb-0">Notes</label>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <input type="text" class="form-control form-control-sm" id="notes" formControlName="notes">
+                        </div>
+                      </div>
+                      <div class="row mt-3 justify-content-center">
+                        <label for="tags" class="col text-left mb-0">Tags</label>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <input type="text" class="form-control form-control-sm" id="tags" formControlName="tags">
+                        </div>
+                      </div>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 ml-1 mr-1 pl-0 pr-0">
+        <div class="container bg-white regular-text border">
+          <div class="row">
+            <div class="col pt-3">
+              <span class="title">Customer</span>
+            </div>
+          </div>
+          <div class="row mt-2 mb-3">
+            <div class="col-4">
+              <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail profile border-0 pl-0">
+            </div>
+            <div class="col text-muted text-right regular-text">
+              <i class="fas fa-clipboard-check mr-2"></i>
+              <span *ngIf="(customerOrders | async)?.length > 0">{{ (customerOrders | async)?.length }} orders</span>
+              <span *ngIf="(customerOrders | async)?.length <= 0">No orders</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span class="h6 text-blue">{{ customer?.firstname }} {{ customer?.lastname}}</span>
+            </div>
+          </div>
+          <div class="row border-bottom pt-1 pb-3">
+            <div class="col">
+              No account
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col">
+              <span class="h6">Order Contact</span>
+            </div>
+            <div class="col text-right text-blue">
+              <button class="btn btn-link btn-sm text-blue pt-0 pb-0 pr-0" data-toggle="modal" data-target="#editOrderContactModal" [disabled]="isOrderCanceled() || isOrderArchived()">Edit</button>
+            </div>
+          </div>
+          <div class="row border-bottom pt-3 pb-3">
+            <div class="col-12">
+              <span *ngIf="customer?.email">{{ customer?.email }}</span><span *ngIf="!customer?.email">No email provided</span>
+            </div>
+            <div class="col-12">
+              {{ customer?.contact }}
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col">
+              <span class="h6">Shipping address</span>
+            </div>
+            <div class="col text-right text-blue">
+              <button class="btn btn-link btn-sm text-blue pt-0 pb-0 pr-0" data-toggle="modal" data-target="#editShippingAddressModal" [disabled]="isOrderCanceled() || isOrderArchived()">Edit</button>
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col" *ngIf="customer?.address">
+              <span *ngIf="customer?.company">{{ customer?.company }}<br></span>
+              {{ customer?.address }}<br>
+              {{ customer?.city }}, {{ customer?.region }}<br>
+              {{ customer?.country }} {{ customer?.postal }}<br>
+            </div>
+            <div class="col pb-4 border-bottom" *ngIf="!customer?.address">
+              <span>No shipping address provided.</span>
+            </div>
+          </div>
+          <div class="row mt-2 pb-4 border-bottom" *ngIf="customer?.address">
+            <div class="col">
+              <span class="text-blue">View map</span>
+            </div>
+          </div>
+          <div class="row pt-3">
+            <div class="col">
+              <span class="h6">Billing address</span>
+            </div>
+          </div>
+          <div class="row pt-3 mb-3">
+            <div class="col">
+              <span>Same as shipping address</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Edit Shipping Address -->
+<div class="modal fade" id="editShippingAddressModal" tabindex="-1" role="dialog" aria-labelledby="editShippingAddressTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered pl-1 pr-1" role="document">
+    <form [formGroup]="editShippingAddressFormGroup" class="container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editShippingAddressTitle">Edit Shipping Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body regular-text">
+          <div class="container pl-2 pr-2 text-left">
+            <div class="row align-items-center" *ngIf="editShippingAddressError">
+              <div class="col">
+                  <div class="alert alert-warning fade show mb-1 text-center" role="alert">
+                      <strong>Update shipping address failed!</strong> {{ editShippingAddressError }}
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Company
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                  <input type="text" formControlName="company" name="company" class="custom-input regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                  Address
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                  <input type="text" formControlName="address" name="address" class="custom-input regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                  Country
+              </div>
+              <div class="col pl-0">
+                  Region
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                  <select class="form-control form-control-sm regular-input" formControlName="country" (change)="selectCountry($event.target.value)">
+                      <option value="" disabled selected>Select Country</option>
+                      <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                  </select>
+                  <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.country.errors?.required && submitted">Country is required</p>
+              </div>
+              <div class="col pl-0">
+                  <select class="form-control form-control-sm regular-input" formControlName="region" (change)="selectRegion($event.target.value)">
+                      <option value="" disabled selected>Select Region</option>
+                      <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                  </select>
+                  <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.region.errors?.required && submitted">Region is required</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                  City
+              </div>
+              <div class="col pl-0">
+                  ZIP/Postal Code
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                  <select class="form-control form-control-sm regular-input" formControlName="city" (change)="selectCity($event.target.value)">
+                      <option value="" disabled selected>Select City</option>
+                      <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                  </select>
+                  <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.city.errors?.required && submitted">City is required</p>
+              </div>
+              <div class="col pl-0">
+                  <input type="text" formControlName="postal" name="postal" class="custom-input regular-input">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-check pt-1 pb-1">
+                  <input class="form-check-input" type="checkbox" name="apply" formControlName="apply" id="apply" value="false">
+                  <label class="form-check-label" for="apply">
+                    Apply changes to all instances of this customer
+                  </label>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="editShippingAddress()" [disabled]="editShippingAddressFormGroup.invalid">Edit shipping address</button>
+          <img *ngIf="editShippingAddressLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Order Contact -->
+<div class="modal fade" id="editOrderContactModal" tabindex="-1" role="dialog" aria-labelledby="editOrderContactTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered pl-5 pr-5" role="document">
+    <form [formGroup]="editOrderContactFormGroup" class="container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editOrderContactTitle">Edit Order Contact</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body regular-text">
+          <div class="container pl-2 pr-2 text-left">
+            <div class="row align-items-center" *ngIf="editOrderContactError">
+              <div class="col">
+                  <div class="alert alert-warning fade show mb-1 text-center" role="alert">
+                      <strong>Update order contact failed!</strong> {{ editOrderContactError }}
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Email
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <input type="text" formControlName="email" name="email" class="custom-input regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Phone number
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <input type="text" formControlName="contact" name="contact" class="custom-input regular-input">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-check pt-1 pb-1">
+                  <input class="form-check-input" type="checkbox" name="apply" formControlName="apply" id="apply" value="false">
+                  <label class="form-check-label" for="apply">
+                    Apply changes to all instances of this customer
+                  </label>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="editOrderContact()" [disabled]="editOrderContactFormGroup.invalid">Edit order contact</button>
+          <img *ngIf="editOrderContactLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelOrderTitle">Cancel Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>Are you sure you want to cancel this order?</div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="cancelOrder()">Cancel order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Permanently Delete Order Modal -->
+<div class="modal fade" id="deleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="deleteOrderTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteOrderTitle">Delete Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>Are you sure you want to permanently delete this order?</div>
+        <span class="text-muted regular-text">
+          <em>
+            Note: Deleting order will not revert the stocks. Please cancel order first, to update your inventory.
+          </em>
+        </span>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="deleteOrder()">Permanently delete order</button>
+      </div>
+    </div>
+  </div>
+</div>

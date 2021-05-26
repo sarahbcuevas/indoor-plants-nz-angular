@@ -1,0 +1,860 @@
+<div class="container bg-gray pl-2 pr-2 pt-2 pb-3 border-bottom">
+    <div class="row bg-white border pt-1 pb-1 ml-1 mr-1 mb-3">
+        <div class="col text-left">
+            <span class="title text-secondary align-middle">Unsaved order</span>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-light btn-sm mr-2" [routerLink]="['/admin/orders']">Cancel</button>
+            <button class="btn btn-primary btn-sm" [disabled]="orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined" (click)="createOrder()">Save</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col text-left">
+            <button (click)="goBack()" type="button" class="btn btn-link btn-sm text-muted"><i class="fas fa-chevron-left"></i> Orders</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4 class="mb-2 pt-1 pb-2 text-left">Create Order</h4>
+        </div>
+    </div>
+    <div class="row pl-2 pr-2" *ngIf="createOrderError && orderItems?.length > 0">
+        <div class="col alert alert-warning alert-dismissible fade show ml-2 mr-2 text-left" role="alert">
+            <div class="container">
+                <div class="row">
+                    <div class="col-1">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="col">
+                        <strong>Create Order Error</strong><br>
+                        {{ createOrderError }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-sm-12 col-md">
+            <div class="container bg-white border pt-3">
+                <div class="row mb-3">
+                    <div class="col">
+                        <span class="title">Order Details</span>
+                    </div>
+                    <div class="col text-right align-items-center">
+                        <span class="text-blue regular-text">Add Custom Item</span>
+                    </div>
+                </div>
+                <div class="row pb-2 border-bottom">
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
+                            </div>
+                            <div class="custom-file dropdown">
+                              <input type="text" class="search custom-input pl-2 dropdown-toggle" id="searchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search products" [(ngModel)]="searchProductText">
+                              <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchDropdown">
+                                <div class="container" *ngIf="(products | async)?.length > 0">
+                                    <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | async | filter : searchProductText" (click)="selectProduct(product)">
+                                        <div *ngIf="product?.image !== null && product?.image !== '' && product?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <img src="{{ product?.image }}" class="img-thumbnail">
+                                        </div>
+                                        <div *ngIf="product?.image === null || product?.image === '' || product?.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <img src="../../assets/default-plant.jpg" class="img-thumbnail">
+                                        </div>
+                                        <div class="col text-left">
+                                            <span class="h6 text-blue">{{ product?.name }}</span><br>
+                                            <span class="text-muted" *ngIf="product?.forPickupOnly"><em>For Pickup Only</em><br></span>
+                                            <span class="text-danger regular-text" *ngIf="product?.stock <= 0"><em><strong>Out of Stock!</strong></em></span>
+                                        </div>
+                                        <div class="col text-center">
+                                            <span class="text-muted ml-2 align-self-center">{{ (product?.price/100).toFixed(2) }}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="container pt-2 pb-2" *ngIf="(products | async)?.length === 0">
+                                    <div class="row justify-content-center">
+                                        <span class="align-middle">No products yet.</span>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="input-group-append">
+                               <button class="btn btn-outline-secondary regular-text" type="button">Browse products</button>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+                <div class="row border-bottom">
+                    <div class="col pl-0 pr-0">
+                        <div class="container mt-3 mb-3">
+                            <div class="row" *ngIf="orderItems?.length > 0">
+                                <div class="col pl-0 pr-0">
+                                    <div class="container">
+                                        <div class="row border-bottom pl-3 pr-3 pt-2 pb-3" *ngFor="let orderItem of orderItems; let i=index">
+                                            <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
+                                            </div>
+                                            <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="../../assets/default-plant.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col text-left">
+                                                <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
+                                                <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em><br></span>
+                                                <span class="text-muted" *ngIf="!orderItem?.product.forPickupOnly && orderItem?.product.deliveryFee"><em>Shipping Fee: {{ (orderItem?.product.deliveryFee/100).toFixed(2) }}</em><br></span>
+                                                <span class="text-muted regular-text">Stock: {{ orderItem?.product.stock }}</span>
+                                            </div>
+                                            <div class="col-1 text-center">
+                                                <span class="text-muted ml-2 align-self-center">{{ (orderItem?.product.price/100).toFixed(2) }}</span>
+                                            </div>
+                                            <div class="col-1 text-center pl-0 pr-0">
+                                                <span>x</span>
+                                            </div>
+                                            <div class="col-1 text-center pl-0 pr-0">
+                                                <input type="text" class="form-control form-control-sm regular-input text-center" id="orderitem-quantity" [value]="orderItem?.quantity" [(ngModel)]="orderItem.quantity" (change)="calculateBill()" min="0" [max]="orderItem?.product.stock">
+                                            </div>
+                                            <div class="col-1">
+                                                {{ ((orderItem?.product.price * orderItem?.quantity)/100).toFixed(2) }}
+                                            </div>
+                                            <div class="col-1 text-right pl-0 pr-0">
+                                                <button type="button" class="btn btn-sm btn-link text-danger pt-0" (click)="unselectProduct(i, orderItem?.product)"><i class="fas fa-minus-circle"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col pl-0 pr-0">
+                                    <div class="container">
+                                        <div class="row justify-content-center mb-1">
+                                            <label for="notes" class="col text-left mb-0 regular-text">Notes</label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col pr-0">
+                                              <input type="text" class="custom-input regular-input" id="notes" [(ngModel)]="notes" placeholder="Add a note">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col text-right pr-0">
+                                    <div class="container">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <button class="btn btn-link text-blue pl-0 pr-0 pt-0 pb-0" data-toggle="modal" data-target="#addDiscountPopup">Add discount</button>
+                                                <div class="row text-right mt-0" *ngIf="discountReason">
+                                                    <span class="col text-muted regular-text"><em>{{ discountReason }}</em></span>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <span *ngIf="discountInput <= 0 || addDiscountError != ''">--</span>
+                                                <div *ngIf="(discountInput > 0 && addDiscountError == '')">
+                                                    (
+                                                    <span *ngIf="discountMethod == DISCOUNT_METHOD.DOLLAR"> {{ discountMethod }} </span>
+                                                    {{ discountInput }}
+                                                    <span *ngIf="discountMethod == DISCOUNT_METHOD.PERCENT"> {{ discountMethod }}</span>
+                                                    )
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <span class="text-muted">Subtotal</span>
+                                            </div>
+                                            <div class="col">NZ$ {{ (subTotal/100).toFixed(2) }}</div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <button class="btn btn-link text-blue pl-0 pr-0 pt-0 pb-0" data-toggle="modal" data-target="#addShippingPopup">Add shipping</button>
+                                                <div class="row text-right mt-0" *ngIf="customShippingName">
+                                                    <span class="col text-muted regular-text"><em>{{ customShippingName }}</em></span>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <span *ngIf="shippingFeeMethod == Shipping_Fee_Method.PICKUP" class="text-muted"><em>(For pickup)</em></span>
+                                                <span *ngIf="shippingFeeMethod == Shipping_Fee_Method.FREE" class="text-muted"><em>(Free shipping)</em></span>
+                                                <span *ngIf="totalShippingFee > 0">NZ$ {{ (totalShippingFee/100).toFixed(2) }} </span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <strong>Total</strong>
+                                            </div>
+                                            <div class="col">
+                                                <strong>NZ$ {{ (totalBill/100).toFixed(2) }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-bottom pt-3 pb-3">
+                    <div class="col">
+                        <i class="far fa-file-alt mr-3"></i><span class="text-uppercase sub-title">Email Invoice</span>
+                    </div>
+                    <div class="col text-right">
+                        <button tyoe="button" class="btn btn-sm btn-light btn-outline-secondary" disabled>Email Invoice</button>
+                    </div>
+                </div>
+                <div class="row border-bottom pt-3 pb-3 align-items-center">
+                    <div class="col align-items-center">
+                        <i class="far fa-file-alt mr-3"></i><span class="text-uppercase sub-title">Accept Payment</span>
+                    </div>
+                    <div class="col pl-0 pr-0 text-muted regular-text">
+                        <span *ngIf="paymentStatus == PAYMENT_STATUS.PENDING"><i class="fas fa-check text-green mr-1"></i> Marked as pending</span>
+                        <span *ngIf="paymentStatus == PAYMENT_STATUS.PAID"><i class="fas fa-check text-green mr-1"></i> Marked as paid</span>
+                    </div>
+                    <div class="col-5 text-right">
+                        <button type="button" class="btn btn-sm mr-2" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PAID) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPaid()">Mark as paid</button>
+                        <button type="button" class="btn btn-sm" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PENDING) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPending()">Mark as pending</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 pl-0">
+            <div class="container bg-white border pl-3 pt-3" *ngIf="selectedCustomer">
+                <div class="row mb-3">
+                    <div class="col">
+                        <span class="title">Customer</span>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="close" (click)="deselectCustomer()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div *ngIf="selectedCustomer?.image !== null && selectedCustomer?.image !== '' && selectedCustomer?.image !== undefined" class="col-3 pl-3 pr-0">
+                        <img src="{{ selectedCustomer?.image }}" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
+                    </div>
+                    <div *ngIf="selectedCustomer?.image === null || selectedCustomer?.image === '' || selectedCustomer?.image === undefined" class="col-3 pl-3 pr-0">
+                        <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
+                    </div>
+                    <div class="col text-right">
+                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders | async)?.length === 0"><i class="fas fa-download mr-1"></i> No orders</span>
+                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders | async)?.length > 0"><i class="fas fa-download mr-1"></i> {{ (selectedCustomerOrders | async)?.length }} order(s)</span>
+                    </div>
+                </div>
+                <div class="row pb-3 border-bottom">
+                    <div class="col">
+                        <span class="text-primary mt-2">{{ selectedCustomer?.firstname }} {{ selectedCustomer?.lastname }}</span>
+                        <div class="row align-items-center" style="line-height: 0.8rem;">
+                            <div class="col-9">
+                                <span *ngIf="selectedCustomer?.email" class="text-primary">{{ selectedCustomer?.email }}</span>
+                                <span *ngIf="!selectedCustomer?.email" class="text-muted">No email was provided.</span>
+                            </div>
+                            <div class="col-3 pl-0 pr-0 text-primary text-right">
+                                <button class="btn btn-link text-blue pt-0 pb-0" data-toggle="modal" data-target="#editCustomerModal">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pt-3 pb-2 align-items-center">
+                    <div class="col-9 text-uppercase sub-title text-left"><strong>Shipping Address</strong></div>
+                    <div class="col-3 pl-0 pr-0 text-primary text-right">
+                        <button class="btn btn-link text-blue pt-0 pb-0" data-toggle="modal" data-target="#editShippingAddressModal">Edit</button>
+                    </div>
+                </div>
+                <div class="row pb-3 border-bottom">
+                    <div class="col text-muted" *ngIf="!selectedCustomer?.address">
+                        No shipping address was provided.
+                    </div>
+                    <div class="col text-muted" *ngIf="selectedCustomer?.address">
+                        <span *ngIf="selectedCustomer?.company">{{ selectedCustomer?.company }}<br></span>
+                        {{ selectedCustomer?.address }}<br>
+                        {{ selectedCustomer?.city }}, {{ selectedCustomer?.region }}<br>
+                        {{ selectedCustomer?.country }} {{ selectedCustomer?.postal }}
+                    </div>
+                </div>
+                <div class="row pt-3 pb-2 align-items-center">
+                    <div class="col text-uppercase sub-title text-left"><strong>Billing Address</strong></div>
+                    <div class="col-2 text-right text-primary">Edit</div>
+                </div>
+                <div class="row pb-3 border-bottom">
+                    <div class="col text-muted">
+                        Same as shipping address
+                    </div>
+                </div>
+            </div>
+            <div class="container bg-white border pt-3" *ngIf="!selectedCustomer">
+                <div class="row mb-3">
+                    <div class="col">
+                        <span class="title">Find or create a customer</span>
+                    </div>
+                </div>
+                <div class="row pb-4 border-bottom">
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
+                            </div>
+                            <div class="custom-file dropdown">
+                                <input type="text" class="search custom-input pl-2" id="searchCustomerDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search customers" required>
+                                <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchCustomerDropdown">
+                                    <div class="container pt-2 pb-2 border-bottom bg-info text-white" data-toggle="modal" data-target="#createCustomerModal">
+                                        <div class="row justify-content-center">
+                                            <div class="col-3 col-sm-3 col-md-2 col-lg-2 pl-4 pr-4">
+                                                <span><i class="fas fa-user-plus"></i></span>
+                                            </div>
+                                            <div class="col text-left">
+                                                <span class="regular-text">Create a new customer</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container" *ngIf="(customers | async)?.length > 0">
+                                        <a class="row border-bottom pl-2 pr-2 pt-2 pb-3 product-item align-items-center" (click)="selectCustomer(customer)" *ngFor="let customer of customers | async | filter : searchCustomerText">
+                                            <div *ngIf="customer?.image !== null && customer?.image !== '' && customer?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="{{ customer?.image }}" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
+                                            </div>
+                                            <div *ngIf="customer?.image === null || customer?.image === '' || customer?.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
+                                            </div>
+                                            <div class="col text-left pl-0 pr-0">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <span class="h6 text-blue">{{ customer?.firstname }} {{ customer?.lastname }}</span>
+                                                            <div class="row">
+                                                                <div class="col" style="line-height: 0.7rem;">
+                                                                    <span class="text-muted regular-text" *ngIf="customer?.email">{{ customer?.email }}</span>
+                                                                    <span class="text-muted regular-text" *ngIf="!customer?.email && customer?.contact">{{ customer?.contact }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container border pl-3">
+                <div class="row bg-gray border-left-0 border-right-0 pb-3"></div>
+                <div class="row">
+                    <div class="col pl-0 pr-0">
+                        <div class="container bg-light-gray border pb-4">
+                            <div class="row pt-3 pl-2 pr-2 pb-3 align-items-center">
+                                <div class="col">
+                                    <span class="title">Tags</span>
+                                </div>
+                                <div class="col text-right align-items-center">
+                                    <button class="btn btn-link text-blue regular-text pt-0 pb-0 pr-0" data-toggle="modal" data-target="#viewAllTagsModal" (click)="initializeSelectedTagsDraft()">View All Tags</button>
+                                </div>
+                            </div>
+                            <div class="row pb-2 pl-4 pr-4">
+                                <div class="col pl-0 pr-0 dropdown">
+                                    <input type="text" class="custom-input regular-input pl-2 dropdown-toggle" id="tagsInput" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [(ngModel)]="tagsInput" placeholder="Urgent, reviewed, wholesale" (keypress)="onKeyPress($event)" autocomplete="off" required>
+                                    <div class="dropdown-menu container tags-dropdown pt-0 pb-0" aria-labelledby="tagsInput">
+                                        <div class="container" *ngIf="allTags?.length > 0">
+                                            <ng-container *ngFor="let tag of allTags | filter : tagsInput ; let i=index">
+                                                <a class="dropdown-item pl-3 pr-3 pt-2 pb-2 mr-0 ml-0" (click)="addSelectedTag(tag.name, i)" *ngIf="!tag?.selected">{{ tag.name }}</a>
+                                             </ng-container>
+                                        </div>
+                                        <div class="container" *ngIf="allTags?.length <= 0">
+                                            <span class="text-muted regular-text">Press enter to add tag</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pl-4 pr-4">
+                                <span class="badge badge-info mr-2 mb-1" *ngFor="let tag of selectedTags; let i=index">{{ tag.name }} <i class="fas fa-times ml-1" (click)="removeSelectedTag(selectedTags, i)"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container bg-gray pt-3 pb-5">
+    <div class="row">
+        <div class="col text-right">
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined" (click)="createOrder()">Save New Order</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add discount popup -->
+<div class="modal fade" id="addDiscountPopup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <form [formGroup]="addDiscountFormGroup">
+            <div class="modal-content">
+                <div class="modal-body border-bottom text-left container pl-3 pr-3">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="discount" class="regular-text">Discount this order by</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group">
+                                    <div class="input-group-prepend regular-text">
+                                        <nav aria-label="Pagination">
+                                            <ul class="pagination mb-0" id="sortByOptions">
+                                                <li class="page-item active text-nowrap" id="discountDollar" (click)="setDiscountMethod(DISCOUNT_METHOD.DOLLAR)"><a class="page-link">$</a></li>
+                                                <li class="page-item text-nowrap" id="discountPercent" (click)="setDiscountMethod(DISCOUNT_METHOD.PERCENT)"><a class="page-link">%</a></li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="text" formControlName="discount" name="discount" class="custom-input regular-input form-control-sm pl-3 pr-3" id="discountInput">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label for="reason" class="regular-text">Reason</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" formControlName="reason" name="reason" class="custom-input regular-input" placeholder="e.g. Loyal customer">
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="addDiscountError">
+                            <div class="col">
+                                <span class="text-danger regular-text">{{ addDiscountError }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal" (click)="closeDiscountPopup()">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="applyDiscount()">Apply</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Shipping Popup -->
+<div class="modal fade" id="addShippingPopup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <form [formGroup]="addShippingFormGroup">
+            <div class="modal-content">
+                <div class="modal-body border-bottom text-left container pl-3 pr-3 pb-4">
+                    <ul class="pl-0 mb-0" style="list-style-type: none;">
+                        <li>
+                            <div class="form-check pt-1 pb-1">
+                                <input class="form-check-input" type="radio" name="shippingFeeMethod" formControlName="shippingFeeMethod" id="pickup" [value]="Shipping_Fee_Method.PICKUP">
+                                <label class="form-check-label" for="pickup">
+                                For Pickup
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-check pt-1 pb-1">
+                                <input class="form-check-input" type="radio" name="shippingFeeMethod" formControlName="shippingFeeMethod" id="standard" [value]="Shipping_Fee_Method.STANDARD">
+                                <label class="form-check-label" for="standard">
+                                Standard shipping<br>
+                                <span class="text-muted regular-text"><em>Based on per item's shipping fee <strong>NZ$ {{ (baseShippingFee/100).toFixed(2) }}</strong></em></span>
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-check pt-1 pb-1">
+                                <input class="form-check-input" type="radio" name="shippingFeeMethod" formControlName="shippingFeeMethod" id="free" [value]="Shipping_Fee_Method.FREE">
+                                <label class="form-check-label" for="free">
+                                Free shipping
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-check pt-1 pb-1">
+                                <input class="form-check-input" type="radio" name="shippingFeeMethod" formControlName="shippingFeeMethod" id="custom" [value]="Shipping_Fee_Method.CUSTOM">
+                                <label class="form-check-label" for="custom">
+                                Custom
+                                </label>
+                                <div class="container pl-0 pr-0 regular-text">
+                                    <div class="row">
+                                        <div class="col pl-0 pr-2">
+                                            <input type="text" formControlName="customName" name="customName" class="custom-input regular-input" placeholder="Custom rate name">
+                                        </div>
+                                        <div class="col-5 pl-0 pr-3">
+                                            <input type="text" formControlName="shipping" name="shipping" class="custom-input regular-input" placeholder="$">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="updateShippingFee()">Apply</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Create a new customer Dialog -->
+<div class="modal fade" id="createCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered regular-text" role="document">
+        <form [formGroup]="createCustomerFormGroup" class="container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Create a new customer</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container pl-0 pr-0 text-left">
+                        <div class="row">
+                            <div class="col">
+                                First name
+                            </div>
+                            <div class="col pl-0">
+                                Last name
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="firstname" name="firstname" class="custom-input regular-input">
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="lastname" name="lastname" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Email
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="email" name="email" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row border-bottom pb-3">
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" [value]="false" id="subscribe" formControlName="subscribe">
+                                    <label class="form-check-label" for="subscribe">
+                                      Customer accepts email marketing
+                                    </label>
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3 pb-2">
+                            <div class="col">
+                                Shipping Address
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Company
+                            </div>
+                            <div class="col pl-0">
+                                Phone number
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="company" name="company" class="custom-input regular-input">
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="contact" name="contact" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Address
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="address" name="address" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Country
+                            </div>
+                            <div class="col pl-0">
+                                Region
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <select class="form-control form-control-sm regular-input" formControlName="country" (change)="selectCountry($event.target.value)">
+                                    <option value="" disabled selected>Select Country</option>
+                                    <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.country.errors?.required && submitted">Country is required</p>
+                            </div>
+                            <div class="col pl-0">
+                                <select class="form-control form-control-sm regular-input" formControlName="region" (change)="selectRegion($event.target.value)">
+                                    <option value="" disabled selected>Select Region</option>
+                                    <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.region.errors?.required && submitted">Region is required</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                City
+                            </div>
+                            <div class="col pl-0">
+                                ZIP/Postal Code
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <select class="form-control form-control-sm regular-input" formControlName="city" (change)="selectCity($event.target.value)">
+                                    <option value="" disabled selected>Select City</option>
+                                    <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!createCustomerFormGroup.controls.city.errors?.required && submitted">City is required</p>
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="postal" name="postal" class="custom-input regular-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="createCustomer()">Create customer</button>
+                    <img *ngIf="createCustomerLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Customer Dialog -->
+<div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered regular-text" role="document">
+        <form [formGroup]="editCustomerFormGroup" class="container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Edit customer</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container pl-0 pr-0 text-left">
+                        <div class="row align-items-center" *ngIf="editCustomerError">
+                            <div class="col">
+                                <div class="alert alert-warning alert-dismissible fade show mb-1 text-center" role="alert">
+                                    <strong>Update Customer Failed!</strong> {{ editCustomerError }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                First name
+                            </div>
+                            <div class="col pl-0">
+                                Last name
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="firstname" name="firstname" class="custom-input regular-input">
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="lastname" name="lastname" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Email
+                            </div>
+                            <div class="col pl-0">
+                                Phone number
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="email" name="email" class="custom-input regular-input">
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="contact" name="contact" class="custom-input regular-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="editCustomer()">Edit customer</button>
+                    <img *ngIf="editCustomerLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Shipping Address -->
+<div class="modal fade" id="editShippingAddressModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered regular-text" role="document">
+        <form [formGroup]="editShippingAddressFormGroup" class="container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Edit shipping address</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container pl-0 pr-0 text-left">
+                        <div class="row align-items-center" *ngIf="editShippingAddressError">
+                            <div class="col">
+                                <div class="alert alert-warning alert-dismissible fade show mb-1 text-center" role="alert">
+                                    <strong>Update Shipping Address Failed!</strong> {{ editShippingAddressError }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Company
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="company" name="company" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Address
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="text" formControlName="address" name="address" class="custom-input regular-input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Country
+                            </div>
+                            <div class="col pl-0">
+                                Region
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <select class="form-control form-control-sm regular-input" formControlName="country" (change)="selectCountry($event.target.value)">
+                                    <option value="" disabled selected>Select Country</option>
+                                    <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.country.errors?.required && submitted">Country is required</p>
+                            </div>
+                            <div class="col pl-0">
+                                <select class="form-control form-control-sm regular-input" formControlName="region" (change)="selectRegion($event.target.value)">
+                                    <option value="" disabled selected>Select Region</option>
+                                    <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.region.errors?.required && submitted">Region is required</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                City
+                            </div>
+                            <div class="col pl-0">
+                                ZIP/Postal Code
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <select class="form-control form-control-sm regular-input" formControlName="city" (change)="selectCity($event.target.value)">
+                                    <option value="" disabled selected>Select City</option>
+                                    <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                                </select>
+                                <p class="text-danger" *ngIf="!!editShippingAddressFormGroup.controls.city.errors?.required && submitted">City is required</p>
+                            </div>
+                            <div class="col pl-0">
+                                <input type="text" formControlName="postal" name="postal" class="custom-input regular-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="editShippingAddress()">Edit shipping address</button>
+                    <img *ngIf="editShippingAddressLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- View All Tags Dialog -->
+<div class="modal fade" id="viewAllTagsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered regular-text" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Tags</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container pl-0 pr-0 text-left">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <span class="sub-title text-uppercase">Applied Tags</span>
+                        </div>
+                    </div>
+                    <div class="row pb-3 border-bottom">
+                        <div class="col" *ngIf="selectedTagsDraft?.length > 0">
+                            <span class="badge badge-info mr-2 mb-1" *ngFor="let tempTag of selectedTagsDraft; let i=index">{{ tempTag.name }} <i class="fas fa-times ml-1" (click)="removeSelectedTag(selectedTagsDraft, i)"></i></span>
+                        </div>
+                        <div class="col align-items-center" *ngIf="selectedTagsDraft?.length == 0">
+                            <span class="text-muted">No tags applied yet</span>
+                        </div>
+                    </div>
+                    <div class="row pt-3 mb-2">
+                        <div class="col">
+                            <span class="sub-title text-uppercase">All Tags</span>
+                        </div>
+                        <div class="col text-right">
+                            Sort:
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-light btn-sm active">
+                                    <input type="radio" name="options" id="option1" autocomplete="off"> Alphabetically
+                                </label>
+                                <label class="btn btn-light btn-sm">
+                                    <input type="radio" name="options" id="option2" autocomplete="off"> Popularity
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-auto" *ngIf="allTags?.length > 0">
+                            <span *ngFor="let tag of allTags; let i=index">
+                                <span class="btn btn-sm btn-light mr-2 mb-1" *ngIf="!tag?.selected" (click)="addDraftSelectedTag(tag.name, i)">{{ tag.name }}</span>
+                            </span>
+                        </div>
+                        <div class="col align-items-center" *ngIf="allTags?.length == 0">
+                            <span class="text-muted">No tags available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="applyTags()">Apply changes</button>
+                <img *ngIf="editCustomerLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+            </div>
+        </div>
+    </div>
+</div>

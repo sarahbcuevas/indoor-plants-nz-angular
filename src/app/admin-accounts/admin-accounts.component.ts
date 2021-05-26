@@ -42,7 +42,7 @@ export class AdminAccountsComponent implements OnInit {
       email: ['', Validators.required],
       contact: ['', Validators.required],
       address: ['', Validators.required],
-      role: ['', Validators.required]
+      role: ['admin', Validators.required]
     });
   }
 

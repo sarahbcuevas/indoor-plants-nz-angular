@@ -142,15 +142,15 @@
                 <div class="card-badge" *ngIf="product?.isBestseller">
                   <span class="badge badge-secondary float-right">Bestseller</span>
                 </div>
-                <div class="card-badge" *ngIf="product?.isSoldout || product?.stock === 0">
+                <div class="card-badge" *ngIf="product?.stock <= 0 || product?.stock === 0">
                   <span class="badge badge-danger float-right">Out of Stock</span>
                 </div>
                 <div class="card-body">
                   <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>
                   <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span>
                   <p class="card-text text-muted text-truncate" [routerLink]="['/products', product?._id]">{{ product?.description }}</p>
-                  <a class="btn btn-black text-uppercase text-white disabled" *ngIf="product?.isSoldout || product?.stock === 0">Add to Cart</a>
-                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="!product?.isSoldout && product?.stock > 0">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white disabled" *ngIf="product?.stock === 0">Add to Cart</a>
+                  <a class="btn btn-black text-uppercase text-white" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="product?.stock > 0">Add to Cart</a>
                 </div>
               </div>
             </div>
@@ -168,7 +168,7 @@
                           <span class="badge badge-secondary" *ngIf="product?.isBestseller">Bestseller</span>
                         </div>
                         <div class="col-xs-12 col-sm-auto col-xl-auto">
-                          <span class="badge badge-danger" *ngIf="product?.isSoldout">Out Of Stock</span>
+                          <span class="badge badge-danger" *ngIf="product?.stock <= 0">Out Of Stock</span>
                         </div>
                       </div>
                     </h5>

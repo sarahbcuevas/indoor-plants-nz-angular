@@ -68,8 +68,7 @@ export class AdminProductsComponent implements OnInit {
       deliveryFee: [0],
       forPickupOnly: [false],
       image: [''],
-      isBestseller: [false],
-      isSoldout: [false]
+      isBestseller: [false]
     });
   }
 
@@ -252,7 +251,7 @@ export class AdminProductsComponent implements OnInit {
               if (!this.isBestsellerChecked && product.isBestseller) {
                 isFiltered = false;
               }
-              if (!this.isSoldoutChecked && product.isSoldout) {
+              if (!this.isSoldoutChecked && product.stock <= 0) {
                 isFiltered = false;
               }
               return isFiltered;

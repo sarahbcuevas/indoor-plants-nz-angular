@@ -1,0 +1,206 @@
+<h6 class="admin-title mb-3">Manage Orders</h6>
+<div class="container mb-3">
+  <div class="row">
+    <div class="col text-left">
+      <a class="btn btn-link text-muted mr-2 regular-text"><i class="fas fa-download mr-2"></i> Export</a>
+      <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        More actions
+      </button>
+      <div class="dropdown-menu" id="more-actions" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" (click)="cancelOrders()" *ngIf="isOpenOrderSelected"><i class="fas fa-times mr-2"></i> Cancel order</a>
+        <a class="dropdown-item" (click)="uncancelOrders()" *ngIf="isCanceledOrderSelected"><i class="fas fa-backspace mr-2"></i> Undo cancel order</a>
+        <a class="dropdown-item" (click)="markOrdersAsPaid()" *ngIf="!isArchived && isUnpaidOrderSelected"><i class="fas fa-dollar-sign mr-2"></i> Mark as paid</a>
+        <a class="dropdown-item" (click)="markOrdersAsUnpaid()" *ngIf="!isArchived && isPaidOrderSelected"><i class="fas fa-undo mr-2"></i> Mark as unpaid</a>
+        <a class="dropdown-item" (click)="markOrdersAsFulfilled()" *ngIf="!isArchived && isUnfulfilledOrderSelected"><i class="fas fa-box mr-2"></i> Mark as fulfilled</a>
+        <a class="dropdown-item" (click)="markOrdersAsUnfulfilled()" *ngIf="!isArchived && isFulfilledOrderSelected"><i class="fas fa-box-open mr-2"></i> Mark as unfulfilled</a>
+        <a class="dropdown-item" (click)="archiveOrders()" *ngIf="!isArchived"><i class="fas fa-archive mr-2"></i> Archive order</a>
+        <a class="dropdown-item" (click)="unarchiveOrders()" *ngIf="isArchived"><i class="fas fa-archive mr-2"></i> Unarchive order</a>
+        <a class="dropdown-item" (click)="permanentlyDeleteOrders()"><i class="fas fa-trash-alt mr-2"></i> Permanently delete order</a>
+      </div>
+    </div>
+    <div class="col-auto text-right">
+      <button type="button" class="btn btn-info btn-sm" [routerLink]="['/admin/orders/create']"><i class="fas fa-plus"></i> Create Order</button>
+    </div>
+  </div>
+  <div class="row mt-3 bg-white border">
+    <nav>
+      <div class="nav" id="nav-tab" role="tablist">
+        <a class="nav-link pl-4 pr-4" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" [ngClass]="{'active' : FilterMode == FilterType.ALL}" [attr.aria-selected]="FilterMode == FilterType.ALL" (click)="selectFilter(FilterType.ALL)">All</a>
+        <a class="nav-link pl-4 pr-4" id="nav-open-tab" data-toggle="tab" href="#nav-open" role="tab" aria-controls="nav-open" [ngClass]="{'active' : FilterMode == FilterType.OPEN}" [attr.aria-selected]="FilterMode == FilterType.OPEN" *ngIf="!isArchived" (click)="selectFilter(FilterType.OPEN)">Open</a>
+        <a class="nav-link pl-4 pr-4" id="nav-unfulfilled-tab" data-toggle="tab" href="#nav-unfulfilled" role="tab" aria-controls="nav-unfulfilled" [ngClass]="{'active' : FilterMode == FilterType.UNFULFILLED}" [attr.aria-selected]="FilterMode == FilterType.UNFULFILLED" (click)="selectFilter(FilterType.UNFULFILLED)">Unfulfilled</a>
+        <a class="nav-link pl-4 pr-4" id="nav-unpaid-tab" data-toggle="tab" href="#nav-unpaid" role="tab" aria-controls="nav-unpaid" [ngClass]="{'active' : FilterMode == FilterType.UNPAID}" [attr.aria-selected]="FilterMode == FilterType.UNPAID" (click)="selectFilter(FilterType.UNPAID)">Unpaid</a>
+        <a class="nav-link pl-4 pr-4" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" [ngClass]="{'active' : FilterMode == FilterType.COMPLETED}" [attr.aria-selected]="FilterMode == FilterType.COMPLETED" (click)="selectFilter(FilterType.COMPLETED)">Completed</a>
+      </div>
+    </nav>
+  </div>
+  <div class="row pt-4 bg-white border border-bottom-0">
+    <div class="col">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="dropdown">
+            <button class="btn regular-input dropdown-toggle" type="button" type="button" id="filterButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter orders</button>
+            <div class="dropdown-menu pl-2 pr-2" aria-labelledby="filterButton">
+              <a class="dropdown-item form-check" (click)="filterBy(ORDER_ID)">
+                <input class="form-check-input" type="radio" name="filterBy" id="orderId" [value]="ORDER_ID" checked>
+                <label class="form-check-label" for="orderId">
+                  {{ ORDER_ID }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterBy(CUSTOMER_NAME)">
+                <input class="form-check-input" type="radio" name="filterBy" id="customerName" [value]="CUSTOMER_NAME">
+                <label class="form-check-label" for="customerName">
+                  {{ CUSTOMER_NAME }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterBy(TAG)">
+                <input class="form-check-input" type="radio" name="filterBy" id="tag" [value]="TAG">
+                <label class="form-check-label" for="tag">
+                  {{ TAG }}
+                </label>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="input-group-prepend">
+            <span class="input-group-text text-muted" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
+        </div>
+        <div class="custom-file">
+          <input type="text" class="search custom-input pl-1" placeholder="Search orders" [(ngModel)]="searchText" autocomplete="off">
+        </div>
+        <div class="input-group-append">
+          <div class="dropdown" *ngIf="!isArchived">
+            <button class="btn regular-input dropdown-toggle border-right-0" type="button" id="orderStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Order status</button>
+            <div class="dropdown-menu pl-2 pr-2" aria-labelledby="orderStatusButton">
+                <a class="dropdown-item form-check" (click)="filterByOrderStatus(FilterType.ALL)">
+                  <input class="form-check-input" type="radio" name="OrderStatusFilter" id="allOrderStatus" [value]="FilterType.ALL" checked>
+                  <label class="form-check-label" for="allOrderStatus">
+                    {{ FilterType.ALL }}
+                  </label>
+                </a>
+                <a class="dropdown-item form-check" (click)="filterByOrderStatus(orderStatuses.OPEN)">
+                  <input class="form-check-input" type="radio" name="OrderStatusFilter" id="open" [value]="orderStatuses.OPEN">
+                  <label class="form-check-label" for="open">
+                    {{ orderStatuses.OPEN }}
+                  </label>
+                </a>
+                <a class="dropdown-item form-check" (click)="filterByOrderStatus(orderStatuses.CANCELED)">
+                  <input class="form-check-input" type="radio" name="OrderStatusFilter" id="canceled" [value]="orderStatuses.CANCELED">
+                  <label class="form-check-label" for="canceled">
+                    {{ orderStatuses.CANCELED }}
+                  </label>
+                </a>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="btn regular-input dropdown-toggle" type="button" id="paymentStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Payment status</button>
+            <div class="dropdown-menu pl-2 pr-2" aria-labelledby="paymentStatusButton">
+              <a class="dropdown-item form-check" (click)="filterByPaymentStatus(FilterType.ALL)">
+                <input class="form-check-input" type="radio" name="PaymentStatusFilter" id="allPaymentStatus" [value]="FilterType.ALL" checked>
+                <label class="form-check-label" for="allPaymentStatus">
+                  {{ FilterType.ALL }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterByPaymentStatus(Payment_Status.PENDING)">
+                <input class="form-check-input" type="radio" name="PaymentStatusFilter" id="pending" [value]="Payment_Status.PENDING">
+                <label class="form-check-label" for="pending">
+                  {{ Payment_Status.PENDING }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterByPaymentStatus(Payment_Status.PAID)">
+                <input class="form-check-input" type="radio" name="PaymentStatusFilter" id="paid" [value]="Payment_Status.PAID">
+                <label class="form-check-label" for="paid">
+                  {{ Payment_Status.PAID }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterByPaymentStatus(Payment_Status.REFUNDED)">
+                <input class="form-check-input" type="radio" name="PaymentStatusFilter" id="refunded" [value]="Payment_Status.REFUNDED">
+                <label class="form-check-label" for="refunded">
+                  {{ Payment_Status.REFUNDED }}
+                </label>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto text-right">
+      <div class="row align-items-center">
+        <form [formGroup]="sortFormGroup">
+          <div class="col-auto">
+            <label for="sortBy" class="mr-2">Sort by</label>
+            <select class="btn regular-input pl-3 pr-4" id="sortBy" formControlName="sortBy" (change)="sortOrders()">
+              <option class="mt-2 mb-3 regular-text text-muted font-weight-bold" disabled>Sort by</option>
+              <option [value]="SortType.NEWEST">{{ SortType.NEWEST }}</option>
+              <option [value]="SortType.OLDEST">{{ SortType.OLDEST }}</option>
+              <option [value]="SortType.CUSTOMER_A_TO_Z">{{ SortType.CUSTOMER_A_TO_Z }}</option>
+              <option [value]="SortType.CUSTOMER_Z_TO_A">{{ SortType.CUSTOMER_Z_TO_A }}</option>
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-1 bg-white border border-top-0">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" class="pr-0"><input type="checkbox" id="toggleAll" (click)="toggleAll()"></th>
+            <th scope="col">Order ID</th>
+            <th scope="col">Date</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Payment</th>
+            <th scope="col">Fulfillment</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="(orders | async)?.length > 0">
+          <tr *ngFor="let order of orders | async | filterOrder : SearchBarFilter : searchText; let i=index">
+            <td class="pr-0"><input type="checkbox" [id]="order?._id" class="checkbox" [value]="isOrderSelected(order?._id)" (click)="toggleSelection(order)"></td>
+            <td scope="row" [routerLink]="['/admin/orders', order._id]" routerLinkActive="router-link-active" routerLink="/admin/orders/{{order._id}}" routerLinkActive="router-link-active" class="underline pointer text-primary"><strong>#{{ order.code }}</strong></td>
+            <td>{{ order.createdAt | date:'MM/dd/yyyy h:mma' }}</td>
+            <td>{{ order.customer.firstname }} {{ order.customer.lastname }}</td>
+            <td>
+              <span class="badge-pill badge-light align-middle" *ngIf="order.paymentStatus == Payment_Status.PAID"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.paymentStatus }}</span>
+              <span class="badge-pill badge-pending align-middle" *ngIf="order.paymentStatus == Payment_Status.PENDING"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.paymentStatus }}</span>
+            </td>
+            <td>
+              <span class="badge-pill badge-light align-middle" *ngIf="order.fulfillmentStatus == Fulfillment_Status.FULFILLED"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+              <span class="badge-pill badge-warning align-middle" *ngIf="order.fulfillmentStatus == Fulfillment_Status.UNFULFILLED"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+            </td>
+            <td>NZD {{ (order.total/100).toFixed(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row pb-3" *ngIf="(orders | async)?.length === 0" style="width:100%;">
+      <span class="col-12">
+        No orders available.
+      </span>
+    </div>
+  </div>
+  <div class="justify-content-center bg-white" *ngIf="isOrdersLoading">
+    <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving orders
+  </div>
+</div>
+
+<!-- Delete Customer Modal -->
+<!-- <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog" aria-labelledby="deleteCustomerTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteCustomerTitle">Delete Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete customer <strong>{{ selectedCustomerName }}</strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="deleteCustomer()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div> -->

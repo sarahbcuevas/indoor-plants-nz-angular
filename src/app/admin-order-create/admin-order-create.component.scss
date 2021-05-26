@@ -1,0 +1,103 @@
+.title {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.sub-title {
+    font-weight: 800!important;
+    font-size: 0.7rem;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.8px;
+}
+
+.text-blue {
+    color: #17a2b8;
+}
+
+.regular-text {
+    font-size: 0.8rem;
+    font-weight: 400!important;
+}
+
+.regular-input {
+    border: 1px solid #6c757d;
+    border-left: 1px solid #6c757d !important;
+    padding: 5px;
+    border-radius: .25rem;
+}
+
+.regular-input:focus {
+    border: 2px solid;
+}
+
+.custom-input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #6c757d;
+    border-left: 0pt;
+}
+
+.input-group-prepend {
+    background-color: white;
+    border-right: 0pt;
+}
+
+#searchInput, #discountInput {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#searchInput:focus {
+    border: 2px solid;
+}
+
+#validatedInputGroupPrepend {
+    background-color: white;
+    border-color: #6c757d;
+}
+
+.dropdown-menu {
+    width: 100%;
+}
+
+.product-item:hover {
+    background-color: whitesmoke;
+}
+
+.page-item .page-link {
+    height: 100%;
+    border: 1px solid #6c757d;
+}
+
+.page-item.active .page-link {
+    border: 2px solid #6c757d;
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.pagination {
+    height: 100%;
+}
+
+.img-thumbnail {
+    background-color: transparent;
+}
+
+.badge {
+    text-transform: none;
+    border-radius: 0.1pt;
+    background-color: #eceff1ea;
+    border: 1px solid #9da1a3;
+    color: black;
+    font-weight: 300;
+    font-size: 0.8rem;
+}
+
+.tags-dropdown {
+    width: inherit!important;
+}

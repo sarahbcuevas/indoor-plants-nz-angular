@@ -1,19 +1,19 @@
-<h6 class="sub-title text-uppercase mb-4">Manage Admin Accounts</h6>
+<h6 class="admin-title mb-4">Manage Admin Accounts</h6>
 <div class="container">
   <div class="row d-flex justify-content-between align-items-center">
-    <div class="col-sm-8 col-lg-7 col-xl-5 search input-group">
+    <div class="col-sm-8 col-lg-7 col-xl-5 search input-group pl-0">
       <label for="searchInput" class="sr-only">Search User</label>
       <input type="search" class="form-control form-control-sm border-right-0" id="searchInput" aria-describedby="searchUser" placeholder="Search by Username or Name" [(ngModel)]="searchText">
       <span class="input-group-append">
           <div class="input-group-text bg-transparent"><i class="fas fa-search"></i></div>
       </span>
     </div>
-    <div class="col-3">
+    <div class="col-3 text-right">
       <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addNewUserModal"><i class="fas fa-plus"></i> Create New User</button>
     </div>
   </div>
   <div class="row mt-3">
-    <div class="table-responsive">
+    <div class="table-responsive bg-white">
       <table class="table table-hover">
         <thead>
           <tr>
@@ -114,8 +114,12 @@
           <div class="form-group row">
             <label for="role" class="col-sm-4 col-form-label text-left">Role</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control form-control-sm" id="role" formControlName="role" placeholder="Role">
-              <p class="text-danger" *ngIf="!!registrationFormGroup.controls.role.errors?.required && submitted">Role is required</p>
+              <select class="form-control form-control-sm" id="role" formControlName="role">
+                <option value="admin">Admin</option>
+                <option value="superuser">Superuser</option>
+              </select>
+              <!-- <input type="text" class="form-control form-control-sm" id="role" formControlName="role" placeholder="Role">
+              <p class="text-danger" *ngIf="!!registrationFormGroup.controls.role.errors?.required && submitted">Role is required</p> -->
             </div>
           </div>
           <div class="modal-footer">
