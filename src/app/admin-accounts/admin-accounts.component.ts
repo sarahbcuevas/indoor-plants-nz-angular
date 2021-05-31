@@ -78,7 +78,7 @@ export class AdminAccountsComponent implements OnInit {
       }))
       .subscribe(
         data => {
-          $('#addNewUserModal').modal('hide');
+          $('#addNewUserModal').hide();
           $('.modal-backdrop').remove();
           this.registrationFormGroup.reset();
           this.resetForm();
@@ -97,7 +97,7 @@ export class AdminAccountsComponent implements OnInit {
   deleteUser() {
     this.userService.deleteUserById(this.selectedUserId)
       .pipe(finalize(() => {
-        $('#deleteUserModal').modal('hide');
+        $('#deleteUserModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(

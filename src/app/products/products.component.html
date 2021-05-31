@@ -66,14 +66,6 @@
                     {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}
                   </div>
                 </div>
-                <div class="row ml-3 mr-4 d-flex" *ngIf="!orderItem?.product.forPickupOnly">
-                  <div class="flex-grow-1">
-                    Shipping Fee
-                  </div>
-                  <div>
-                    {{ (orderItem?.product.deliveryFee * orderItem?.quantity / 100).toFixed(2) }}
-                  </div>
-                </div>
                 <button type="button" class="close-btn pointer" aria-label="Remove" (click)="removeFromCart(orderItem?.product._id)">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -87,27 +79,15 @@
                 </div>
               </div>
               <div class="row justify-content-center mt-4">
-                <button type="button" class="btn btn-dark btn-sm text-uppercase" [routerLink]="['/checkout']">
+                <button type="button" class="btn btn-dark btn-sm text-uppercase" [routerLink]="['/cart']">
                   <i class="fas fa-sign-out-alt"></i> Proceed to Checkout
                 </button>
               </div>
-              <!-- <div class="row justify-content-center">
-                <p class="text-danger text-center">* Order Checkout Is Under Construction</p>
-              </div> -->
             </div>
 
         </div>
         <div class="col-12 col-md-8 col-lg-9 pt-4">
             <h6 class="sub-title text-uppercase mb-4">Products</h6>
-            <!-- <div class="alert alert-danger alert-dismissible text-center" role="alert">
-              <strong>'Add to Cart' Is Under Construction!</strong>
-              In the mean time, you may place your orders thru:
-              email: <a class="alert-link">{{ contactDetails?.email }}</a>.
-              You may also check our listings on Trademe <a class="alert-link" [href]="socialMedia?.trademe">@indoorplantsnz</a>.
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div> -->
             <div class="container mb-4">
                 <div class="row justify-content-between align-items-center flex-column-reverse flex-lg-row">
                     <div class="col-md-12 col-lg-4 text-lg-left mt-3 mt-lg-0">
@@ -143,7 +123,7 @@
                   <span class="badge badge-secondary float-right">Bestseller</span>
                 </div>
                 <div class="card-badge" *ngIf="product?.stock <= 0 || product?.stock === 0">
-                  <span class="badge badge-danger float-right">Out of Stock</span>
+                  <span class="badge badge-danger float-right">Sold Out</span>
                 </div>
                 <div class="card-body">
                   <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>

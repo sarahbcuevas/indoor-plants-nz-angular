@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { ContentService } from '../_services/content.service';
+import { Content } from '../_models/content';
 
 import { AuthenticationService } from '../_services/authentication.service';
 
@@ -17,12 +19,14 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   loginError: string;
+  content: Content;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private contentService: ContentService
   ) { }
 
   ngOnInit() {
@@ -36,6 +40,20 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/admin'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/admin';
+
+    this.getContent();
+  }
+
+  getContent() {
+    this.contentService.getContent()
+      .subscribe(
+        content => {
+          this.content = content[0];
+          if (this.content) {
+            document.title = this.content.shopName;
+          }
+        }
+      );
   }
 
   // convenience getter for easy access to form fields

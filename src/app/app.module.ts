@@ -39,7 +39,6 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { AdminContentComponent } from './admin-content/admin-content.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
-import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 import { TrackOrderComponent } from './track-order/track-order.component';
 import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
@@ -49,6 +48,7 @@ import { AdminOrderDetailsComponent } from './admin-order-details/admin-order-de
 import { AdminOrderCreateComponent } from './admin-order-create/admin-order-create.component';
 import { AdminOrderEditComponent } from './admin-order-edit/admin-order-edit.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,6 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
     AdminContentComponent,
     CheckoutComponent,
     AdminRegisterComponent,
-    AdminProfileComponent,
     OrderConfirmationComponent,
     TrackOrderComponent,
     AdminOrdersComponent,
@@ -79,7 +78,8 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
     AdminOrderDetailsComponent,
     AdminOrderCreateComponent,
     AdminOrderEditComponent,
-    AdminSettingsComponent
+    AdminSettingsComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,

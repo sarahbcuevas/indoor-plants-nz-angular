@@ -80,7 +80,7 @@ export class ProductsComponent implements OnInit {
   addToCart() {
     if (this.selectedProduct._id) {
       const orderItem: OrderItem = {
-        product: this.selectedProduct,
+        product: this.selectedProduct._id,
         quantity: this.noOfItemsCart
       };
       if (localStorage.getItem('cart') === null) {
@@ -92,7 +92,7 @@ export class ProductsComponent implements OnInit {
         let index = -1;
         for (let i = 0; i < cart.length; i++) {
           const item: OrderItem = JSON.parse(cart[i]);
-          if (item.product._id === this.selectedProduct._id) {
+          if (item.product === this.selectedProduct._id) {
             index = i;
             break;
           }
@@ -112,7 +112,7 @@ export class ProductsComponent implements OnInit {
       this.loadCart();
     }
 
-    $('#addToCartModal').modal('hide');
+    $('#addToCartModal').hide();
     $('.modal-backdrop').remove();
     this.noOfItemsCart = 1;
   }
@@ -126,15 +126,17 @@ export class ProductsComponent implements OnInit {
     }
     for (let i = 0; i < cart.length; i++) {
       const item = JSON.parse(cart[i]);
-      this.orderItems.push({
-        product: item.product,
-        quantity: item.quantity
-      });
-      if (item.product.forPickupOnly) {
-        this.totalAmount += item.product.price * item.quantity;
-      } else {
-        this.totalAmount += (item.product.price + item.product.deliveryFee) * item.quantity;
-      }
+      this.productService.getProductById(item.product)
+        .pipe()
+        .subscribe(
+          prod => {
+            this.orderItems.push({
+              product: prod,
+              quantity: item.quantity
+            });
+            this.totalAmount += prod.price * item.quantity;
+          }
+        );
     }
   }
 
@@ -147,7 +149,7 @@ export class ProductsComponent implements OnInit {
     const index = -1;
     for (let i = 0; i < cart.length; i++) {
       const item: OrderItem = JSON.parse(cart[i]);
-      if (item.product._id === id) {
+      if (item.product === id) {
         cart.splice(i, 1);
         break;
       }
@@ -158,7 +160,7 @@ export class ProductsComponent implements OnInit {
 
   applyFilter() {
     this.getAllProducts();
-    $('#sortFilterModal').modal('hide');
+    $('#sortFilterModal').hide();
     $('.modal-backdrop').remove();
   }
 

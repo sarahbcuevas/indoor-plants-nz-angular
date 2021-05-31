@@ -7,6 +7,15 @@
   letter-spacing: 0rem;
 }
 
+.shop-name {
+  font-family: 'Pacifico', sans-serif;
+  text-align: center;
+}
+
+.block-title {
+  font-size: 1.1rem;
+}
+
 .btn-disabled {
    pointer-events: none;
    cursor: default;
@@ -61,4 +70,27 @@
 
 .regular-text {
   font-size: 0.8rem;
+}
+
+.navbar-toggler {
+  font-size: 1rem!important;
+  background-color: #FAFAFA !important;
+}
+
+#sidebar-toggler {    
+
+  @media (max-width: 767.98px) {
+      display: block;
+  }
+  
+  @media (min-width: 768px) {
+      display: none;
+  }
+}
+
+#orderSummary {
+
+  @media (min-width: 768px) {
+      display: block;
+  }
 }

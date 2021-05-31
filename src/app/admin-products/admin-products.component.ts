@@ -93,7 +93,7 @@ export class AdminProductsComponent implements OnInit {
         },
         error => {
           if (error === 'OK') {
-            $('#addNewProductModal').modal('hide');
+            $('#addNewProductModal').hide();
             $('.modal-backdrop').remove();
             this.createProductFormGroup.reset();
             this.resetForm();
@@ -106,7 +106,7 @@ export class AdminProductsComponent implements OnInit {
 
   applyFilter() {
     this.getAllProducts();
-    $('#sortFilterModal').modal('hide');
+    $('#sortFilterModal').hide();
     $('.modal-backdrop').remove();
   }
 
@@ -183,7 +183,7 @@ export class AdminProductsComponent implements OnInit {
   deleteProduct() {
     this.productService.deleteProductById(this.selectedProductId)
       .pipe(finalize(() => {
-        $('#deleteProductModal').modal('hide');
+        $('#deleteProductModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(
@@ -196,7 +196,7 @@ export class AdminProductsComponent implements OnInit {
   deleteAllProducts() {
     this.productService.deleteAllProducts()
       .pipe(finalize(() => {
-        $('#deleteAllProductsModal').modal('hide');
+        $('#deleteAllProductsModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(

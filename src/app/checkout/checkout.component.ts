@@ -2,15 +2,19 @@ import { isMetadataImportedSymbolReferenceExpression } from '@angular/compiler-c
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { OrderItem, Order, PaymentMethod, ShippingDetails, ShippingFeeMethod } from '../_models/order';
+import { OrderItem, Order, PaymentMethod, ShippingDetails, ShippingFeeMethod, PaymentStatus } from '../_models/order';
 import { Customer } from '../_models/customer';
 import { Product } from '../_models/product';
 import { CustomerService } from '../_services/customer.service';
 import { OrderService } from '../_services/order.service';
 import { ProductService } from '../_services/product.service';
+import { SettingsService } from '../_services/settings.service';
 import location from '../../assets/cities.json';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { render } from 'creditcardpayments/creditCardPayments';
+import { Settings } from '../_models/settings';
+import { ContentService } from '../_services/content.service';
+import { Content } from '../_models/content';
 
 declare const clickTab: any;
 declare var paypal;
@@ -21,7 +25,6 @@ declare var paypal;
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
-  @ViewChild('paypalCheckoutButtons', { static: true }) paypalElement: ElementRef;
   @ViewChild('paypalCompleteOrderButton', { static: true }) paypalCompleteOrderElement: ElementRef;
 
   subTotal: number;
@@ -40,9 +43,15 @@ export class CheckoutComponent implements OnInit {
   regionIndex = 0;
   cityIndex = 0;
   totalShippingFee: number = 0;
+  baseShippingFee: number = 0;
   customer: Customer;
   isShippingAllowed: boolean;
   Payment_Method = PaymentMethod;
+  settings: Settings;
+  paypalButton: any;
+  content: Content;
+  forShipping: boolean;
+  isShippingStep = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,7 +59,9 @@ export class CheckoutComponent implements OnInit {
     private router: Router,
     private customerService: CustomerService,
     private orderService: OrderService,
-    private productService: ProductService
+    private productService: ProductService,
+    private settingsService: SettingsService,
+    private contentService: ContentService
   ) {
 
     this.userInfoFormGroup = this.formBuilder.group({
@@ -70,7 +81,7 @@ export class CheckoutComponent implements OnInit {
       forShipping: [false]
     });
     this.paymentFormGroup = this.formBuilder.group({
-      paymentMethod: [PaymentMethod.CASH, Validators.required]
+      paymentMethod: ['', Validators.required]
     });
     this.billingFormGroup = this.formBuilder.group({
       sameAsShippingAddress: [true]
@@ -97,8 +108,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getSettings();
     this.loadCart();
     this.loadCountries();
+    this.getContent();
     document.querySelector<HTMLElement>('#paypalCompleteOrderButton');
     if (this.paymentFormGroup.get('paymentMethod').value == PaymentMethod.PAYPAL) {
       document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'inline-block';
@@ -115,91 +128,107 @@ export class CheckoutComponent implements OnInit {
     this.selectedProduct = product;
   }
 
+  getSettings(): void {
+    this.settingsService.getSettings()
+      .pipe(tap(settings => {
+        this.settings = settings;
+        this.shippingFormGroup.get('forShipping').setValue(!this.settings.allowPickup);
+      }))
+      .subscribe();
+  }
+  
+  getContent() {
+    this.contentService.getContent()
+      .subscribe(
+        content => {
+          this.content = content[0];
+          if (this.content) {
+            document.title = this.content.shopName;
+          }
+        }
+      );
+  }
+
   loadCart() {
     this.subTotal = 0;
     this.orderItems = [];
     this.isShippingAllowed = true;
     this.totalShippingFee = 0;
+    let totalBill = 0;
     const cart = JSON.parse(localStorage.getItem('cart'));
 
     if (cart === null) {
       return;
     }
+
     for (let i = 0; i < cart.length; i++) {
       const item = JSON.parse(cart[i]);
-      let _product: Product = item.product;
-      this.orderItems.push({
-        product: _product,
-        quantity: item.quantity
-      });
-      this.subTotal += _product.price * item.quantity;
-      this.totalShippingFee += _product.deliveryFee * item.quantity;
+      this.productService.getProductById(item.product)
+        .pipe(finalize(() => {
+          if (i == cart.length - 1) {
+            totalBill = this.subTotal;
+            if (this.isShippingAllowed) {
+              totalBill += this.totalShippingFee + this.baseShippingFee;
+            }
 
-      if (_product.forPickupOnly) {
-        this.isShippingAllowed = false;
-      }
+            this.renderPaypalButton();
+          }
+        }))
+        .subscribe(
+          prod => {
+            this.orderItems.push({
+              product: prod,
+              quantity: item.quantity
+            });
+            
+            this.subTotal += prod.price * item.quantity;
+            this.totalShippingFee += prod.deliveryFee * item.quantity;
+
+            if (prod.forPickupOnly && this.settings.allowPickup) {
+              this.isShippingAllowed = false;
+            }
+          }
+        );
+    }
+  }
+
+  renderPaypalButton() {
+
+    this.forShipping = this.shippingFormGroup.get('forShipping').value;
+    let shipping = 0;
+
+    if (this.forShipping) {
+      shipping = this.totalShippingFee + this.baseShippingFee;
     }
 
-    let totalBill = this.subTotal;
-    if (this.isShippingAllowed) {
-      totalBill += this.totalShippingFee;
+    let totalBill = this.subTotal + shipping;
+
+    let itemList = [];
+    let itemTotal = 0;
+    
+    this.orderItems.forEach(order => {
+      let item = {
+        name: order.product.name,
+        quantity: order.quantity,
+        unit_amount: {value: order.product.price/100, currency_code: 'NZD'}
+      };
+      itemTotal += order.quantity;
+      console.log(`${order.product.name}: ${order.product.price} x ${order.quantity} = ${order.product.price * order.quantity} `);
+
+      itemList.push(item);
+    });
+
+    if (this.paypalButton != undefined || this.paypalButton != null) {
+      this.paypalButton.close();
     }
 
-    // render({
-    //   id: "#paypalCheckoutButtons",
-    //   currency: "NZD",
-    //   value: JSON.parse(JSON.stringify(totalBill/100)),
-    //   onApprove: (details) => {
-    //     alert("Transaction Successful!");
-    //     console.log('Details: ', details);
-    //     // TODO: Redirect to order successful page
-    //     // Mark order as paid
-    //     // Remove items in cart
-    //   },
-    // });
+    console.log('totalBill: ', totalBill);
+    console.log('shipping: ', shipping);
 
-    paypal.Buttons({
-        style: {
-          color: 'gold',
-          shape: 'rect',
-          size: 'small',
-          height: 40,
-          layout: 'horizontal',
-          tagline: 'false'
-        },
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [
-              {
-                description: 'item description',
-                amount: {
-                  currency_code: 'NZD',
-                  value: JSON.parse(JSON.stringify(totalBill/100))
-                }
-              }
-            ]
-          });
-        },
-        onApprove: async (data, actions) => {
-          const order = await actions.order.capture();
-    //       // Redirect to order successful page
-    //       // Mark order as paid
-    //       // Remove items in cart
-    // Record info of customers and order
-          alert("Transaction successful! " + order);
-          console.log('onApprove order: ', order);
-        },
-        onError: err => {
-          console.log('Error: ', err);
-          alert("Error: " + err);
-        }
-      })
-      .render(this.paypalElement.nativeElement);
-
-    paypal.Buttons({
+    this.paypalButton = paypal.Buttons({
 
       // Show the buyer a 'Pay Now' button in the checkout flow
-      commit: false,
+      commit: true,
 
       style: {
         color: 'gold',
@@ -210,40 +239,53 @@ export class CheckoutComponent implements OnInit {
         tagline: 'false'
       },
 
-      // payment() is called when the button is clicked
-      payment: function(data, actions) {
-        // Make a call to the REST API to set up the payment
-        return actions.payment.create({
-          payment: {
-            transactions: [
-              {
-                amount: { 
-                  total: JSON.parse(JSON.stringify(totalBill/100)),
-                  currency_code: 'NZD',
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                currency_code: 'NZD',
+                value: JSON.parse(JSON.stringify(totalBill/100)),
+                breakdown: {
+                  item_total: {value: this.subTotal/100, currency_code: 'NZD'},
+                  shipping: {value: shipping/100, currency_code: 'NZD'}
                 }
-              }
-            ],
-            redirect_urls: {
-              return_url: 'http://localhost:4200/order-confirmation',
-              cancel_url: '/checkout'
+              },
+              items: itemList
             }
+          ],
+          application_context: {
+            shipping_preference: 'NO_SHIPPING'
           }
         });
       },
 
       // onAuthorize() is called when the buyer approves the payment
       onAuthorize: function(data, actions) {
-
         // Make a call to the REST API to execute the payment
         return actions.payment.execute().then(function() {
           actions.redirect();
         });
       },
 
+      onApprove: async (data, actions) => {
+        const order = await actions.order.capture();
+        // Redirect to order successful page
+        // Mark order as paid
+        // Remove items in cart
+        // Record info of customers and order
+        if (order.status == "COMPLETED") {
+          this.completeOrder();
+        }
+      },
+
       onCancel: function(data, actions) {
-        actions.redirect();
+        console.log('onCancel() data: ', data);
       }
-    }).render(this.paypalCompleteOrderElement.nativeElement);
+    });
+
+    this.paypalButton.render(this.paypalCompleteOrderElement.nativeElement);
+
   }
 
   loadCountries() {
@@ -266,6 +308,14 @@ export class CheckoutComponent implements OnInit {
     this.cities = [];
     this.regionIndex = regionIndex;
     let data = location[this.countryIndex].regions[regionIndex].cities;
+    let island = location[this.countryIndex].regions[regionIndex].island;
+
+    if (island === "North Island") {
+      this.baseShippingFee = this.settings.northIslandShippingRate;
+    } else if (island === "South Island") {
+      this.baseShippingFee = this.settings.southIslandShippingRate;
+    }
+
     for (let i=0; i<data.length; i++) {
       this.cities.push(data[i]);
     }
@@ -294,15 +344,17 @@ export class CheckoutComponent implements OnInit {
       return;
     }
     this.removeFromCart(this.selectedProduct._id);
-    $('#removeProductModal').modal('hide');
+    $('#removeProductModal').hide();
     $('.modal-backdrop').remove();
   }
 
   continueToShipping() {
     this.onTabClick();
+    this.isShippingStep = true;
   }
 
   continueToPayment() {
+    this.loadCart();
     this.onTabClick();
   }
 
@@ -354,14 +406,18 @@ export class CheckoutComponent implements OnInit {
     let shippingDetails = new ShippingDetails();
     if (forShipping) {
       shippingDetails.mode = ShippingFeeMethod.STANDARD;
-      shippingDetails.fee = this.totalShippingFee;
+      shippingDetails.fee = this.totalShippingFee + this.baseShippingFee;
     } else {
       shippingDetails.mode = ShippingFeeMethod.PICKUP;
       shippingDetails.fee = 0;
     }
     order.shipping = shippingDetails;
 
-    order.total = this.subTotal + this.totalShippingFee;
+    if (order.paymentMethod == PaymentMethod.PAYPAL) {
+      order.paymentStatus = PaymentStatus.PAID;
+    }
+
+    order.total = this.subTotal + shippingDetails.fee;
 
     this.orderService.createOrder(order)
     .pipe()
@@ -369,10 +425,8 @@ export class CheckoutComponent implements OnInit {
       order => {
         this.emptyCart();
 
-        let firstname = this.userInfoFormGroup.get('firstname').value;
-
         this.router.navigate(['/order-confirmation'], 
-          {queryParams: { name: firstname, code: order._id}});
+          {queryParams: { orderId: order._id}});
       },
       error => {
         console.log('Error: ', error);

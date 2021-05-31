@@ -377,7 +377,7 @@ export class AdminOrderEditComponent implements OnInit {
           updated_customer => {
             this.selectedCustomer = updated_customer;
             this.editOrderContactError = null;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           },
           error => {
@@ -398,7 +398,7 @@ export class AdminOrderEditComponent implements OnInit {
           }),
           finalize(() => {
             this.editOrderContactLoading = false;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           })
         )
@@ -410,7 +410,7 @@ export class AdminOrderEditComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.editOrderContactLoading = false;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           })
         )
@@ -446,7 +446,7 @@ export class AdminOrderEditComponent implements OnInit {
           updated_customer => {
             this.selectedCustomer = updated_customer;
             this.editShippingAddressError = null;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           },
           error => {
@@ -471,7 +471,7 @@ export class AdminOrderEditComponent implements OnInit {
           }),
           finalize(() => {
             this.editShippingAddressLoading = false;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           })
         ).subscribe();
@@ -486,7 +486,7 @@ export class AdminOrderEditComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.editShippingAddressLoading = false;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           })
         ).subscribe();
@@ -530,7 +530,7 @@ export class AdminOrderEditComponent implements OnInit {
 
     this.revertSelectPropertiesOfAllTags();
 
-    $('#viewAllTagsModal').modal('hide');
+    $('#viewAllTagsModal').hide();
     $('.modal-backdrop').remove();
   }
 
@@ -658,7 +658,7 @@ export class AdminOrderEditComponent implements OnInit {
       this.order.discount.reason = this.discountReason;
     }
 
-    $('#addDiscountPopup').modal('hide');
+    $('#addDiscountPopup').hide();
     $('.modal-backdrop').remove();
   }
 
@@ -685,7 +685,7 @@ export class AdminOrderEditComponent implements OnInit {
 
     this.addShippingError = '';
 
-    $('#addShippingPopup').modal('hide');
+    $('#addShippingPopup').hide();
     $('.modal-backdrop').remove();
 
     this.calculateBill();

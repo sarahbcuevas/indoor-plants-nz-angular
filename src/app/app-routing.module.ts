@@ -7,6 +7,7 @@ import { AboutUsComponent } from './aboutus/aboutus.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
 import { ProductsComponent } from './products/products.component';
 import { LoginComponent } from './login/login.component';
+import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { TrackOrderComponent } from './track-order/track-order.component';
 
@@ -18,7 +19,6 @@ import { AdminContentComponent } from './admin-content/admin-content.component';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 import { AdminProductDetailComponent } from './admin-product-detail/admin-product-detail.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
-import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminCustomersComponent } from './admin-customers/admin-customers.component';
 import { AdminCustomerDetailComponent } from './admin-customer-detail/admin-customer-detail.component';
@@ -46,8 +46,8 @@ const routes: Routes = [
     { path: 'admin/orders/:id/edit', component: AdminOrderEditComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
     // { path: 'register', component: AdminRegisterComponent },
-    { path: 'admin/profile', component: AdminProfileComponent, canActivate: [AuthGuard] },
     { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [AuthGuard] },
+    { path: 'cart', component: CartComponent },
     { path: 'checkout', component: CheckoutComponent },
     { path: 'order-confirmation', component: OrderConfirmationComponent },
     { path: 'track-order', component: TrackOrderComponent },

@@ -1,13 +1,130 @@
-<div class="container bg-white pt-5 pb-5 text-center justify-content-center justify-content-around">
-    <div class="row justify-content-around d-flex justify-content-center">
-        <h4>{{ name }}, thank you for your order!</h4>
+<div class="container-fluid ml-0 mr-0 pl-0 pr-0 h-100 d-inline-block" style="max-height: 100%;">
+    <div class="row" id="sidebar-toggler">
+        <div class="navbar-toggler border collapsed" data-toggle="collapse" data-target="#orderSummary" aria-controls="orderSummary" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="container-fluid ml-0 mr-0 pt-3 pb-3">
+                <div class="row">
+                    <div class="col text-left">
+                        <span class="text-info"><i class="fas fa-shopping-cart mr-2"></i> Show order summary <i class="fas fa-chevron-down ml-2"></i></span>
+                    </div>
+                    <div class="col-auto text-right">
+                        <strong>NZD {{ (totalBill / 100).toFixed(2) }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row mt-1 mt-sm-2 mt-md-4 justify-content-around d-flex justify-content-center">
-        <div class="col-12 col-sm-9 col-md-7 pl-5 pr-5 pt-3 pb-3 alert alert-success">
-            <h5 class="text-uppercase">Order Confirmation</h5>
-            <p>We've received your order and will contact you as soon as possible.<br>
-            You can track your order <a href="/track-order" class="text-green"><u>here</u></a>.</p>
-            <h6>Tracking Code: {{ trackingCode }}</h6>
+    <div class="row justify-content-around h-100" style="max-height: 100%;">
+        <div class="col-sm-12 col-md-7 bg-white pt-4 pb-4 pl-0 pr-0 pl-md-4 pr-md-4 order-last order-md-first">
+            <div class="container mt-3 pl-3 pr-3">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="title">{{ content?.shopName }}</h2>
+                        <p class="sub-title text-uppercase"><small>{{ content?.shopSubtitle }}</small></p>
+                    </div>
+                </div>
+                <div class="row justify-content-end mt-3">
+                    <div class="col-auto">
+                        <span class="text-info check"><i class="far fa-check-circle"></i></span>
+                    </div>
+                    <div class="col col-md-10 col-lg-9 text-left">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col pl-0 pr-0">
+                                    <span class="regular-text text-gray">Order #{{ order?.code }}</span><br>
+                                    <span class="thank-you">Thank you {{ order?.customer.firstname }}!</span>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col block text-left">
+                                    <span class="block-title">Order updates</span>
+                                    <p class="regular-text">You'll get shipping and delivery updates by email or text.</p>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col block text-left">
+                                    <span class="block-title">Customer information</span>
+                                    <div class="row regular-text">
+                                        <div class="col mt-2">
+                                            <strong>Contact information</strong><br>
+                                            <span>{{ order?.customer.email }}</span><br><br>
+                                            <strong>Shipping address</strong><br>
+                                            <span>{{ order?.customer.firstname }} {{ order?.customer.lastname }}</span><br>
+                                            <span>{{ order?.customer.address }}</span><br>
+                                            <span>{{ order?.customer.city }}, {{ order?.customer.region }}</span><br>
+                                            <span>{{ order?.customer.country }} {{ order?.customer.postal }}</span><br>
+                                            <span>{{ order?.customer.contact }}</span><br>
+                                            
+                                        </div>
+                                        <div class="col mt-2">
+                                            <strong>Payment method</strong><br>
+                                            <span>{{ order?.paymentMethod }} - <strong>NZD {{  (order?.total/100).toFixed(2) }}</strong></span><br><br>
+                                            <strong>Shipping method</strong><br>
+                                            <span *ngIf="order?.shipping.mode !== Shipping_Fee_Method.PICKUP">For Delivery</span>
+                                            <span *ngIf="order?.shipping.mode === Shipping_Fee_Method.PICKUP">For Pick Up</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4 mb-3 justify-content-around">
+                                <div class="col text-left">
+                                    Need help? <a [routerLink]="['/contactus']">Contact Us</a>
+                                </div>
+                                <div class="col text-right">
+                                    <a class="btn btn-info pt-md-2 pb-md-2 pl-md-4 pr-md-4" [routerLink]="['/products']">Continue Shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-5 bg-light pt-5 pb-4 pl-4 pr-4 border-left collapse navbar-collapse order-first order-md-last" id="orderSummary">
+            <div class="container pt-3 pb-3">
+                <div class="row align-items-center mb-3">
+                    <div class="col">
+                        <span class="block-title">Order Summary</span>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2 mb-2" *ngFor="let orderItem of order?.orderItems ">
+                    <div class="col-2 pr-0">
+                        <img src="{{ orderItem.product.image }}" class="img-thumbnail" *ngIf="orderItem.product.image !== null && orderItem.product.image !== '' && orderItem.product.image !== undefined">
+                        <img src="../../assets/default-plant.jpg" class="img-thumbnail" *ngIf="orderItem.product.image === null || orderItem.product.image === '' || orderItem.product.image === undefined">
+                    </div>
+                    <div class="col text-left">
+                        <strong>{{ orderItem.product.name }}</strong> <span class="regular-text text-gray ml-3">x {{ orderItem.quantity }}</span>
+                    </div>
+                    <div class="col-auto">
+                        <span>{{ (orderItem.product.price * orderItem.quantity / 100).toFixed(2) }}</span>
+                    </div>
+                </div>
+                <hr class="mt-3 mb-3">
+                <div class="row align-items-center">
+                    <div class="col text-left">
+                        Subtotal
+                    </div>
+                    <div class="col-auto text-right">
+                        <span>{{ (subTotal / 100).toFixed(2) }}</span>
+                    </div>
+                </div>
+                <div class="row mt-1 align-items-center">
+                    <div class="col text-left">
+                        Shipping
+                    </div>
+                    <div class="col-auto text-right">
+                        <span *ngIf="order?.shipping.fee > 0">{{ (order?.shipping.fee / 100).toFixed(2) }}</span>
+                        <span *ngIf="order?.shipping.fee == 0" class="text-gray"><em>Free</em></span>
+                    </div>
+                </div>
+                <hr class="mt-3 mb-3">
+                <div class="row align-items-center">
+                    <div class="col text-left">
+                        <strong class="h6">Total</strong>
+                    </div>
+                    <div class="col-auto text-right">
+                        <strong class="h5">NZD {{ (totalBill / 100).toFixed(2) }}</strong>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

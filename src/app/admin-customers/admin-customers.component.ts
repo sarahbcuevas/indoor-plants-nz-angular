@@ -123,7 +123,7 @@ export class AdminCustomersComponent implements OnInit {
         },
         error => {
           if (error === 'OK') {
-            $('#addNewCustomerModal').modal('hide');
+            $('#addNewCustomerModal').hide();
             $('.modal-backdrop').remove();
             this.createCustomerFormGroup.reset();
             this.resetForm();
@@ -137,7 +137,7 @@ export class AdminCustomersComponent implements OnInit {
   deleteCustomer() {
     this.customerService.deleteCustomerById(this.selectedCustomerId)
       .pipe(finalize(() => {
-        $('#deleteCustomerModal').modal('hide');
+        $('#deleteCustomerModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(

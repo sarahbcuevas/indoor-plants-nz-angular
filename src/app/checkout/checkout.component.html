@@ -1,564 +1,572 @@
-<div class="container bg-white pt-5 pb-5 text-center justify-content-center justify-content-around">
-  <h6 class="sub-title text-uppercase mb-4">Order Checkout</h6>
-  <div class="row justify-content-center align-items-center">
-    <ul class="nav justify-content-center align-items-center">
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#review-cart" data-toggle="tab">Review Cart</a>
-      </li>
-      <i class="fas fa-chevron-right text-muted"></i>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#customer-information" data-toggle="tab">Customer Information</a>
-      </li>
-      <i class="fas fa-chevron-right text-muted"></i>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#shipping" data-toggle="tab">Shipping</a>
-      </li>
-      <i class="fas fa-chevron-right text-muted"></i>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#payment" data-toggle="tab">Payment</a>
-      </li>
-    </ul>
-  </div>
-  <div class="row justify-content-around d-flex justify-content-center">
-    <div class="tab-content pt-4 pb-4 col-md-11 col-lg-9 align-items-center justify-content-center">
-      <div class="tab-pane fade show active" id="review-cart">
-        <h4>Review Cart</h4>
-        <div class="container mt-3 align-items-center justify-content-center">
-          <div class="row border pt-4 pb-4 justify-content-center align-items-center" *ngIf="orderItems?.length === 0">
-            <div class="col-12">No products in the cart.</div>
+<div class="container-fluid ml-0 mr-0 pl-0 pr-0 h-100 d-inline-block" style="max-height: 100%;">
+  <div class="row" id="sidebar-toggler">
+    <div class="navbar-toggler border collapsed" data-toggle="collapse" data-target="#orderSummary" aria-controls="orderSummary" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="container-fluid ml-0 mr-0 pt-3 pb-3">
+        <div class="row">
+          <div class="col text-left">
+            <span class="text-info"><i class="fas fa-shopping-cart mr-2"></i> Show order summary <i class="fas fa-chevron-down ml-2"></i></span>
           </div>
-          <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
-            <div class="container">
-              <div class="row border justify-content-around align-items-center" *ngFor="let orderItem of orderItems">
-                <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
-                  <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
-                </div>
-                <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
-                  <img src="../../assets/default-plant.jpg" class="img-thumbnail">
-                </div>
-                <div class="col text-left">
-                  <span class="h5">{{ orderItem?.product.name }}</span>
-                  <span class="text-muted ml-2">x{{ orderItem?.quantity }}</span><br>
-                  <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em></span>
-                </div>
-                <div class="col-3 col-sm-2 align-middle">NZD {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}</div>
-                <button type="button" class="close align-self-start pr-1" data-toggle="modal" data-target="#removeProductModal" aria-label="Close" (click)="selectProduct(orderItem?.product)">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="row border justify-content-center">
-            <div class="col-12 col-md-7 col-lg-7 offset-md-5 offset-lg-5">
-              <table class="table table-borderless text-right">
-                <tbody>
-                  <tr>
-                    <th scope="row" class="pt-1 pb-1">Sub-total</th>
-                    <td class="pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row" class="pt-1 pb-1">Shipping Fee</th>
-                    <td class="pt-1 pb-1"><em>Calculated on Shipping Step</em></td>
-                  </tr>
-                  <tr>
-                    <th scope="row" class="h5 pt-1 pb-1">TOTAL</th>
-                    <td class="h5 pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="row mt-4">
-            <div class="col-12">
-              <ul class="nav float-right">
-                <li class="nav-item">
-                  <a class="btn btn-success nav-link"  href="#customer-information" data-toggle="tab" (click)="onTabClick()" [ngClass]="{'btn-disabled': (orderItems?.length===0)}">Continue to Information</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <button type="button" [routerLink]="['/products']" class="btn btn-link text-green float-right"><i class="fas fa-chevron-left"></i> Continue Shopping</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="customer-information">
-        <h4>Customer Information</h4>
-        <div class="container align-items-center justify-content-center">
-          <div class="row mt-5 justify-content-center align-items-center">
-            <div class="col-12 col-md-10 col-lg-9 col-xl-7 pl-0 pr-0">
-              <div class="border pt-1 pb-2">
-                <h6>Express Checkout</h6>
-                <div id="paypalCheckoutButtons" #paypalCheckoutButtons class="ml-5 mr-5 mt-3 mb-2"></div>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-4 mb-4 align-items-center justify-content-center">
-            <div class="col-12 col-md-10">
-              <span class="lined">&nbsp;OR&nbsp;</span>
-            </div>
-          </div>
-          <div class="row mt-4 mb-3 justify-content-center align-items-center">
-            <form [formGroup]="userInfoFormGroup" class="col-12 col-md-10 justify-content-center">
-              <div class="row mb-3 justify-content-around">
-                <div class="col-12 col-sm-6 pl-0 pr-0">
-                  <h5 class="title mb-0 float-left">Contact Information</h5>
-                </div>
-                <div class="col-12 col-sm-6 pl-0 pr-0">
-                  <span class="float-left float-sm-right">Already have an account? <a href="" class="text-green"><u>Log in</u></a></span>
-                </div>
-              </div>
-              <div class="form-group row mb-1 justify-content-center">
-                <input type="text" id="email" formControlName="email" class="form-control" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
-                <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.email.errors?.required && submitted">Email is required</p>
-              </div>
-              <div class="form-check row mb-3 mb-sm-4 justify-content-center">
-                <div class="col-12 d-flex pl-0 pr-0">
-                  <div class="float-left">
-                    <input type="checkbox" id="subscribe" formControlName="subscribe" class="form-check-input" placeholder="Subscribe">
-                    <label class="form-check-label text-sm" for="subscribe">Keep me up to date on news and exclusive offers</label>
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-12 pl-0 pr-0">
-                  <h5 class="title mb-0 float-left">Shipping Address</h5>
-                </div>
-              </div>
-              <div class="row mb-sm-1 justify-content-center">
-                <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pr-sm-1">
-                  <input type="text" id="firstname" formControlName="firstname" class="form-control" placeholder="First Name">
-                  <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.firstname.errors?.required && submitted">First Name is required</p>
-                </div>
-                <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pl-sm-1">
-                  <input type="text" id="lastname" formControlName="lastname" class="form-control" placeholder="Last Name">
-                  <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.lastname.errors?.required && submitted">Last Name is required</p>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <input type="text" id="contact" formControlName="contact" class="form-control" placeholder="Contact">
-                  <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <select class="form-control" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
-                    <option value="" disabled selected>Select Country</option>
-                    <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <select class="form-control" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
-                    <option value="" disabled selected>Select Region</option>
-                    <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <select class="form-control" id="city" formControlName="city" (change)="selectCity($event.target.value)">
-                    <option value="" disabled selected>Select City</option>
-                    <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <input type="text" id="address" formControlName="address" class="form-control" placeholder="Street Address">
-                  <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.address.errors?.required && submitted">Address is required</p>
-                </div>
-              </div>
-              <div class="form-group row mb-2 justify-content-center">
-                <div class="col-12 pl-0 pr-0">
-                  <input type="text" id="postal" formControlName="postal" class="form-control" placeholder="Postal Code">
-                  <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.postal.errors?.required && submitted">Postal Code is required</p>
-                </div>
-              </div>
-              <div class="form-check row mb-2 mb-sm-4 justify-content-center">
-                <div class="col-12 d-flex pl-0 pr-0">
-                  <div class="float-left">
-                    <input type="checkbox" id="save" formControlName="save" class="form-check-input" placeholder="Save this information for next time">
-                    <label class="form-check-label text-sm" for="save">Save this information for next time</label>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="row mt-md-2 justify-content-center">
-            <div class="col-12 col-md-10 pr-0">
-              <ul class="nav float-right">
-                <li class="nav-item">
-                  <a class="btn btn-success nav-link" href="#shipping" data-toggle="tab" (click)="continueToShipping()" [ngClass]="{'btn-disabled': (!userInfoFormGroup.valid)}">Continue to Shipping</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-10 pr-0">
-              <ul class="nav float-right">
-                <li class="nav-item">
-                  <a class="btn btn-link text-green nav-link" href="#review-cart" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Cart</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="shipping">
-        <h4>Shipping</h4>
-        <div class="container align-items-center justify-content-center">
-          <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
-            <div class="col-12 col-md-10">
-              <div class="border pt-1 pb-2">
-                <div class="container">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-2">
-                      <span class="text-muted">Contact</span>
-                    </div>
-                    <div class="col d-flex text-left">
-                      <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
-                    </div>
-                    <div class="col-2 text-left">
-                      <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
-                    </div>
-                  </div>
-                  <hr class="mt-2 mb-2">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-2">
-                      <span class="text-muted">Ship to</span>
-                    </div>
-                    <div class="col d-flex text-left">
-                      <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
-                    </div>
-                    <div class="col-2 text-left">
-                      <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-3 align-items-center justify-content-center">
-            <div class="col-12 col-md-10">
-              <h5 class="title mb-0 float-left">Shipping</h5>
-            </div>
-          </div>
-          <div class="row d-flex mb-5 justify-content-center align-items-center">
-            <div class="col-12 col-md-10">
-              <div class="border pt-1 pb-2">
-                <form [formGroup]="shippingFormGroup">
-                  <ul class="container" style="list-style-type:none;">
-                    <div class="row d-flex align-items-center">
-                      <div class="col d-flex text-left">
-                        <li>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="forPickup" [value]="false">
-                            <label class="form-check-label" for="forPickup">
-                              For Pick Up
-                            </label>
-                          </div>
-                        </li>
-                      </div>
-                      <div class="col-2 text-left">
-                        <h6 class="mb-0">Free</h6>
-                      </div>
-                    </div>
-                    <hr class="mt-2 mb-2">
-                    <div class="row d-flex align-items-center">
-                      <div class="col d-flex text-left">
-                        <li>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="shipping" [value]="true" [attr.disabled]="isShippingAllowed ? null: false">
-                            <label class="form-check-label" for="shipping">
-                              Standard Shipping (2-4 days)
-                            </label>
-                            <span class="text-danger" *ngIf="!isShippingAllowed"><br>Shipping is not allowed since a product that is "For Pick Up Only" has been selected.</span>
-                          </div>
-                        </li>
-                      </div>
-                      <div class="col-2 text-left">
-                        <h6 class="mb-0" *ngIf="isShippingAllowed">{{ (totalShippingFee/100).toFixed(2) }} NZD</h6>
-                      </div>
-                    </div>
-                  </ul>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-md-2 justify-content-center">
-            <div class="col-12 col-md-10">
-              <ul class="nav float-right">
-                <li class="nav-item">
-                  <a class="btn btn-success nav-link" href="#payment" data-toggle="tab" (click)="continueToPayment()">Continue to Payment</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-10 pr-0">
-              <ul class="nav float-right">
-                <li class="nav-item">
-                  <a class="btn btn-link text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Information</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="payment">
-        <h4>Payment</h4>
-        <div class="container align-items-center justify-content-center">
-          <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
-            <div class="col-12 col-md-10">
-              <div class="border pt-1 pb-2">
-                <div class="container">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-2">
-                      <span class="text-muted">Contact</span>
-                    </div>
-                    <div class="col d-flex text-left">
-                      <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
-                    </div>
-                    <div class="col-2 text-left">
-                      <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
-                    </div>
-                  </div>
-                  <hr class="mt-2 mb-2">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-2">
-                      <span class="text-muted">Ship to</span>
-                    </div>
-                    <div class="col d-flex text-left">
-                      <span>{{ userInfoFormGroup.controls.address.value }}, {{ userInfoFormGroup.controls.city.value }}, {{ userInfoFormGroup.controls.region.value }}, {{ userInfoFormGroup.controls.country.value }} {{ userInfoFormGroup.controls.postal.value }}</span>
-                    </div>
-                    <div class="col-2 text-left">
-                      <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
-                    </div>
-                  </div>
-                  <hr class="mt-2 mb-2">
-                  <div class="row d-flex align-items-center">
-                    <div class="col-2">
-                      <span class="text-muted">Method</span>
-                    </div>
-                    <div class="col d-flex text-left">
-                      <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping (2-4 days) <strong>{{ (totalShippingFee/100).toFixed(2) }} NZD</strong></span>
-                      <span *ngIf="!shippingFormGroup.controls.forShipping.value">For Pick Up</span>
-                    </div>
-                    <div class="col-2 text-left">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-1 align-items-center justify-content-center">
-            <div class="col-12 col-md-10">
-              <h5 class="title mb-0 float-left">Payment</h5><br>
-              <p class="text-muted text-left">All transactions are secure and encrypted.</p>
-            </div>
-          </div>
-          <div class="row d-flex mb-5 justify-content-center align-items-center">
-            <div class="col-12 col-md-10">
-              <div class="border">
-                <form [formGroup]="paymentFormGroup">
-                  <ul style="list-style-type:none;" class="container pl-0 pr-0">
-                    <div id="accordion">
-                      <div class="card row">
-                        <div class="card-header" id="headingTwo">
-                          <h5 class="mb-0 text-left">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                              <li>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="cash" formControlName="paymentMethod" value="Cash">
-                                  <label class="form-check-label text-dark" for="cash">
-                                    <strong>Cash on Delivery / Cash on Pickup</strong>
-                                  </label>
-                                </div>
-                              </li>
-                            </button>
-                          </h5>
-                        </div>
-                      </div>
-                      <div class="card row">
-                        <div class="card-header" id="headingOne">
-                          <h5 class="mb-0 text-left">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                              <li>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" formControlName="paymentMethod" value="Paypal">
-                                  <label class="form-check-label" for="paypal">
-                                    <img src="../../assets/paypal1.svg" class="paypal-logo-img">&nbsp;<img src="../../assets/paypal2.svg" class="paypal-img">
-                                  </label>
-                                </div>
-                              </li>
-                            </button>
-                          </h5>
-                        </div>
-                    
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                          <div class="card-body">
-                            <div>
-                              <i class="fab fa-paypal"></i>
-                            </div>
-                            <div class="mt-3">
-                              After clicking "Complete Order", you will be redirected to PayPal to complete your purchase securely.
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="card row">
-                        <div class="card-header" id="headingThree">
-                          <h5 class="mb-0 text-left">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                              <li>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="paymentMethod" id="bank_deposit" formControlName="paymentMethod" value="Bank Deposit">
-                                  <label class="form-check-label text-dark" for="bank_deposit">
-                                    <strong>Bank Deposit</strong>
-                                  </label>
-                                </div>
-                              </li>
-                            </button>
-                          </h5>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                          <div class="card-body">
-                            An invoice will be emailed upon acknowledgement of this order.<br>
-                            <span class="text-muted regular-text"><em>Please make sure you input correct email.</em></span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </ul>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-1 align-items-center justify-content-center" *ngIf="shippingFormGroup.controls.forShipping.value">
-            <div class="col-12 col-md-10">
-              <h5 class="title mb-0 float-left">Billing Address</h5><br>
-              <p class="text-muted text-left">Select the address that matches your card or payment method.</p>
-            </div>
-          </div>
-          <div class="row d-flex mb-5 justify-content-center align-items-center" *ngIf="shippingFormGroup.controls.forShipping.value">
-            <div class="col-12 col-md-10">
-              <div class="border">
-                <form [formGroup]="billingFormGroup">
-                  <div class="container pl-0 pr-0">
-                    <div id="accordion">
-                      <div class="card row">
-                        <div class="card-header" id="headingTwo">
-                          <h5 class="mb-0 text-left">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="true">
-                                <label class="form-check-label text-dark" for="shipping">
-                                  <strong>Same as shipping address</strong>
-                                </label>
-                              </div>
-                            </button>
-                          </h5>
-                        </div>
-                      </div>
-                      <div class="card row">
-                        <div class="card-header" id="headingThree">
-                          <h5 class="mb-0 text-left">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="false">
-                                <label class="form-check-label text-dark" for="shipping">
-                                  <strong>Use different billing address</strong>
-                                </label>
-                              </div>
-                            </button>
-                          </h5>
-                        </div>
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                          <div class="card-body pl-4 pr-4">
-                            <form [formGroup]="billingAddressFormGroup" class="col-12 justify-content-center">
-                              <div class="row mb-sm-1 justify-content-center">
-                                <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pr-sm-1">
-                                  <input type="text" id="firstname" formControlName="firstname" class="form-control" placeholder="First Name">
-                                  <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.firstname.errors?.required && submitted">First Name is required</p>
-                                </div>
-                                <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pl-sm-1">
-                                  <input type="text" id="lastname" formControlName="lastname" class="form-control" placeholder="Last Name">
-                                  <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.lastname.errors?.required && submitted">Last Name is required</p>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <input type="text" id="contact" formControlName="contact" class="form-control" placeholder="Contact">
-                                  <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <select class="form-control" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
-                                    <option value="" disabled selected>Select Country</option>
-                                    <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <select class="form-control" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
-                                    <option value="" disabled selected>Select Region</option>
-                                    <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <select class="form-control" id="city" formControlName="city" (change)="selectCity($event.target.value)">
-                                    <option value="" disabled selected>Select City</option>
-                                    <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <input type="text" id="address" formControlName="address" class="form-control" placeholder="Street Address">
-                                  <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.address.errors?.required && submitted">Address is required</p>
-                                </div>
-                              </div>
-                              <div class="form-group row mb-2 justify-content-center">
-                                <div class="col-12 pl-0 pr-0">
-                                  <input type="text" id="postal" formControlName="postal" class="form-control" placeholder="Postal Code">
-                                  <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.postal.errors?.required && submitted">Postal Code is required</p>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-md-2 justify-content-center">
-            <div class="col-12 col-md-10">
-              <button type="button" class="btn btn-success float-right" (click)="completeOrder()" [disabled]="!billingFormGroup.controls.sameAsShippingAddress.value && !billingAddressFormGroup.valid" *ngIf="paymentFormGroup.controls.paymentMethod.value != Payment_Method.PAYPAL">Complete Order</button>
-              <div id="paypalCompleteOrderButton" #paypalCompleteOrderButton class="float-right"></div>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-10 pr-0">
-              <a class="btn btn-link text-green nav-link float-right" href="#shipping" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Shipping</a>
-            </div>
+          <div class="col-auto text-right">
+            <strong>NZD {{ (subTotal / 100).toFixed(2) }}</strong>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="row justify-content-around h-100" style="max-height: 100%;">
+    <div class="col-sm-12 col-md-7 bg-white pt-4 pb-4 pl-0 pr-0 pl-md-4 pr-md-4 order-last order-md-first">
+      <div class="container bg-white pt-2 pb-5 text-center justify-content-end">
+        <div class="row">
+          <div class="col">
+              <h2 class="shop-name">{{ content?.shopName }}</h2>
+              <p class="sub-title text-uppercase"><small>{{ content?.shopSubtitle }}</small></p>
+          </div>
+      </div>
+        <div class="row justify-content-center align-items-center">
+          <a class="mr-3 text-info" [routerLink]="['/cart']">Cart</a>
+          <ul class="nav justify-content-center align-items-center">
+            <i class="fas fa-chevron-right text-muted"></i>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#customer-information" data-toggle="tab">Customer Information</a>
+            </li>
+            <i class="fas fa-chevron-right text-muted"></i>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#shipping" data-toggle="tab">Shipping</a>
+            </li>
+            <i class="fas fa-chevron-right text-muted"></i>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#payment" data-toggle="tab">Payment</a>
+            </li>
+          </ul>
+        </div>
+        <div class="row justify-content-around d-flex justify-content-center">
+          <div class="tab-content pt-4 pb-4 pl-4 pr-4 col align-items-center justify-content-center">
+            <div class="tab-pane fade show active" id="customer-information">
+              <h4>Customer Information</h4>
+              <div class="container align-items-center justify-content-center">
+                <div class="row mt-4 mb-3 justify-content-center align-items-center">
+                  <form [formGroup]="userInfoFormGroup" class="col-12 col-md-10 justify-content-center">
+                    <div class="row mb-3 justify-content-around">
+                      <div class="col-12 col-sm-6 pl-0 pr-0">
+                        <h5 class="title mb-0 float-left">Contact Information</h5>
+                      </div>
+                      <div class="col-12 col-sm-6 pl-0 pr-0">
+                        <span class="float-left float-sm-right">Already have an account? <a href="" class="text-green"><u>Log in</u></a></span>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-1 justify-content-center">
+                      <input type="text" id="email" formControlName="email" class="form-control" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                      <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.email.errors?.required && submitted">Email is required</p>
+                    </div>
+                    <div class="form-check row mb-3 mb-sm-4 justify-content-center">
+                      <div class="col-12 d-flex pl-0 pr-0">
+                        <div class="float-left">
+                          <input type="checkbox" id="subscribe" formControlName="subscribe" class="form-check-input" placeholder="Subscribe">
+                          <label class="form-check-label text-sm" for="subscribe">Keep me up to date on news and exclusive offers</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-12 pl-0 pr-0">
+                        <h5 class="title mb-0 float-left">Shipping Address</h5>
+                      </div>
+                    </div>
+                    <div class="row mb-sm-1 justify-content-center">
+                      <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pr-sm-1">
+                        <input type="text" id="firstname" formControlName="firstname" class="form-control" placeholder="First Name">
+                        <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.firstname.errors?.required && submitted">First Name is required</p>
+                      </div>
+                      <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pl-sm-1">
+                        <input type="text" id="lastname" formControlName="lastname" class="form-control" placeholder="Last Name">
+                        <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.lastname.errors?.required && submitted">Last Name is required</p>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <input type="text" id="contact" formControlName="contact" class="form-control" placeholder="Contact">
+                        <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <select class="form-control" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
+                          <option value="" disabled selected>Select Country</option>
+                          <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <select class="form-control" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
+                          <option value="" disabled selected>Select Region</option>
+                          <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <select class="form-control" id="city" formControlName="city" (change)="selectCity($event.target.value)">
+                          <option value="" disabled selected>Select City</option>
+                          <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <input type="text" id="address" formControlName="address" class="form-control" placeholder="Street Address">
+                        <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.address.errors?.required && submitted">Address is required</p>
+                      </div>
+                    </div>
+                    <div class="form-group row mb-2 justify-content-center">
+                      <div class="col-12 pl-0 pr-0">
+                        <input type="text" id="postal" formControlName="postal" class="form-control" placeholder="Postal Code">
+                        <p class="text-danger" *ngIf="!!userInfoFormGroup.controls.postal.errors?.required && submitted">Postal Code is required</p>
+                      </div>
+                    </div>
+                    <div class="form-check row mb-2 mb-sm-4 justify-content-center">
+                      <div class="col-12 d-flex pl-0 pr-0">
+                        <div class="float-left">
+                          <input type="checkbox" id="save" formControlName="save" class="form-check-input" placeholder="Save this information for next time">
+                          <label class="form-check-label text-sm" for="save">Save this information for next time</label>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="row mt-md-2 justify-content-center">
+                  <div class="col-12 col-md-10 pr-0">
+                    <ul class="nav float-right">
+                      <li class="nav-item">
+                        <a class="btn btn-success nav-link" href="#shipping" data-toggle="tab" (click)="continueToShipping()" [ngClass]="{'btn-disabled': (!userInfoFormGroup.valid)}">Continue to Shipping</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12 col-md-10 pr-0">
+                    <ul class="nav float-right">
+                      <li class="nav-item">
+                        <a class="btn btn-link text-green nav-link" [routerLink]="['/cart']"><i class="fas fa-chevron-left"></i> Return to Cart</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="shipping">
+              <h4>Shipping</h4>
+              <div class="container align-items-center justify-content-center">
+                <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
+                  <div class="col-12 col-md-10">
+                    <div class="border pt-1 pb-2">
+                      <div class="container">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-2">
+                            <span class="text-muted">Contact</span>
+                          </div>
+                          <div class="col d-flex text-left">
+                            <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
+                          </div>
+                          <div class="col-2 text-left">
+                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-2">
+                            <span class="text-muted">Ship to</span>
+                          </div>
+                          <div class="col d-flex text-left">
+                            <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
+                          </div>
+                          <div class="col-2 text-left">
+                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3 align-items-center justify-content-center">
+                  <div class="col-12 col-md-10">
+                    <h5 class="title mb-0 float-left">Shipping</h5>
+                  </div>
+                </div>
+                <div class="row d-flex mb-5 justify-content-center align-items-center">
+                  <div class="col-12 col-md-10">
+                    <div class="border pt-1 pb-1">
+                      <form [formGroup]="shippingFormGroup">
+                        <ul class="container" style="list-style-type:none;">
+                          <div class="row d-flex align-items-center mt-2" *ngIf="settings?.allowPickup">
+                            <div class="col d-flex text-left">
+                              <li>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="forPickup" [value]="false">
+                                  <label class="form-check-label" for="forPickup">
+                                    For Pick Up
+                                  </label>
+                                </div>
+                              </li>
+                            </div>
+                            <div class="col-2 text-right">
+                              <h6 class="mb-0">Free</h6>
+                            </div>
+                          </div>
+                          <hr class="mt-2 mb-2" *ngIf="settings?.allowPickup">
+                          <div class="row d-flex align-items-center">
+                            <div class="col d-flex text-left">
+                              <li>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="forShipping" formControlName="forShipping" id="shipping" [value]="true" [attr.disabled]="isShippingAllowed ? null: false">
+                                  <label class="form-check-label" for="shipping">
+                                    Standard Shipping (2-4 days)
+                                  </label>
+                                  <span class="text-danger" *ngIf="!isShippingAllowed"><br>Shipping is not allowed since a product that is "For Pick Up Only" has been selected.</span>
+                                </div>
+                              </li>
+                            </div>
+                            <div class="col-auto text-right">
+                              <h6 class="mb-0" *ngIf="isShippingAllowed">{{ ((baseShippingFee + totalShippingFee)/100).toFixed(2) }} NZD</h6>
+                            </div>
+                          </div>
+                        </ul>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-md-2 justify-content-center">
+                  <div class="col-12 col-md-10">
+                    <ul class="nav float-right">
+                      <li class="nav-item">
+                        <a class="btn btn-success nav-link" href="#payment" data-toggle="tab" (click)="continueToPayment()">Continue to Payment</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12 col-md-10 pr-0">
+                    <ul class="nav float-right">
+                      <li class="nav-item">
+                        <a class="btn btn-link text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Information</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="payment">
+              <h4>Payment</h4>
+              <div class="container align-items-center justify-content-center">
+                <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
+                  <div class="col-12 col-md-10">
+                    <div class="border pt-1 pb-2">
+                      <div class="container">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-2">
+                            <span class="text-muted">Contact</span>
+                          </div>
+                          <div class="col d-flex text-left">
+                            <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
+                          </div>
+                          <div class="col-2 text-left">
+                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-2">
+                            <span class="text-muted">Ship to</span>
+                          </div>
+                          <div class="col d-flex text-left">
+                            <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
+                          </div>
+                          <div class="col-2 text-left">
+                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="row d-flex align-items-center">
+                          <div class="col-2">
+                            <span class="text-muted">Method</span>
+                          </div>
+                          <div class="col d-flex text-left">
+                            <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping (2-4 days) <strong>{{ ((baseShippingFee + totalShippingFee)/100).toFixed(2) }} NZD</strong></span>
+                            <span *ngIf="!shippingFormGroup.controls.forShipping.value">For Pick Up</span>
+                          </div>
+                          <div class="col-2 text-left">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-1 align-items-center justify-content-center">
+                  <div class="col-12 col-md-10">
+                    <h5 class="title mb-0 float-left">Payment</h5><br>
+                    <p class="text-muted text-left">All transactions are secure and encrypted.</p>
+                  </div>
+                </div>
+                <div class="row d-flex mb-5 justify-content-center align-items-center">
+                  <div class="col-12 col-md-10">
+                    <div>
+                      <form [formGroup]="paymentFormGroup">
+                        <ul style="list-style-type:none;" class="container pl-0 pr-0">
+                          <div id="accordion">
+                            <div class="card row" *ngIf="settings?.acceptCash">
+                              <div class="card-header" id="headingTwo">
+                                <h5 class="mb-0 text-left">
+                                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <li>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="cash" formControlName="paymentMethod" value="Cash">
+                                        <label class="form-check-label text-dark" for="cash">
+                                          <strong>Cash</strong>
+                                        </label>
+                                      </div>
+                                    </li>
+                                  </button>
+                                </h5>
+                              </div>
+                            </div>
+                            <div class="card row" *ngIf="settings?.acceptPaypal">
+                              <div class="card-header" id="headingOne">
+                                <h5 class="mb-0 text-left">
+                                  <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <li>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" formControlName="paymentMethod" value="Paypal">
+                                        <label class="form-check-label" for="paypal">
+                                          <img src="../../assets/paypal1.svg" class="paypal-logo-img">&nbsp;<img src="../../assets/paypal2.svg" class="paypal-img">
+                                        </label>
+                                      </div>
+                                    </li>
+                                  </button>
+                                </h5>
+                              </div>
+                          
+                              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                  <div>
+                                    <i class="fab fa-paypal"></i>
+                                  </div>
+                                  <div class="mt-3">
+                                    After clicking "Complete Order", you will be redirected to PayPal to complete your purchase securely.
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- <div class="card row">
+                              <div class="card-header" id="headingThree">
+                                <h5 class="mb-0 text-left">
+                                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <li>
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="bank_deposit" formControlName="paymentMethod" value="Bank Deposit">
+                                        <label class="form-check-label text-dark" for="bank_deposit">
+                                          <strong>Bank Deposit</strong>
+                                        </label>
+                                      </div>
+                                    </li>
+                                  </button>
+                                </h5>
+                              </div>
+                              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div class="card-body">
+                                  An invoice will be emailed upon acknowledgement of this order.<br>
+                                  <span class="text-muted regular-text"><em>Please make sure you input correct email.</em></span>
+                                </div>
+                              </div>
+                            </div> -->
+                          </div>
+                        </ul>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="row mb-1 align-items-center justify-content-center" *ngIf="shippingFormGroup.controls.forShipping.value">
+                  <div class="col-12 col-md-10">
+                    <h5 class="title mb-0 float-left">Billing Address</h5><br>
+                    <p class="text-muted text-left">Select the address that matches your card or payment method.</p>
+                  </div>
+                </div>
+                <div class="row d-flex mb-5 justify-content-center align-items-center" *ngIf="shippingFormGroup.controls.forShipping.value">
+                  <div class="col-12 col-md-10">
+                    <div class="border">
+                      <form [formGroup]="billingFormGroup">
+                        <div class="container pl-0 pr-0">
+                          <div id="accordion">
+                            <div class="card row">
+                              <div class="card-header" id="headingTwo">
+                                <h5 class="mb-0 text-left">
+                                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="true">
+                                      <label class="form-check-label text-dark" for="shipping">
+                                        <strong>Same as shipping address</strong>
+                                      </label>
+                                    </div>
+                                  </button>
+                                </h5>
+                              </div>
+                            </div>
+                            <div class="card row">
+                              <div class="card-header" id="headingThree">
+                                <h5 class="mb-0 text-left">
+                                  <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="sameAsShippingAddress" id="shipping" formControlName="sameAsShippingAddress" [value]="false">
+                                      <label class="form-check-label text-dark" for="shipping">
+                                        <strong>Use different billing address</strong>
+                                      </label>
+                                    </div>
+                                  </button>
+                                </h5>
+                              </div>
+                              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div class="card-body pl-4 pr-4">
+                                  <form [formGroup]="billingAddressFormGroup" class="col-12 justify-content-center">
+                                    <div class="row mb-sm-1 justify-content-center">
+                                      <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pr-sm-1">
+                                        <input type="text" id="firstname" formControlName="firstname" class="form-control" placeholder="First Name">
+                                        <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.firstname.errors?.required && submitted">First Name is required</p>
+                                      </div>
+                                      <div class="form-group mb-2 mb-sm-1 col-12 col-sm-6 pl-0 pr-0 pl-sm-1">
+                                        <input type="text" id="lastname" formControlName="lastname" class="form-control" placeholder="Last Name">
+                                        <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.lastname.errors?.required && submitted">Last Name is required</p>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <input type="text" id="contact" formControlName="contact" class="form-control" placeholder="Contact">
+                                        <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.contact.errors?.required && submitted">Contact is required</p>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <select class="form-control" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
+                                          <option value="" disabled selected>Select Country</option>
+                                          <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <select class="form-control" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
+                                          <option value="" disabled selected>Select Region</option>
+                                          <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <select class="form-control" id="city" formControlName="city" (change)="selectCity($event.target.value)">
+                                          <option value="" disabled selected>Select City</option>
+                                          <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <input type="text" id="address" formControlName="address" class="form-control" placeholder="Street Address">
+                                        <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.address.errors?.required && submitted">Address is required</p>
+                                      </div>
+                                    </div>
+                                    <div class="form-group row mb-2 justify-content-center">
+                                      <div class="col-12 pl-0 pr-0">
+                                        <input type="text" id="postal" formControlName="postal" class="form-control" placeholder="Postal Code">
+                                        <p class="text-danger" *ngIf="!!billingAddressFormGroup.controls.postal.errors?.required && submitted">Postal Code is required</p>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="row mt-md-2 justify-content-center">
+                  <div class="col-12 col-md-10">
+                    <button type="button" class="btn btn-success float-right" (click)="completeOrder()" [disabled]="paymentFormGroup.invalid || (!billingFormGroup.controls.sameAsShippingAddress.value && !billingAddressFormGroup.valid)" *ngIf="paymentFormGroup.controls.paymentMethod.value != Payment_Method.PAYPAL">Complete Order</button>
+                    <div id="paypalCompleteOrderButton" #paypalCompleteOrderButton class="float-right"></div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12 col-md-10 pr-0">
+                    <a class="btn btn-link text-green nav-link float-right" href="#shipping" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Shipping</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-5 bg-light pt-5 pb-4 pl-4 pr-4 border-left collapse navbar-collapse order-first order-md-last" id="orderSummary">
+      <div class="container pt-3 pb-3">
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                <span class="block-title">Order Summary</span>
+            </div>
+        </div>
+        <div class="row align-items-center mt-2 mb-2" *ngFor="let orderItem of orderItems">
+            <div class="col-2 pr-0">
+                <img src="{{ orderItem.product.image }}" class="img-thumbnail" *ngIf="orderItem.product.image !== null && orderItem.product.image !== '' && orderItem.product.image !== undefined">
+                <img src="../../assets/default-plant.jpg" class="img-thumbnail" *ngIf="orderItem.product.image === null || orderItem.product.image === '' || orderItem.product.image === undefined">
+            </div>
+            <div class="col text-left">
+                <strong>{{ orderItem.product.name }}</strong> <span class="regular-text text-gray ml-3">x {{ orderItem.quantity }}</span>
+            </div>
+            <div class="col-auto">
+                <span>{{ (orderItem.product.price * orderItem.quantity / 100).toFixed(2) }}</span>
+            </div>
+        </div>
+        <hr class="mt-4 mb-4">
+        <div class="row">
+          <div class="col pr-0">
+            <input class="form-control" type="text" name="discountCode" id="discountCode" placeholder="Discount code">
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-secondary">Apply</button>
+          </div>
+        </div>
+        <hr class="mt-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col text-left">
+                Subtotal
+            </div>
+            <div class="col-auto text-right">
+                <span>{{ (subTotal / 100).toFixed(2) }}</span>
+            </div>
+        </div>
+        <div class="row mt-1 align-items-center">
+            <div class="col text-left">
+                Shipping
+            </div>
+            <div class="col-auto text-right">
+                <span class="text-gray regular-text" *ngIf="!isShippingStep"><em>Calculated at next step</em></span>
+                <span *ngIf="isShippingStep && !shippingFormGroup.controls.forShipping.value"><em>Free</em></span>
+                <span *ngIf="isShippingStep && shippingFormGroup.controls.forShipping.value && (totalShippingFee + baseShippingFee) > 0"><em>{{ ((totalShippingFee + baseShippingFee) / 100).toFixed(2) }}</em></span>
+            </div>
+        </div>
+        <hr class="mt-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col text-left">
+                <strong class="h6">Total</strong>
+            </div>
+            <div class="col-auto text-right">
+                <strong class="h5" *ngIf="isShippingStep && shippingFormGroup.controls.forShipping.value">NZD {{ ((subTotal + totalShippingFee + baseShippingFee) / 100).toFixed(2) }}</strong>
+                <strong class="h5" *ngIf="!isShippingStep || !shippingFormGroup.controls.forShipping.value">NZD {{ (subTotal / 100).toFixed(2) }}</strong>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
 
 <!-- Remove Product Modal -->
 <div class="modal fade" id="removeProductModal" tabindex="-1" role="dialog" aria-labelledby="removeProductTitle" aria-hidden="true">

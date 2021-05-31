@@ -371,7 +371,7 @@ export class AdminOrderCreateComponent implements OnInit {
       this.createOrderError = null;
     }
 
-    $('#addDiscountPopup').modal('hide');
+    $('#addDiscountPopup').hide();
     $('.modal-backdrop').remove();
   }
 
@@ -398,7 +398,7 @@ export class AdminOrderCreateComponent implements OnInit {
 
     this.addShippingError = '';
 
-    $('#addShippingPopup').modal('hide');
+    $('#addShippingPopup').hide();
     $('.modal-backdrop').remove();
 
     this.calculateBill();
@@ -460,7 +460,7 @@ export class AdminOrderCreateComponent implements OnInit {
       .subscribe(
         customer => {
           this.selectCustomer(customer);
-          $('#createCustomerModal').modal('hide');
+          $('#createCustomerModal').hide();
           $('.modal-backdrop').remove();
           this.createCustomerFormGroup.reset();
           this.createCustomerSubmitted = false;
@@ -507,7 +507,7 @@ export class AdminOrderCreateComponent implements OnInit {
         updated_customer => {
           this.selectedCustomer = updated_customer;
           this.editCustomerError = null;
-          $('#editCustomerModal').modal('hide');
+          $('#editCustomerModal').hide();
           $('.modal-backdrop').remove();
         },
         error => {
@@ -531,7 +531,7 @@ export class AdminOrderCreateComponent implements OnInit {
         updated_customer => {
           this.selectedCustomer = updated_customer;
           this.editShippingAddressError = null;
-          $('#editShippingAddressModal').modal('hide');
+          $('#editShippingAddressModal').hide();
           $('.modal-backdrop').remove();
         },
         error => {
@@ -658,7 +658,7 @@ export class AdminOrderCreateComponent implements OnInit {
     this.selectedTags = this.duplicateSelectedTag(this.selectedTagsDraft, this.selectedTags);
     this.selectedTagsDraft = [];
 
-    $('#viewAllTagsModal').modal('hide');
+    $('#viewAllTagsModal').hide();
     $('.modal-backdrop').remove();
   }
 

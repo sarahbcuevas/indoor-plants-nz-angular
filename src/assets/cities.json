@@ -4,6 +4,7 @@
         "regions": [
             {
                 "name": "Auckland",
+                "island":  "North Island",
                 "cities": [
                     "Auckland",
                     "Devonport",
@@ -12,6 +13,7 @@
             },
             {
                 "name": "Bay Of Plenty",
+                "island": "North Island",
                 "cities": [
                     "Rotorua",
                     "Tauranga"
@@ -19,6 +21,7 @@
             },
             {
                 "name": "Canterbury",
+                "island": "South Island",
                 "cities": [
                     "Akaroa",
                     "Christchurch",
@@ -28,12 +31,14 @@
             },
             {
                 "name": "Gisborne",
+                "island": "North Island",
                 "cities": [
                     "Gisborne"
                 ]
             },
             {
                 "name": "Hawke's Bay",
+                "island": "North Island",
                 "cities": [
                     "Hastings",
                     "Napier"
@@ -41,6 +46,7 @@
             },
             {
                 "name": "Manawatu-Wanganui",
+                "island": "North Island",
                 "cities": [
                     "Pahiatua",
                     "Palmerston North",
@@ -50,6 +56,7 @@
             },
             {
                 "name": "Marlborough",
+                "island": "South Island",
                 "cities": [
                     "Blenheim",
                     "Picton"
@@ -57,12 +64,14 @@
             },
             {
                 "name": "Nelson",
+                "island": "South Island",
                 "cities": [
                     "Nelson"
                 ]
             },
             {
                 "name": "Northland",
+                "island": "North Island",
                 "cities": [
                     "Kaitaia",
                     "Russell"
@@ -70,6 +79,7 @@
             },
             {
                 "name": "Otago",
+                "island": "South Island",
                 "cities": [
                     "Alexandra",
                     "Dunedin",
@@ -79,12 +89,14 @@
             },
             {
                 "name": "Southland",
+                "island": "South Island",
                 "cities": [
                     "Invercargill"
                 ]
             },
             {
                 "name": "Taranaki",
+                "island": "North Island",
                 "cities": [
                     "Hawera",
                     "Kapuni",
@@ -94,12 +106,14 @@
             },
             {
                 "name": "Tasman",
+                "island": "South Island",
                 "cities": [
                     "Tasman"
                 ]
             },
             {
                 "name": "Waikato",
+                "island": "North Island",
                 "cities": [
                     "Hamilton",
                     "Paeroa",
@@ -110,6 +124,7 @@
             },
             {
                 "name": "Wellington",
+                "island": "North Island",
                 "cities": [
                     "Lower Hutt",
                     "Masterton",
@@ -120,6 +135,7 @@
             },
             {
                 "name": "West Coast",
+                "island": "South Island",
                 "cities": [
                     "Greymouth",
                     "Hokitika",

@@ -74,7 +74,7 @@ export class AdminCategoriesComponent implements OnInit {
   deleteAllCategories() {
     this.categoryService.deleteAllCategories()
       .pipe(finalize(() => {
-        $('#deleteAllCategoriesModal').modal('hide');
+        $('#deleteAllCategoriesModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(
@@ -87,7 +87,7 @@ export class AdminCategoriesComponent implements OnInit {
   deleteCategory() {
     this.categoryService.deleteCategoryById(this.selectedCategoryId)
       .pipe(finalize(() => {
-        $('#deleteCategoryModal').modal('hide');
+        $('#deleteCategoryModal').hide();
         $('.modal-backdrop').remove();
       }))
       .subscribe(

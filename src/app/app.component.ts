@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
 
   isAdmin: boolean;
   isLogin: boolean;
+  isCustomerOrder: boolean;
   currentUser: User;
   content: Content;
   contact: Contact;
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
           const url = event.url.split('/')[1];
           this.isAdmin = url.startsWith('admin');
           this.isLogin = url.startsWith('login') || url.startsWith('register');
+          this.isCustomerOrder = url.startsWith('order-confirmation') || url.startsWith('checkout');
           if (this.isAdmin) {
             this.getCurrentUser();
           }

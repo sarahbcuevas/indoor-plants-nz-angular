@@ -84,11 +84,15 @@
                 <div class="col pl-0">
                   <span class="title">Order Details</span>
                   <span class="title text-muted"> / #{{ order?.code }}</span>
-                  <span class="badge-pill badge-danger ml-3" *ngIf="isOrderCanceled()">Order canceled</span>
-                  <span class="badge-pill badge-warning ml-3" *ngIf="isOrderArchived()">Order archived</span>
                 </div>
                 <div class="col pr-0 text-right text-blue">
                   <span class="order-id">Tracking No.: {{ order?._id }}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col pl-0">
+                  <span class="badge-pill badge-danger regular-text" *ngIf="isOrderCanceled()">Order canceled</span>
+                  <span class="badge-pill badge-warning regular-text" *ngIf="isOrderArchived()">Order archived</span>
                 </div>
               </div>
               <div class="row mt-3 mb-3">

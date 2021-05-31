@@ -1,10 +1,291 @@
 <h6 class="admin-title mb-3">Settings</h6>
-<div class="container mt-3 pl-0 pr-0">
-    <div class="block text-left">
-        <h5 class="title">Shipping</h5>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="customSwitch1">
-            <label class="custom-control-label" for="customSwitch1">Allow orders for Pick Up</label>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-sm-12 col-md ml-1 mr-1 pl-0 pr-0" *ngIf="settings">
+            <div class="bg-white text-left border pl-2 pr-2 pt-2 pb-2">
+                <h5 class="title">Shipment Settings</h5>
+                <div class="custom-control custom-switch mt-3 mb-2">
+                    <input type="checkbox" class="custom-control-input" id="allowPickup" [(ngModel)]="settings.allowPickup" (change)="allowPickup()">
+                    <label class="custom-control-label" for="allowPickup">Allow orders for pick up</label>
+                </div>
+            </div>
+        
+            <div class="bg-white text-left mt-2 border pl-2 pr-2 pt-2 pb-2">
+                <h5 class="title">Base Shipping Rates</h5>
+                <div class="form-group container">
+                  <form [formGroup]="shippingRatesFormGroup">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6 pl-1 pr-1 align-middle">
+                          <label for="northIslandShippingRate" class="col text-left pl-0 regular-text">North Island (NZD)</label>
+                          <input type="text" class="form-control" id="northIslandShippingRate" formControlName="northIslandShippingRate" placeholder="Shipping rate">
+                        </div>
+                        <div class="col-sm-12 mt-sm-2 mt-lg-0 col-lg-6 align-middle pl-1 pr-1">
+                          <label for="southIslandShippingRate" class="col text-left pl-0 regular-text">South Island (NZD)</label>
+                          <input type="text" class="form-control" id="southIslandShippingRate" formControlName="southIslandShippingRate" placeholder="Shipping rate">
+                        </div>
+                    </div>
+                  </form>
+                    <div class="row mt-3 text-right">
+                      <div class="col">
+                        <button type="button" class="btn btn-sm btn-info" (click)="updateShippingRates()" [disabled]="updateShippingRatesLoading">Save</button>
+                        <img *ngIf="updateShippingRatesLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+                      </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="bg-white text-left mt-2 border pl-2 pr-2 pt-2 pb-2">
+                <h5 class="title">Payment Options</h5>
+                <div class="custom-control custom-switch mt-3 mb-2">
+                    <input type="checkbox" class="custom-control-input" id="acceptCash" [(ngModel)]="settings.acceptCash" (change)="acceptCash()">
+                    <label class="custom-control-label" for="acceptCash">Accept Cash</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" id="acceptPaypal" [(ngModel)]="settings.acceptPaypal" (change)="acceptPaypal()">
+                    <label class="custom-control-label" for="acceptPaypal">Accept Paypal</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" disabled id="acceptLaybuy" [(ngModel)]="settings.acceptLaybuy" (change)="acceptLaybuy()">
+                    <label class="custom-control-label" for="acceptLaybuy">Accept Laybuy</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" disabled id="acceptGenopay" [(ngModel)]="settings.acceptGenopay" (change)="acceptGenopay()">
+                    <label class="custom-control-label" for="acceptGenopay">Accept Genopay</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" disabled id="acceptApplepay" [(ngModel)]="settings.acceptApplepay" (change)="acceptApplepay()">
+                    <label class="custom-control-label" for="acceptApplepay">Accept Apple Pay</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" disabled id="acceptAfterpay" [(ngModel)]="settings.acceptAfterpay" (change)="acceptAfterpay()">
+                    <label class="custom-control-label" for="acceptAfterpay">Accept Afterpay</label>
+                </div>
+        
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 ml-1 mr-1 pl-0 pr-0">
+            <div class="container bg-white regular-text border text-left">
+                <div class="row align-items-center">
+                  <div class="col pt-3 align-middle">
+                    <span class="title">Profile</span>
+                  </div>
+                  <div class="col text-right text-blue">
+                    <button class="btn btn-link btn-sm text-blue pr-0" data-toggle="modal" data-target="#editProfileModal">Edit</button>
+                  </div>
+                </div>
+                <div class="row mt-2 mb-3">
+                  <div class="col-4">
+                    <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail profile border-0 pl-0">
+                  </div>
+                  <div class="col text-muted text-right regular-text">
+                    <i class="fas fa-clipboard-check mr-2"></i>
+                    <span>{{ user?.role }}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <span class="h6 text-blue">{{ user?.name }}</span>
+                  </div>
+                </div>
+                <div class="row border-bottom pt-1 pb-3">
+                  <div class="col">
+                    {{ user?.username }}
+                  </div>
+                </div>
+                <div class="row pt-3">
+                  <div class="col">
+                    <span class="h6">Contact</span>
+                  </div>
+                </div>
+                <div class="row border-bottom pt-3 pb-3">
+                  <div class="col-12">
+                    <span *ngIf="user?.email">{{ user?.email }}</span><span *ngIf="!user?.email">No email provided</span>
+                  </div>
+                  <div class="col-12">
+                    {{ user?.contact }}
+                  </div>
+                </div>
+                <div class="row pt-3">
+                  <div class="col">
+                    <span class="h6">Address</span>
+                  </div>
+                </div>
+                <div class="row pt-3 pb-3">
+                  <div class="col" *ngIf="user?.address">
+                    {{ user?.address }}<br>
+                  </div>
+                  <div class="col pb-4 border-bottom" *ngIf="!user?.address">
+                    <span>No address provided.</span>
+                  </div>
+                </div>
+                <div class="row pt-3 mb-3 text-center">
+                  <div class="col">
+                    <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+                  </div>
+                </div>
+              </div>
         </div>
     </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered pl-1 pr-1" role="document">
+    <form [formGroup]="editProfileFormGroup" class="container">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileTitle">Edit Profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body regular-text">
+          <div class="container pl-2 pr-2 text-left">
+            <div class="row">
+              <div class="col-12">
+                Username
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="username" name="username" class="regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                  Name
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="name" name="name" class="regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                  Email
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="email" name="email" class="regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                  Contact
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="contact" name="contact" class="regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                  Address
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="address" name="address" class="regular-input">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                  Role
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                  <input type="text" formControlName="role" name="role" class="regular-input">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-secondary btn-sm pl-2 pr-2" data-dismiss="modal" (click)="cancel()">Close</button>
+          <button type="button" class="btn btn-primary btn-sm pl-2 pr-2" (click)="editProfile()" [disabled]="editProfileFormGroup.invalid">Edit profile</button>
+          <img *ngIf="editProfileLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordTitle">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissable fade show" *ngIf="editPasswordError" role="alert">
+          {{ editPasswordError }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="alert alert-success alert-dismissable fade show" *ngIf="editPasswordSuccess" role="alert">
+          {{ editPasswordSuccess }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form  [formGroup]="passwordFormGroup">
+          <div class="form-group row align-items-top">
+            <label for="oldPassword" class="col-sm-4 col-form-label text-left">Old Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="oldPassword" formControlName="oldPassword" placeholder="Old Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.oldPassword.errors?.required && submittedPassword">Old Password is required</p>
+            </div>
+          </div>
+          <div class="form-group row align-items-top">
+            <label for="password" class="col-sm-4 col-form-label text-left">New Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="password" formControlName="password" placeholder="New Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.password.errors?.required && submittedPassword">New Password is required</p>
+            </div>
+          </div>
+          <div class="form-group row align-items-top">
+            <label for="repeatPassword" class="col-sm-4 col-form-label text-left">Repeat New Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control form-control-sm" id="repeatPassword" formControlName="repeatPassword" placeholder="Repeat New Password">
+              <p class="text-danger" *ngIf="!!passwordFormGroup.controls.repeatPassword.errors?.required && submittedPassword">Repeat New Password is required</p>
+              <p class="text-danger" *ngIf="!!passwordFormGroup.errors?.doesMatchPassword">Password does not match</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetPasswordForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="changePasswordLoading" (click)="savePassword()">Change Password</button>
+            <img *ngIf="changePasswordLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalTitle">Content Saved</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Homepage Content Saved
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
 </div>

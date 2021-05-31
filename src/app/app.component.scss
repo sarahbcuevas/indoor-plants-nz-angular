@@ -119,27 +119,27 @@
     }
 }
 
-#sidebar.collapse {
+// #sidebar .collapse {
 
-  @media (min-width: 768px) {
-      display: block;
-  }
-}
+//   @media (min-width: 768px) {
+//       display: block;
+//   }
+// }
 
-#sidebar-row {
-  @media (min-width: 768px) {
-      display: none;
-  }
-}
+// #sidebar-row {
+//   @media (min-width: 768px) {
+//       display: none;
+//   }
+// }
 
-#sidebar-toggler {
-  @media (max-width: 767.98px) {
-      visibility: visible;
-  }
-  @media (min-width: 768px) {
-      visibility: collapse;
-  }
-}
+// #sidebar-toggler {
+//   @media (max-width: 767.98px) {
+//       visibility: visible;
+//   }
+//   @media (min-width: 768px) {
+//       visibility: collapse;
+//   }
+// }
 
 #subscribeEmailInput {
     border: none;

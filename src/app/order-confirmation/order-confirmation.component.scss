@@ -1,0 +1,50 @@
+.regular-text {
+    font-size: 0.8rem;
+}
+
+.check {
+    font-size: 3rem;
+    font-weight: 200;
+}
+
+.thank-you {
+    font-size: 1.3rem;
+}
+
+.block-title {
+    font-size: 1.1rem;
+}
+
+.block {
+    border: solid 1px lightgray !important;
+    border-radius: 0.25rem;
+    padding: 10px 15px;
+}
+
+.title {
+    font-family: 'Pacifico', sans-serif;
+    text-align: center;
+}
+
+.navbar-toggler {
+    font-size: 1rem!important;
+    background-color: #FAFAFA !important;
+}
+
+#sidebar-toggler {    
+
+    @media (max-width: 767.98px) {
+        display: block;
+    }
+    
+    @media (min-width: 768px) {
+        display: none;
+    }
+}
+
+#orderSummary {
+
+    @media (min-width: 768px) {
+        display: block;
+    }
+}

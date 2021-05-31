@@ -223,7 +223,7 @@ export class AdminOrderDetailsComponent implements OnInit {
       this.order.fulfillmentStatus == this.Fulfillment_Status.FULFILLED) {
       this.editOrderErrorTitle = 'Cancel order failed';
       this.editOrderErrorDesc = 'Cannot cancel an already completed order.';
-      $('#cancelOrderModal').modal('hide');
+      $('#cancelOrderModal').hide();
       $('.modal-backdrop').remove();
       return;
     } else {
@@ -236,7 +236,7 @@ export class AdminOrderDetailsComponent implements OnInit {
     this.orderService.updateOrder(this.order)
       .pipe(
         finalize(() => {
-          $('#cancelOrderModal').modal('hide');
+          $('#cancelOrderModal').hide();
           $('.modal-backdrop').remove();
         })
       )
@@ -370,7 +370,7 @@ export class AdminOrderDetailsComponent implements OnInit {
           updated_customer => {
             this.customer = updated_customer;
             this.editOrderContactError = null;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           },
           error => {
@@ -391,7 +391,7 @@ export class AdminOrderDetailsComponent implements OnInit {
           }),
           finalize(() => {
             this.editOrderContactLoading = false;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           })
         )
@@ -403,7 +403,7 @@ export class AdminOrderDetailsComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.editOrderContactLoading = false;
-            $('#editOrderContactModal').modal('hide');
+            $('#editOrderContactModal').hide();
             $('.modal-backdrop').remove();
           })
         )
@@ -439,7 +439,7 @@ export class AdminOrderDetailsComponent implements OnInit {
           updated_customer => {
             this.customer = updated_customer;
             this.editShippingAddressError = null;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           },
           error => {
@@ -464,7 +464,7 @@ export class AdminOrderDetailsComponent implements OnInit {
           }),
           finalize(() => {
             this.editShippingAddressLoading = false;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           })
         ).subscribe();
@@ -479,7 +479,7 @@ export class AdminOrderDetailsComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.editShippingAddressLoading = false;
-            $('#editShippingAddressModal').modal('hide');
+            $('#editShippingAddressModal').hide();
             $('.modal-backdrop').remove();
           })
         ).subscribe();
