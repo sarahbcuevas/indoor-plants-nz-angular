@@ -14,8 +14,8 @@
         <ng-container *ngFor="let bestseller of bestsellers | async; let i=index">
           <div class="col-10 col-sm-4 col-lg-3 text-center" *ngIf="i<3">
             <div class="container category">
-                <img src="{{ bestseller.image }}" class="img-fluid" *ngIf="bestseller.image">
-                <img src="{{ '../../assets/default-plant.jpg' }}" class="img-fluid" *ngIf="!bestseller.image">
+                <img [src]="getPrimaryPhoto(bestseller)" class="img-fluid" *ngIf="bestseller.images.length > 0">
+                <img src="{{ '../../assets/default-plant.jpg' }}" class="img-fluid" *ngIf="bestseller.images.length == 0">
                 <button type="button" class="btn btn-light text-uppercase results-text" [routerLink]="['/products', bestseller._id]">
                   {{ bestseller.name }}
                 </button>

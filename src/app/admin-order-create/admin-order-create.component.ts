@@ -10,7 +10,7 @@ import { Customer } from '../_models/customer';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, map, filter } from 'rxjs/operators/';
 import location from '../../assets/cities.json';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 export class Tag {
   name: string;

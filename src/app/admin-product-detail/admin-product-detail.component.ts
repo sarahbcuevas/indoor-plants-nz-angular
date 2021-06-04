@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Product } from '../_models/product';
+import { Product, Photo } from '../_models/product';
 import { Category } from '../_models/category';
 import { ProductService } from '../_services/product.service';
 import { CategoryService } from '../_services/category.service';
@@ -8,11 +8,12 @@ import { ActivatedRoute } from '@angular/router';
 import { finalize, map, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { Location } from '@angular/common';
 import { FileUploader } from 'ng2-file-upload';
 import { baseURL } from '../_helpers/baseurl';
+import { initTinyMCE } from '../_helpers/tinymce';
 
 const URL = baseURL + '/uploads';
+declare const tinymce: any;
 
 interface UploadResponse {
   success: boolean;
@@ -30,10 +31,12 @@ export class AdminProductDetailComponent implements OnInit {
   product: Product;
   categories: Observable<Category[]>;
   editProductFormGroup: FormGroup;
-  isEditOn: boolean;
   loading: boolean;
   submitted: boolean;
-  tempImage: string;
+  imageUrls: Photo[] = [];
+  isImageUploading = false;
+  noOfImagesUploading: number;
+  isNewProduct: boolean = false;
 
   public uploader: FileUploader = new FileUploader({url: URL, itemAlias: 'photo'});
 
@@ -43,7 +46,6 @@ export class AdminProductDetailComponent implements OnInit {
     private categoryService: CategoryService,
     private uploadService: UploadService,
     private formBuilder: FormBuilder,
-    private location: Location,
     @Inject('BaseURL') public BaseURL
   ) {
     this.editProductFormGroup = this.formBuilder.group({
@@ -55,9 +57,9 @@ export class AdminProductDetailComponent implements OnInit {
       price: [0, Validators.required],
       deliveryFee: [0],
       forPickupOnly: [false],
-      image: [''],
       isBestseller: [false]
     });
+
   }
 
   ngOnInit() {
@@ -67,6 +69,8 @@ export class AdminProductDetailComponent implements OnInit {
     this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
+
+    this.isNewProduct = this.route.snapshot.queryParams['newProduct'];
   }
 
   getAllCategories() {
@@ -105,61 +109,123 @@ export class AdminProductDetailComponent implements OnInit {
       .subscribe();
   }
 
-  editMode(isEditOn: boolean) {
-    this.isEditOn = isEditOn;
-    if (isEditOn) {
-      $('fieldset').removeAttr('disabled');
-    } else {
-      $('fieldset').prop('disabled', 'disabled');
-    }
-  }
-
   cancel() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (this.tempImage) {
-      this.product.image = this.tempImage;
-      this.tempImage = '';
-    }
-    this.editProductFormGroup.get('_id').setValue(id);
+    console.log('Cancel product: ', this.product);
+    this.editProductFormGroup.get('_id').setValue(this.product._id);
     this.editProductFormGroup.get('name').setValue(this.product.name);
-    this.editProductFormGroup.get('category').setValue(this.product.category[0]);
-    this.editProductFormGroup.get('description').setValue(this.product.description);
+    this.editProductFormGroup.get('category').setValue(this.product.category[0]._id);
     this.editProductFormGroup.get('stock').setValue(this.product.stock);
     this.editProductFormGroup.get('price').setValue((this.product.price / 100).toFixed(2));
     this.editProductFormGroup.get('deliveryFee').setValue((this.product.deliveryFee / 100).toFixed(2));
     this.editProductFormGroup.get('forPickupOnly').setValue(this.product.forPickupOnly);
     this.editProductFormGroup.get('isBestseller').setValue(this.product.isBestseller);
-    // this.editProductFormGroup.get('image').setValue(this.product.image);
-    this.editMode(false);
+    this.editProductFormGroup.get('description').setValue(this.product.description);
+    this.imageUrls = this.product.images;
+    initTinyMCE();
+    console.log('form: ', this.editProductFormGroup.value);
+    console.log('isInvalid: ', this.editProductFormGroup.invalid);
   }
 
-  goBack() {
-    this.location.back();
+  removeImage(index) {
+    let image = this.imageUrls.splice(index, 1);
+
+    this.uploadService.deleteUpload(image[0].url).subscribe();
   }
 
-  delete() {
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log(`Product image: ${this.product.image}`);
-    this.productService.deleteProductById(id)
-      .subscribe(
-        data => {
-          if (this.product.image !== null && this.product.image !== '' && this.product.image !== undefined) {
-            const pathToDelete = this.product.image.replace('/images/', '');
-            this.uploadService.deleteUpload(pathToDelete).subscribe();
-          }
-          this.goBack();
-          $('.modal-backdrop').remove();
+  makePrimaryPhoto(index) {
+    for (var i=0; i<this.imageUrls.length; i++) {
+      if (i == index) {
+        this.imageUrls[i].isPrimary = true;
+      } else {
+        this.imageUrls[i].isPrimary = false;
+      }
+    }
+  }
+
+  onFileChange(event) {
+    if (event.target.files) {
+      
+      this.noOfImagesUploading = this.imageUrls.length + event.target.files.length;
+      this.isImageUploading = true;
+      for (var i=0; i<event.target.files.length; i++) {
+        this.getSignedRequest(event.target.files[i]);
+      }
+    }
+  }
+
+  getSignedRequest(file) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `${baseURL}/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          this.uploadFile(file, response.signedRequest, response.url);
+        } else {
+          console.log('Could not get signed URL.');
         }
-      );
+      }
+    };
+    xhr.send();
   }
 
-  removeImage() {
-    this.tempImage = this.product.image;
-    this.product.image = '';
-    this.editProductFormGroup.get('image').setValue('');
+  uploadFile(file, signedRequest, url) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', signedRequest);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var image = new Photo();
+          image.url = url;
+          this.imageUrls.push(image);
+        } else {
+          console.log('Could not upload file.');
+        }
+
+        if (this.noOfImagesUploading == this.imageUrls.length) {
+          this.isImageUploading = false;
+        }
+      }
+    };
+    xhr.send(file);
+  }
+
+  save() {
+    event.preventDefault();
+    this.submitted = true;
+    this.editProductError = null;
+    this.isNewProduct = false;
+    // stop here if form is invalid or untouched
+    if (this.editProductFormGroup.invalid || this.editProductFormGroup.pristine) {
+      return;
+    }
+    this.loading = true;
+    const product: Product = this.editProductFormGroup.value;
+
+    const tempCategories = [];
+    this.categories.forEach(categories => {
+      for (let category of categories) {
+        if (category._id == this.editProductFormGroup.get('category').value) {
+          console.log('Category id: ', category._id);
+          tempCategories.push({_id: category._id});
+          if (category.parent !== null) {
+            tempCategories.push({_id: category.parent._id});
+            if (category.parent.parent !== null) {
+              tempCategories.push({_id: category.parent.parent});
+            }
+          }
+          console.log('tempCategories: ', tempCategories);
+          product.category = tempCategories;
+          product.images = this.imageUrls;
+          product.description = tinymce.get("description").getContent();
+          this.updateProduct(product);
+        }
+      }
+    });
   }
 
   updateProduct(product: Product) {
+    console.log('product before save: ', product);
     this.productService.updateProduct(product)
       .pipe(finalize(() => {
         this.loading = false;
@@ -168,43 +234,18 @@ export class AdminProductDetailComponent implements OnInit {
         data => {
           this.editProductError = null;
           this.getProductDetails();
-          this.editMode(false);
+          this.showMessageModal('Save', 'Product updated!');
         },
         error => {
-          this.editProductError = 'Product name already exists';
+          this.editProductError = error;
         }
       );
   }
 
-  save() {
-    this.submitted = true;
-    this.editProductError = null;
-    if (this.editProductFormGroup.invalid) {
-      return;
-    }
-    this.loading = true;
-    const product: Product = this.editProductFormGroup.value;
-
-    if (product.image !== null && product.image !== '' && product.image !== undefined) {
-      this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-        const resp: UploadResponse = JSON.parse(response);
-        if (resp.success) {
-          const pathToDelete = this.product.image.replace('/images/', '');
-          this.uploadService.deleteUpload(pathToDelete).subscribe();
-          product.image = resp.path;
-        }
-        this.updateProduct(product);
-      };
-      this.uploader.uploadAll();
-    } else if (product.image === '' && this.tempImage) {
-      const pathToDelete = this.tempImage.replace('/images/', '');
-      this.uploadService.deleteUpload(pathToDelete).subscribe();
-      this.updateProduct(product);
-      this.tempImage = '';
-    } else {
-      product.image = this.product.image;
-      this.updateProduct(product);
-    }
+  showMessageModal(title: string, message: string) {
+    window.scroll(0, 0);
+    $('div.modal-body').text(message);
+    $('#messageModalTitle').text(title);
+    $('#messageModal').modal('show');
   }
-
 }

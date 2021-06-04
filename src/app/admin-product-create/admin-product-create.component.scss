@@ -1,0 +1,55 @@
+.image-icon {
+    color: lightgray;
+}
+
+.regular-text {
+    font-size: 0.8rem;
+}
+
+.note {
+    line-height: 1!important;
+}
+
+.remove-image {
+    position: absolute;
+    margin-top: 1px;
+    margin-right: 2px;
+    top: 0;
+    right: 0;
+}
+
+.block {
+    padding: 10px 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    cursor: pointer;
+    display: inline-block;
+    
+    :hover {
+        text-decoration: underline;
+    }
+}
+
+.input-group-prepend {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+.input-group-prepend > .input-group-text {
+    background-color: white;
+    border-color: #ced4da;
+    padding: .375rem .5rem;
+}
+
+.custom-input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ced4da;
+    border-left: 0pt;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}

@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="col-3 text-right">
-      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addNewProductModal"><i class="fas fa-plus"></i> Create New Product</button>
+      <a class="btn btn-info btn-sm" [routerLink]="['/admin/products/create']"><i class="fas fa-plus"></i> Add Product</a>
     </div>
   </div>
   <div class="row mt-3">
@@ -82,101 +82,6 @@
   No products available.
 </div>
 <button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products | async)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
-
-<!-- Create New Product Modal -->
-<div class="modal fade" id="addNewProductModal" tabindex="-1" role="dialog" aria-labelledby="addNewProductTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addNewProductTitle">Create New Product</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-danger alert-dismissable fade show" *ngIf="createProductError" role="alert">
-          {{ createProductError }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form [formGroup]="createProductFormGroup">
-          <div class="form-group row">
-            <label for="name" class="col-sm-4 col-form-label text-left">Product Name</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control form-control-sm" id="name" formControlName="name" placeholder="Product Name">
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.name.errors?.required && submitted">Product name is required</p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="category" class="col-sm-4 col-form-label text-left">Category</label>
-            <div class="col-sm-8">
-              <select class="form-control form-control-sm" id="category" formControlName="category">
-                <option *ngFor="let category of categories | async" ngValue="{{ category._id }}">
-                  <span *ngIf="category.parent!==null"><pre>&emsp;</pre></span>
-                  <span *ngIf="category.parent!==null && category.parent.parent!==null"><pre>&emsp;</pre></span>
-                  {{ category.name }}
-                </option>
-              </select>
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.category.errors?.required && submitted">Category is required</p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="description" class="col-sm-4 col-form-label text-left">Description</label>
-            <div class="col-sm-8">
-              <textarea rows="5" class="form-control form-control-sm" id="description" formControlName="description" placeholder="Description"></textarea>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="stock" class="col-sm-4 col-form-label text-left">No. of Stocks</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control form-control-sm" id="stock" formControlName="stock" placeholder="Stock" pattern="((\d+)|(\d{1,3})(\,\d{3}|)*)">
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.stock.errors?.required && submitted">Stock is required</p>
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.stock.errors?.pattern && submitted">Invalid number of stocks</p>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="price" class="col-sm-4 col-form-label text-left">Price (NZD)</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control form-control-sm" id="price" formControlName="price" placeholder="Price" pattern="((\d+)|(\d{1,3})(\,\d{3}|)*)(\.\d{2}|)">
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.price.errors?.required && submitted">Price is required</p>
-              <p class="text-danger" *ngIf="!!createProductFormGroup.controls.price.errors?.pattern && submitted">Invalid price</p>
-            </div>
-          </div>
-          <div class="form-group row d-flex align-items-center">
-            <label for="deliveryFee" class="col-sm-4 col-form-label text-left">Delivery Fee (optional)</label>
-            <div class="col-sm-4">
-              <input type="text" class="form-control form-control-sm" id="deliveryFee" formControlName="deliveryFee" placeholder="Delivery Fee">
-            </div>
-            <div class="col-sm-4 form-check">
-              <input class="form-check-input" type="checkbox" id="forPickupOnly" formControlName="forPickupOnly">
-              <label class="form-check-label" for="forPickupOnly">For Pick Up Only</label>
-            </div>
-          </div>
-          <div class="form-group row">
-            <label for="image" class="col-sm-4 col-form-label text-left">Image</label>
-            <div class="col-sm-8">
-              <input type="file" class="form-control form-control-sm image-upload-input" id="image" formControlName="image" placeholder="Image" accept="image/*" (change)="onFileChange($event)">
-              <img *ngIf="isImageUploading == true" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
-              <img src="{{ productImageUrl }}" class="img-fluid" *ngIf="productImageUrl != null && productImageUrl != ''" id="productImage">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col form-check">
-              <input class="form-check-input" type="checkbox" id="isBestseller" formControlName="isBestseller">
-              <label class="form-check-label" for="checkBox">Is Bestseller?</label>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" (click)="resetForm()">Cancel</button>
-            <button type="button" class="btn btn-primary btn-sm" [disabled]="loading == true || isImageUploading == true" (click)="createNewProduct()">Create New Product</button>
-            <img *ngIf="loading" id="productImageUploadLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Delete Product Modal -->
 <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true">

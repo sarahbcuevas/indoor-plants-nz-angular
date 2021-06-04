@@ -1,3 +1,8 @@
+export class Photo {
+  url: string;
+  isPrimary: boolean;
+}
+
 export class Product {
   _id: string;
   name: string;
@@ -10,6 +15,7 @@ export class Product {
   deliveryFee: number;
   forPickupOnly: boolean;
   image: string;
+  images: Photo[];
   stock: number;
   isBestseller: boolean;
 }

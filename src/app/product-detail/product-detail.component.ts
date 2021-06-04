@@ -5,6 +5,8 @@ import { ProductService } from '../_services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { finalize, tap, map } from 'rxjs/operators/';
+import { SettingsService } from '../_services/settings.service';
+import { Settings } from '../_models/settings';
 
 @Component({
   selector: 'app-product-detail',
@@ -14,9 +16,11 @@ import { finalize, tap, map } from 'rxjs/operators/';
 export class ProductDetailComponent implements OnInit {
 
   product: Product;
+  settings: Settings;
 
   constructor(
     private productService: ProductService,
+    private settingsService: SettingsService,
     private route: ActivatedRoute,
     private location: Location,
     @Inject('BaseURL') public BaseURL
@@ -35,8 +39,12 @@ export class ProductDetailComponent implements OnInit {
       .subscribe();
   }
 
-  goBack() {
-    this.location.back();
+  getSettings(): void {
+    this.settingsService.getSettings()
+      .pipe(tap(settings => {
+        this.settings = settings;
+      }))
+      .subscribe();
   }
 
 }

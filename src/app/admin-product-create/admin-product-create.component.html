@@ -1,27 +1,25 @@
+<div class="container mb-4 pl-0 pr-0">
+    <div class="row bg-white border pt-1 pb-1 ml-1 mr-1 mb-3">
+        <div class="col text-left">
+            <span class="title text-secondary align-middle">Unsaved product</span>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-light btn-sm mr-2" [routerLink]="['/admin/products']">Cancel</button>
+            <button class="btn btn-primary btn-sm" [disabled]="createProductFormGroup.invalid || isImageUploading" (click)="createNewProduct()">Save</button>
+            <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+        </div>
+    </div>
+</div>
+
 <p class="text-left"><a [routerLink]="['/admin/products']" class="text-secondary"><i class="fas fa-chevron-left mr-1"></i> Products</a></p>
 
 <div class="container mb-3">
-    <div class="row mb-2">
+    <div class="row">
         <div class="col pl-2 pr-2">
-            <h6 class="admin-title mb-3">{{ product?.name }}</h6>
+            <h6 class="admin-title mb-3">Add Product</h6>
         </div>
     </div>
-    <div class="row" *ngIf="isNewProduct">
-        <div class="col alert alert-success fade show ml-1 mr-1 text-left" role="alert">
-            <div class="container-fluid">
-            <div class="row">
-                <div class="col-1">
-                <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="col">
-                <strong>Product '{{ product?.name }}' created</strong><br>
-                <button type="button" class="btn btn-link pl-0 pt-0 btn-sm" [routerLink]="['/admin/products/create']">Create another product</button>
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
-    <form [formGroup]="editProductFormGroup">
+    <form [formGroup]="createProductFormGroup">
     <div class="row d-flex justify-content-between text-left">
         <div class="col-sm-12 col-md-8 pl-1 pr-1">
             <div class="container">
@@ -45,8 +43,8 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col">
-                            <input class="mr-2" type="checkbox" id="isBestseller" formControlName="isBestseller">
-                            <label for="isBestseller">Mark as bestseller</label>
+                                <input class="mr-2" type="checkbox" id="isBestseller" formControlName="isBestseller">
+                                <label for="isBestseller">Mark as bestseller</label>
                             </div>
                         </div>
                     </div>
@@ -102,11 +100,11 @@
                                 <select class="form-control" id="category" formControlName="category">
                                     <option value="" disabled selected>Select category</option>
                                     <option *ngFor="let category of categories | async" ngValue="{{ category._id }}">
-                                        <span *ngIf="category.parent!==null"><pre>&emsp;</pre></span>
-                                        <span *ngIf="category.parent!==null && category.parent.parent!==null"><pre>&emsp;</pre></span>
-                                        {{ category.name }}
+                                      <span *ngIf="category.parent!==null"><pre>&emsp;</pre></span>
+                                      <span *ngIf="category.parent!==null && category.parent.parent!==null"><pre>&emsp;</pre></span>
+                                      {{ category.name }}
                                     </option>
-                                    </select>
+                                  </select>
                             </div>
                         </div>
                     </div>
@@ -175,30 +173,10 @@
 </div>
 
 <div class="container bg-gray pt-4 pb-5">
-  <div class="row">
-      <div class="col text-right">
-          <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
-          <button type="button" class="btn btn-sm btn-primary" [disabled]="editProductFormGroup.pristine || editProductFormGroup.invalid || isImageUploading" (click)="save()">Save Product</button>
-      </div>
-  </div>
-</div>
-
-<!-- Message Modal -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalTitle">Content Saved</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Homepage Content Saved
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
-            </div>
+    <div class="row">
+        <div class="col text-right">
+            <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+            <button type="button" class="btn btn-sm btn-primary" [disabled]="createProductFormGroup.invalid || isImageUploading" (click)="createNewProduct()">Save New Product</button>
         </div>
     </div>
 </div>

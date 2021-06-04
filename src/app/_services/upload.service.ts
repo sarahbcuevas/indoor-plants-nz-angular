@@ -9,14 +9,15 @@ import { Observable, of } from 'rxjs';
 })
 export class UploadService {
 
-  private uploadUrl = baseURL + '/uploads/';
+  private uploadUrl = baseURL + '/sign-s3';
   constructor(
     private http: HttpClient
   ) { }
 
   /** Delete previously uploaded file from the server */
   deleteUpload(path: string) {
-    const url = this.uploadUrl + path;
+    const filename = path.split('/');
+    const url = this.uploadUrl + '?file-name=' + filename[filename.length-1];
     console.log('Url: ', url);
     return this.http.delete(url)
       .pipe(

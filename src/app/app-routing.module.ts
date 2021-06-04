@@ -18,6 +18,7 @@ import { AdminCategoriesComponent } from './admin-categories/admin-categories.co
 import { AdminContentComponent } from './admin-content/admin-content.component';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 import { AdminProductDetailComponent } from './admin-product-detail/admin-product-detail.component';
+import { AdminProductCreateComponent } from './admin-product-create/admin-product-create.component';
 import { AdminRegisterComponent } from './admin-register/admin-register.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminCustomersComponent } from './admin-customers/admin-customers.component';
@@ -44,6 +45,7 @@ const routes: Routes = [
     { path: 'admin/orders/create', component: AdminOrderCreateComponent, canActivate: [AuthGuard] },
     { path: 'admin/orders/:id', component: AdminOrderDetailsComponent, canActivate: [AuthGuard] },
     { path: 'admin/orders/:id/edit', component: AdminOrderEditComponent, canActivate: [AuthGuard] },
+    { path: 'admin/products/create', component: AdminProductCreateComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
     // { path: 'register', component: AdminRegisterComponent },
     { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [AuthGuard] },

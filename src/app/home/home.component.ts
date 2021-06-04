@@ -39,6 +39,15 @@ export class HomeComponent implements OnInit {
       ));
   }
 
+  getPrimaryPhoto(product: Product) {
+    for (let image of product.images) {
+      if (image.isPrimary) {
+        return image.url;
+      }
+    }
+    return product.images[0].url;
+  }
+
   getContent() {
     this.contentService.getContent()
       .subscribe(

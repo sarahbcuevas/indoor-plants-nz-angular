@@ -5,17 +5,7 @@ import { ProductService } from '../_services/product.service';
 import { Product } from '../_models/product';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, filter, map } from 'rxjs/operators/';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
-// import { HttpErrorResponse } from '@angular/common/http';
-import { baseURL } from '../_helpers/baseurl';
-
-// const URL = baseURL + '/uploads';
-
-// interface UploadResponse {
-//   success: boolean;
-//   path: string;
-// }
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-products',
@@ -27,22 +17,16 @@ export class AdminProductsComponent implements OnInit {
   searchText: string;
   noOfProducts: number;
   isProductsLoading: boolean;
-  loading: boolean;
-  isImageUploading = false;
-  submitted = false;
   products: Observable<Product[]>;
   categories: Observable<Category[]>;
   selectedProductId: string;
   selectedProductName: string;
-  createProductError: string;
-  createProductFormGroup: FormGroup;
   isCheckAllFilters = true;
   isCheckAllCategories = true;
   viewAsList = true;
   isBestsellerChecked = true;
   isSoldoutChecked = true;
   isCategoryChecked: boolean[] = [];
-  productImageUrl: string;
 
   /** For sort by */
   SORT_BY_PRODUCT_A_TO_Z = 0;
@@ -51,57 +35,16 @@ export class AdminProductsComponent implements OnInit {
   SORT_BY_PRICE_HIGH_TO_LOW = 3;
   sortBy = this.SORT_BY_PRODUCT_A_TO_Z;
 
-  // public uploader: FileUploader = new FileUploader({url: URL, itemAlias: 'photo'});
-
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private formBuilder: FormBuilder,
     @Inject('BaseURL') public BaseURL
-  ) {
-    this.createProductFormGroup = this.formBuilder.group({
-      name: ['', Validators.required],
-      category: ['', Validators.required],
-      description: [''],
-      stock: [0],
-      price: [0, Validators.required],
-      deliveryFee: [0],
-      forPickupOnly: [false],
-      image: [''],
-      isBestseller: [false]
-    });
-  }
+  ) { }
 
   ngOnInit() {
     this.getAllProducts();
     this.getAllCategories();
-
-    // this.uploader.onAfterAddingFile = (file) => {
-    //   file.withCredentials = false;
-    // };
-  }
-
-  addProduct(product: Product) {
-    this.productService.addProduct(product)
-      .pipe(finalize(() => {
-        this.loading = false;
-        this.getAllProducts();
-      }))
-      .subscribe(
-        data => {
-          // do nothing
-        },
-        error => {
-          if (error === 'OK') {
-            $('#addNewProductModal').hide();
-            $('.modal-backdrop').remove();
-            this.createProductFormGroup.reset();
-            this.resetForm();
-          } else {
-            this.createProductError = 'Product name already exists';
-          }
-        }
-      );
   }
 
   applyFilter() {
@@ -138,46 +81,6 @@ export class AdminProductsComponent implements OnInit {
     const isBestsellerChecked = $('#checkbox-bestseller').prop('checked');
     const isSoldoutChecked = $('#checkbox-soldout').prop('checked');
     this.isCheckAllFilters = isBestsellerChecked && isSoldoutChecked;
-  }
-
-  createNewProduct() {
-    event.preventDefault();
-    this.submitted = true;
-    this.createProductError = null;
-    // stop here if form is invalid
-    if (this.createProductFormGroup.invalid) {
-      return;
-    }
-
-    this.loading = true;
-    const product: Product = this.createProductFormGroup.value;
-    const categories = [];
-    this.categoryService.getCategoryById(this.createProductFormGroup.get('category').value)
-      .pipe(
-        tap((cat: Category) => {
-          categories.push({_id: cat._id});
-          if (cat.parent !== null) {
-            categories.push({_id: cat.parent._id});
-            if (cat.parent.parent !== null) {
-              categories.push({_id: cat.parent.parent});
-            }
-          }
-          product.category = categories;
-          // if (product.image) {
-          //   this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-          //     const resp: UploadResponse = JSON.parse(response);
-          //     if (resp.success) {
-          //       product.image = resp.path;
-          //     }
-          //     this.addProduct(product);
-          //   };
-          //   this.uploader.uploadAll();
-          // } else {
-            product.image = this.productImageUrl;
-            this.addProduct(product);
-          // }
-        })
-      ).subscribe();
   }
 
   deleteProduct() {
@@ -260,7 +163,6 @@ export class AdminProductsComponent implements OnInit {
         ),
         tap(products => {
           this.noOfProducts = products.length;
-          // products.filter();
             products.sort((a, b) => {
             switch (this.sortBy) {
               case this.SORT_BY_PRODUCT_A_TO_Z:
@@ -325,59 +227,7 @@ export class AdminProductsComponent implements OnInit {
     }
   }
 
-  resetForm() {
-    this.createProductFormGroup.reset();
-    this.submitted = false;
-    this.createProductError = null;
-    this.productImageUrl = null;
-  }
-
   toggleView() {
     this.viewAsList = !this.viewAsList;
-  }
-
-  onFileChange(fileInput) {
-    const files = (<HTMLInputElement>document.getElementById('image')).files;
-    const file = files[0];
-    if (file === null) {
-      return console.log('No file selected.');
-    }
-    this.isImageUploading = true;
-    this.getSignedRequest(file);
-  }
-
-  getSignedRequest(file) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', `${baseURL}/sign-s3?file-name=${file.name}&file-type=${file.type}`);
-    xhr.onreadystatechange = () => {
-      console.log('xhr: ', xhr);
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          console.log('response: ', response);
-          this.uploadFile(file, response.signedRequest, response.url);
-        } else {
-          console.log('Could not get signed URL.');
-        }
-      }
-    };
-    xhr.send();
-  }
-
-  uploadFile(file, signedRequest, url) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('PUT', signedRequest);
-    xhr.onreadystatechange = () => {
-      console.log('PUT xhr: ', xhr);
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          this.productImageUrl = url;
-        } else {
-          console.log('Could not upload file.');
-        }
-        this.isImageUploading = false;
-      }
-    };
-    xhr.send(file);
   }
 }
