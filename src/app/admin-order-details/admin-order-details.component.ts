@@ -4,13 +4,18 @@ import { Location } from '@angular/common';
 import { Order, OrderItem, OrderStatus, PaymentMethod, PaymentStatus, FulfillmentStatus, DiscountMethod, ShippingFeeMethod } from '../_models/order';
 import { Customer } from '../_models/customer';
 import { Product } from '../_models/product';
+import { OrderTransaction, OrderTransactionType } from '../_models/ordertransaction';
 import { OrderService } from '../_services/order.service';
+import { UserService } from 'app/_services/user.service';
+import { User } from '../_models/user';
 import { CustomerService } from '../_services/customer.service';
 import { ProductService } from '../_services/product.service';
+import { OrderTransactionService } from 'app/_services/order-transaction.service';
 import { finalize, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import location from '../../assets/cities.json';
+import { Router } from '@angular/router';
 import { ProductsComponent } from '../products/products.component';
 
 @Component({
@@ -28,9 +33,12 @@ export class AdminOrderDetailsComponent implements OnInit {
 
   orderActionButtonText: String;
   order: Order = null;
+  orderTransactions: OrderTransaction[];
+  OrderTransactionTypes = OrderTransactionType;
   additionalDetailsFormGroup: FormGroup;
   editOrderContactFormGroup: FormGroup;
   editShippingAddressFormGroup: FormGroup;
+  markAsPaidFormGroup: FormGroup;
   editOrderErrorTitle: string;
   editOrderErrorDesc: string;
   loading: boolean;
@@ -51,6 +59,7 @@ export class AdminOrderDetailsComponent implements OnInit {
   editShippingAddressLoading: boolean;
   editShippingAddressError: string;
   isFulfillItemsError: boolean = false;
+  currentUser: User;
 
   countries = [];
   regions = [];
@@ -61,11 +70,14 @@ export class AdminOrderDetailsComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
+    private orderTransactionService: OrderTransactionService,
     private customerService: CustomerService,
     private productService: ProductService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private router: Router,
   ) {
     this.additionalDetailsFormGroup = this.formBuilder.group({
       notes: [{value: '', disabled: true}],
@@ -89,12 +101,27 @@ export class AdminOrderDetailsComponent implements OnInit {
       postal: [''],
       apply: [false]
     });
+
+    this.markAsPaidFormGroup = this.formBuilder.group({
+      paymentMethod: [PaymentMethod.CASH, Validators.required]
+    });
   }
 
   ngOnInit() {
+    this.getCurrentUser();
     this.getOrderDetails();
+    this.getOrderTransactions();
     this.loadCountries();
     this.isNewOrder = this.route.snapshot.queryParams['newOrder'];
+  }
+
+  getCurrentUser() {
+    this.userService.getCurrentUser()
+      .subscribe(
+        data => {
+          this.currentUser = data;
+        }
+      );
   }
 
   getOrderDetails() {
@@ -134,6 +161,17 @@ export class AdminOrderDetailsComponent implements OnInit {
       );
 
     this.submitted = false;
+  }
+
+  getOrderTransactions() {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.orderTransactionService.getOrderTransactions(id)
+      .pipe()
+      .subscribe(
+        transactions => {
+          this.orderTransactions = transactions;
+        }
+      );
   }
 
   loadCountries() {
@@ -255,6 +293,9 @@ export class AdminOrderDetailsComponent implements OnInit {
               }
             );
           }
+
+          // Create order transaction of type ORDER_CANCELED
+          this.createOrderTransaction(OrderTransactionType.ORDER_CANCELED);
         },
         error => {
           this.order.orderStatus = OrderStatus.OPEN;
@@ -281,6 +322,8 @@ export class AdminOrderDetailsComponent implements OnInit {
               }
             );
           }
+          // Create order transaction of type ORDER_UNCANCELED
+          this.createOrderTransaction(OrderTransactionType.ORDER_UNCANCELED);
         },
         error => {
           this.order.orderStatus = OrderStatus.CANCELED;
@@ -306,17 +349,25 @@ export class AdminOrderDetailsComponent implements OnInit {
 
   markAsPaid() {
     const order = new Order();
+    const paymentMethod = this.markAsPaidFormGroup.get('paymentMethod').value;
     order._id = this.order._id;
     order.paymentStatus = this.Payment_Status.PAID;
+    order.paymentMethod = paymentMethod;
 
     this.orderService.updateOrder(order)
-      .pipe()
+      .pipe(
+        finalize(() => {
+          $('#markAsPaidModal').hide();
+          $('.modal-backdrop').remove();
+        })
+      )
       .subscribe(
         order => {
           this.order = order;
           this.editOrderErrorTitle = null;
           this.editOrderErrorDesc = null;
           this.isFulfillItemsError = null;
+          this.createOrderTransaction(OrderTransactionType.PAYMENT_RECEIVED);
         },
         error => {
           this.editOrderErrorTitle = 'Failed to mark order as paid';
@@ -326,32 +377,15 @@ export class AdminOrderDetailsComponent implements OnInit {
   }
 
   fulfillItems() {
+    this.isNewOrder = false;
     if (this.order.paymentStatus == this.Payment_Status.PENDING) {
       this.isFulfillItemsError = true;
+      window.scroll(0, 0);
       return;
     }
-    this.fulfillOrder();
-  }
 
-  fulfillOrder() {
-    this.isFulfillItemsError = false;
+    this.router.navigate([`/admin/orders/${this.order._id}/fulfill`]);
 
-    const order = new Order();
-    order._id = this.order._id;
-    order.fulfillmentStatus = this.Fulfillment_Status.FULFILLED;
-    this.orderService.updateOrder(order)
-      .pipe()
-      .subscribe(
-        order => {
-          this.order = order;
-          this.editOrderErrorTitle = null;
-          this.editOrderErrorDesc = null;
-        },
-        error => {
-          this.editOrderErrorTitle = 'Fulfill order items failed';
-          this.editOrderErrorDesc = error;
-        }
-      );
   }
 
   editOrderContact() {
@@ -513,11 +547,16 @@ export class AdminOrderDetailsComponent implements OnInit {
   }
 
   archiveOrder() {
+    this.editOrderErrorDesc = null;
+    this.editOrderErrorTitle = null;
+    this.isNewOrder = false;
+
     this.orderService.archiveOrder(this.order._id)
       .pipe()
       .subscribe(
         orders => {
           this.getOrderDetails();
+          this.createOrderTransaction(OrderTransactionType.ORDER_ARCHIVED);
         }
       );
   }
@@ -528,6 +567,41 @@ export class AdminOrderDetailsComponent implements OnInit {
       .subscribe(
         orders => {
           this.getOrderDetails();
+          this.createOrderTransaction(OrderTransactionType.ORDER_UNARCHIVED);
+        }
+      );
+  }
+
+  createOrderTransaction(type: string) {
+    const orderTotal = (this.order.total/100).toFixed(2);
+    let transaction = new OrderTransaction();
+    transaction.orderId = this.order._id;
+    transaction.type = type;
+    
+    switch(type) {
+      case OrderTransactionType.PAYMENT_RECEIVED:
+        transaction.summary = `Payment of NZD ${orderTotal} was accepted thru ${this.order.paymentMethod}`;
+        break;
+      case OrderTransactionType.ORDER_ARCHIVED:
+        transaction.summary = `Order was archived by admin ${this.currentUser.username}`;
+        break;
+      case OrderTransactionType.ORDER_UNARCHIVED:
+        transaction.summary = `Order was unarchived by admin ${this.currentUser.username}`;
+        break;
+      case OrderTransactionType.ORDER_CANCELED:
+        transaction.summary = `Order has been canceled by admin ${this.currentUser.username}`;
+        break;
+      case OrderTransactionType.ORDER_UNCANCELED:
+        transaction.summary = `Undo cancel order by admin ${this.currentUser.username}`;
+        break;
+      default:
+        break;
+    }
+    this.orderTransactionService.addOrderTransaction(transaction)
+      .pipe()
+      .subscribe(
+        transaction => {
+          this.getOrderTransactions();
         }
       );
   }

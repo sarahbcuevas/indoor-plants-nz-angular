@@ -3,14 +3,18 @@ import { Location } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { OrderItem, Order, PaymentMethod, PaymentStatus, OrderStatus, FulfillmentStatus, DiscountMethod, OrderDiscount, ShippingFeeMethod, ShippingDetails } from '../_models/order';
 import { ProductService } from '../_services/product.service';
+import { OrderTransactionService } from 'app/_services/order-transaction.service';
 import { CustomerService } from '../_services/customer.service';
 import { OrderService } from '../_services/order.service';
+import { UserService } from 'app/_services/user.service';
 import { Product } from '../_models/product';
 import { Customer } from '../_models/customer';
+import { User } from '../_models/user';
 import { Observable, of } from 'rxjs';
 import { finalize, tap, map, filter } from 'rxjs/operators/';
 import location from '../../assets/cities.json';
 import { Router } from '@angular/router';
+import { OrderTransaction, OrderTransactionType } from 'app/_models/ordertransaction';
 
 export class Tag {
   name: string;
@@ -54,6 +58,7 @@ export class AdminOrderCreateComponent implements OnInit {
   notes: string = '';
   PAYMENT_STATUS = PaymentStatus;
   paymentStatus = null;
+  currentUser: User;
 
   // Discount Methods
   DISCOUNT_METHOD = DiscountMethod;
@@ -102,7 +107,9 @@ export class AdminOrderCreateComponent implements OnInit {
     private productService: ProductService,
     private customerService: CustomerService,
     private orderService: OrderService,
+    private userService: UserService,
     private router: Router,
+    private orderTransactionService: OrderTransactionService
   ) {
     this.orderFormGroup = this.formBuilder.group({
       customer: ['', Validators.required],
@@ -161,10 +168,20 @@ export class AdminOrderCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getCurrentUser();
     this.loadProducts();
     this.loadCustomers();
     this.loadCountries();
     this.loadAllTags();
+  }
+
+  getCurrentUser() {
+    this.userService.getCurrentUser()
+      .subscribe(
+        data => {
+          this.currentUser = data;
+        }
+      );
   }
 
   goBack() {
@@ -743,6 +760,7 @@ export class AdminOrderCreateComponent implements OnInit {
       .subscribe(
         order => {
           this.createOrderError = null;
+          this.createOrderTransaction(order._id);
           this.router.navigate([`/admin/orders/${order._id}`], 
           {queryParams: { newOrder: true }});
         },
@@ -750,5 +768,15 @@ export class AdminOrderCreateComponent implements OnInit {
           this.createOrderError = error;
         }
       );
+  }
+
+  createOrderTransaction(orderId: string) {
+    let transaction = new OrderTransaction();
+    transaction.orderId = orderId;
+    transaction.type = OrderTransactionType.ORDER_CREATED;
+    transaction.summary = `Order created by admin ${this.currentUser.username}`;
+    this.orderTransactionService.addOrderTransaction(transaction)
+      .pipe()
+      .subscribe();
   }
 }

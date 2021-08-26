@@ -27,6 +27,7 @@ import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 import { AdminOrderDetailsComponent } from './admin-order-details/admin-order-details.component';
 import { AdminOrderCreateComponent } from './admin-order-create/admin-order-create.component';
 import { AdminOrderEditComponent } from './admin-order-edit/admin-order-edit.component';
+import { AdminOrderFulfillmentComponent } from './admin-order-fulfillment/admin-order-fulfillment.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
@@ -45,6 +46,7 @@ const routes: Routes = [
     { path: 'admin/orders/create', component: AdminOrderCreateComponent, canActivate: [AuthGuard] },
     { path: 'admin/orders/:id', component: AdminOrderDetailsComponent, canActivate: [AuthGuard] },
     { path: 'admin/orders/:id/edit', component: AdminOrderEditComponent, canActivate: [AuthGuard] },
+    { path: 'admin/orders/:id/fulfill', component: AdminOrderFulfillmentComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/create', component: AdminProductCreateComponent, canActivate: [AuthGuard] },
     { path: 'admin/products/:id', component: AdminProductDetailComponent, canActivate: [AuthGuard] },
     // { path: 'register', component: AdminRegisterComponent },

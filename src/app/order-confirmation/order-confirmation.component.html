@@ -16,10 +16,9 @@
     <div class="row justify-content-around h-100" style="max-height: 100%;">
         <div class="col-sm-12 col-md-7 bg-white pt-4 pb-4 pl-0 pr-0 pl-md-4 pr-md-4 order-last order-md-first">
             <div class="container mt-3 pl-3 pr-3">
-                <div class="row">
-                    <div class="col">
-                        <h2 class="title">{{ content?.shopName }}</h2>
-                        <p class="sub-title text-uppercase"><small>{{ content?.shopSubtitle }}</small></p>
+                <div class="row justify-content-center">
+                    <div class="col-4 col-lg-3">
+                      <img src="../assets/logo_transparent_background.png" class="d-block w-100" alt="The Foliage Fix">
                     </div>
                 </div>
                 <div class="row justify-content-end mt-3">
@@ -67,10 +66,10 @@
                             </div>
                             <div class="row mt-4 mb-3 justify-content-around">
                                 <div class="col text-left">
-                                    Need help? <a [routerLink]="['/contactus']">Contact Us</a>
+                                    Need help? <a [routerLink]="['/contactus']" class="contactUs">Contact Us</a>
                                 </div>
                                 <div class="col text-right">
-                                    <a class="btn btn-info pt-md-2 pb-md-2 pl-md-4 pr-md-4" [routerLink]="['/products']">Continue Shopping</a>
+                                    <a class="btn pt-md-2 pb-md-2 pl-md-4 pr-md-4 continueBtn" [routerLink]="['/products']">Continue Shopping</a>
                                 </div>
                             </div>
                         </div>
@@ -87,8 +86,8 @@
                 </div>
                 <div class="row align-items-center mt-2 mb-2" *ngFor="let orderItem of order?.orderItems ">
                     <div class="col-2 pr-0">
-                        <img src="{{ orderItem.product.image }}" class="img-thumbnail" *ngIf="orderItem.product.image !== null && orderItem.product.image !== '' && orderItem.product.image !== undefined">
-                        <img src="../../assets/default-plant.jpg" class="img-thumbnail" *ngIf="orderItem.product.image === null || orderItem.product.image === '' || orderItem.product.image === undefined">
+                        <img src="{{ orderItem.product.images[0].url }}" class="img-thumbnail" *ngIf="orderItem.product.images.length > 0">
+                        <img src="../../assets/default-plant.jpg" class="img-thumbnail" *ngIf="orderItem.product.images.length == 0">
                     </div>
                     <div class="col text-left">
                         <strong>{{ orderItem.product.name }}</strong> <span class="regular-text text-gray ml-3">x {{ orderItem.quantity }}</span>

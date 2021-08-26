@@ -50,6 +50,7 @@ import { AdminOrderEditComponent } from './admin-order-edit/admin-order-edit.com
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { CartComponent } from './cart/cart.component';
 import { AdminProductCreateComponent } from './admin-product-create/admin-product-create.component';
+import { AdminOrderFulfillmentComponent } from './admin-order-fulfillment/admin-order-fulfillment.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { AdminProductCreateComponent } from './admin-product-create/admin-produc
     AdminOrderEditComponent,
     AdminSettingsComponent,
     CartComponent,
-    AdminProductCreateComponent
+    AdminProductCreateComponent,
+    AdminOrderFulfillmentComponent
   ],
   imports: [
     BrowserModule,

@@ -9,5 +9,6 @@ export class Settings {
     acceptGenopay: boolean;
     acceptApplepay: boolean;
     acceptAfterpay: boolean;
+    acceptBankTransfer: boolean;
 }
   

@@ -27,8 +27,6 @@
         </nav>
 
         <div class="container-fluid pt-2 pb-2 bg-light-yellow">
-            <!-- <h2 class="title">{{ content?.shopName }}</h2>
-            <p class="sub-title text-uppercase"><small>{{ content?.shopSubtitle }}</small></p> -->
             <div class="row justify-content-center">
               <div class="col-4 col-md-3 col-lg-2">
                 <img src="../assets/logo_transparent_background.png" class="d-block w-100" alt="The Foliage Fix">
@@ -57,7 +55,8 @@
     </div>
 
     <div class="content">
-        <router-outlet></router-outlet>
+        <!-- <router-outlet></router-outlet> -->
+        <ng-container *ngTemplateOutlet="template"></ng-container>
     </div>
 
     <div class="footer">
@@ -126,7 +125,8 @@
     </nav>
   </div>
   <div class="content">
-    <router-outlet></router-outlet>
+    <!-- <router-outlet></router-outlet> -->
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   </div>
 </div>
 
@@ -135,7 +135,6 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-gradient py-2">
         <div class="navbar-brand">
           <img src="../assets/white_logo_transparent_background.png" alt="The Foliage Fix">
-          <!-- <h6 class="title mb-0">{{ content?.shopName }}</h6> -->
         </div>
         <div class="navbar-profile d-flex align-items-center">
           <ul class="navbar-nav ml-auto mt-lg-0">
@@ -181,7 +180,8 @@
             </ul>
           </div>
           <div class="col-12 col-md-8 col-lg-9 pt-4 bg-gray">
-            <router-outlet></router-outlet>
+            <!-- <router-outlet></router-outlet> -->
+            <ng-container *ngTemplateOutlet="template"></ng-container>
           </div>
         </div>
       </div>
@@ -190,6 +190,12 @@
 
 <div class="wrapper" *ngIf="isCustomerOrder">
   <div class="content">
-    <router-outlet></router-outlet>
+    <!-- <router-outlet></router-outlet> -->
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   </div>
 </div>
+
+
+<ng-template #template>
+  <router-outlet></router-outlet>
+</ng-template>

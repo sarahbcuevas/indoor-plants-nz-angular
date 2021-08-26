@@ -22,7 +22,7 @@ export const FulfillmentStatus = {
 export const PaymentMethod = {
   'CASH': 'Cash',
   'PAYPAL': 'Paypal',
-  'BANK_DEPOSIT': 'Bank_Deposit'
+  'BANK_TRANSFER': 'Bank_Transfer'
 };
 
 export const DiscountMethod = {
@@ -68,5 +68,6 @@ export class Order {
   notes: String;
   discount: OrderDiscount;
   total: number;
+  trackingNumber: string;
   createdAt: string;
 }

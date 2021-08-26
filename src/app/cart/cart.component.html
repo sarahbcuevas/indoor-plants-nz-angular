@@ -1,6 +1,6 @@
 <div class="container align-items-center">
     <div class="row justify-content-around d-flex justify-content-center">
-        <div class="pt-4 pb-4 col-md-11 col-lg-9 align-items-center justify-content-center">
+        <div class="pt-4 pb-4 col-md-10 col-lg-8 align-items-center justify-content-center">
             <h4 class="mt-2 text-center">Review Cart</h4>
             <div class="container mt-3 align-items-center justify-content-center">
                 <div class="row border pt-4 pb-4 justify-content-center align-items-center" *ngIf="orderItems?.length === 0">
@@ -9,10 +9,10 @@
                 <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
                     <div class="container">
                         <div class="row border justify-content-around align-items-center" *ngFor="let orderItem of orderItems">
-                            <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
-                                <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
+                            <div *ngIf="orderItem?.product.images.length > 0" class="col-4 col-sm-3 col-md-3 col-lg-2 pl-0 pr-0">
+                                <img src="{{ orderItem?.product.images[0].url }}" class="img-thumbnail">
                             </div>
-                            <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-4 col-sm-3 col-md-3 col-lg-3 pl-0 pr-0">
+                            <div *ngIf="orderItem?.product.images.length === 0" class="col-4 col-sm-3 col-md-3 col-lg-2 pl-0 pr-0">
                                 <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                             </div>
                             <div class="col text-left">
@@ -51,14 +51,14 @@
                         <div class="col-12">
                             <ul class="nav float-right">
                                 <li class="nav-item">
-                                    <a class="btn btn-success nav-link" [routerLink]="['/checkout']" [ngClass]="{'btn-disabled': (orderItems?.length===0)}">Proceed to Checkout</a>
+                                    <a class="btn nav-link proceedBtn" [routerLink]="['/checkout']" [ngClass]="{'btn-disabled': (orderItems?.length===0)}">Proceed to Checkout</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <a type="button" [routerLink]="['/products']" class="btn btn-link text-green float-right"><i class="fas fa-chevron-left"></i> Continue Shopping</a>
+                            <a type="button" [routerLink]="['/products']" class="btn float-right"><i class="fas fa-chevron-left"></i> Continue Shopping</a>
                         </div>
                     </div>
             </div>

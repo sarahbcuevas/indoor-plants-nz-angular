@@ -184,6 +184,14 @@ export class AdminSettingsComponent implements OnInit {
     this.update(newSettings);
   }
 
+  acceptBankTransfer() {
+    let newSettings = new Settings();
+    newSettings._id = this.settings._id;
+    newSettings.acceptBankTransfer = this.settings.acceptBankTransfer;
+
+    this.update(newSettings);
+  }
+
   acceptPaypal() {
     let newSettings = new Settings();
     newSettings._id = this.settings._id;

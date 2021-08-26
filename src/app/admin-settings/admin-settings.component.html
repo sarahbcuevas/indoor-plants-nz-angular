@@ -41,6 +41,10 @@
                     <label class="custom-control-label" for="acceptCash">Accept Cash</label>
                 </div>
                 <div class="custom-control custom-switch mb-2">
+                    <input type="checkbox" class="custom-control-input" id="acceptBankTransfer" [(ngModel)]="settings.acceptBankTransfer" (change)="acceptBankTransfer()">
+                    <label class="custom-control-label" for="acceptBankTransfer">Accept Bank Transfer</label>
+                </div>
+                <div class="custom-control custom-switch mb-2">
                     <input type="checkbox" class="custom-control-input" id="acceptPaypal" [(ngModel)]="settings.acceptPaypal" (change)="acceptPaypal()">
                     <label class="custom-control-label" for="acceptPaypal">Accept Paypal</label>
                 </div>

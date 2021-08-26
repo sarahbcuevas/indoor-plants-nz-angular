@@ -1,21 +1,9 @@
 <div class="container-fluid bg-white">
-  <!-- <h6 class="sub-title row text-uppercase mb-5 justify-content-center">Contact Us</h6> -->
   <div class="row">
   <div class="col-md-9 py-5">
-    <div class="row justify-content-center">
-      <div class="col-auto alert alert-danger text-center" role="alert">
-        <h4 class="alert-heading">This Page Is Under Construction!</h4>
-        <p>In the mean time, you may reach us thru:</p>
-        <hr>
-        <!-- <p class="mb-0">Contact: <a class="alert-link">{{ contactDetails?.contactNo }}</a></p> -->
-        <p class="mb-0">Email: <a class="alert-link">{{ contactDetails?.email }}</a></p>
-        <p class="mb-0">Instagram: <a href="{{ socialMedia?.instagram }}" class="alert-link">{{ socialMedia?.instagram }}</a></p>
-        <p class="mb-0">Trademe: <a href="{{ socialMedia?.trademe }}" class="alert-link">@indoorplantsnz</a></p>
-      </div>
-    </div>
     <h4 class="title text-center mb-5">We'd love to hear from you!</h4>
     <form [formGroup]="contactUsFormGroup" class="container">
-      <fieldset disabled>
+      <fieldset>
         <div class="form-group row justify-content-center">
           <label for="name" class="col-sm-2 col-form-label text-left">Name</label>
           <div class="col-sm-8">
@@ -57,8 +45,7 @@
         <div class="row justify-content-center">* Required</div>
         <div class="row justify-content-center mt-3">
           <button type="button" class="btn btn-secondary btn-sm mr-1" [disabled]="true" (click)="resetForm()">Reset</button>
-          <button type="button" class="btn btn-primary btn-sm" [disabled]="true" (click)="submit()">Send Message</button>
-          <!-- <button type="button" class="btn btn-primary btn-sm" [disabled]="this.contactUsFormGroup.invalid || loading" (click)="submit()">Send Message</button> -->
+          <button type="button" class="btn btn-primary btn-sm" [disabled]="this.contactUsFormGroup.invalid || loading" (click)="submit()">Send Message</button>
           <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
         </div>
       </fieldset>
@@ -73,7 +60,7 @@
       </div>
       <div class="row justify-content-center mt-3">
         <div class="col">
-          <p class="text-center"><strong>Hey there! I am Charlie Francis.</strong></p>
+          <p class="text-center"><strong>Hey there! I am Carlos.</strong></p>
           <p class="text-justify" *ngIf="content?.jumbotronDescription">{{ content?.jumbotronDescription }}</p>
         </div>
       </div>
@@ -94,5 +81,25 @@
       </div>
     </div>
   </div>
+  </div>
+</div>
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageTitle">Message sent!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p>We have received your message.<br>We will get back to you as soon as we can.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
   </div>
 </div>

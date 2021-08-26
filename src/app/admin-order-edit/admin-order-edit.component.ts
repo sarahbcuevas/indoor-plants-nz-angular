@@ -251,11 +251,11 @@ export class AdminOrderEditComponent implements OnInit {
           }
 
           if (order.discount) {
-            this.addDiscountFormGroup.setValue({
-              discount: order.discount.discount,
-              mode: order.discount.mode,
-              reason: order.discount.reason
-            });
+            this.addDiscountFormGroup.get('discount').setValue(order.discount.discount);
+            this.addDiscountFormGroup.get('mode').setValue(order.discount.mode);
+            if (order.discount.reason) {
+              this.addDiscountFormGroup.get('reason').setValue(order.discount.reason);
+            }
             this.discountInput = order.discount.discount;
             this.discountReason = order.discount.reason;
             this.setDiscountMethod(order.discount.mode);

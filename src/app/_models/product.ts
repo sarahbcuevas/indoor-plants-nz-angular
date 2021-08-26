@@ -14,7 +14,6 @@ export class Product {
   price: number;
   deliveryFee: number;
   forPickupOnly: boolean;
-  image: string;
   images: Photo[];
   stock: number;
   isBestseller: boolean;

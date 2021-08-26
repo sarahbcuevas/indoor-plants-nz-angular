@@ -1,0 +1,222 @@
+<p class="text-left"><a [routerLink]="['/admin/orders', order?._id]" class="text-secondary"><i class="fas fa-chevron-left mr-1"></i> #{{ order?.code }}</a></p>
+
+<div class="container mb-3">
+    <div class="row mb-2">
+        <div class="col pl-2 pr-2">
+            <h6 class="admin-title mb-3">Fulfillment</h6>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-between text-left">
+        <div class="col-sm-12 col-md-8 pl-1 pr-1">
+            <div class="container">
+                <div class="row">
+                    <div class="container block pl-3 pr-3 pt-3 pb-3">
+                        <div class="row">
+                            <div class="col">
+                                <span class="title" *ngIf="order?.fulfillmentStatus === Fulfillment_Status.UNFULFILLED">Mark as fulfilled</span>
+                                <span class="title" *ngIf="order?.fulfillmentStatus === Fulfillment_Status.FULFILLED">
+                                    <i class="fas fa-check-double text-primary mr-2"></i> Already marked as fulfilled
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="text-uppercase h6 regular-text">Order Items to Fulfill</span>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div class="container border-bottom pl-0 pr-0 pb-3">
+                                    <div class="row text-muted mb-1">
+                                        <div class="col-3 col-sm-3 col-md-2 col-lg-2">
+                                            <span class="regular-text"><em><strong>Item</strong></em></span>
+                                        </div>
+                                        <div class="col text-left"></div>
+                                        <div class="col-2 align-middle text-center">
+                                            <span class="regular-text"><em><strong>Quantity</strong></em></span>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-around align-items-center mb-1 pb-1" *ngFor="let orderItem of order?.orderItems; let i=index">
+                                        <div *ngIf="orderItem?.product.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2">
+                                            <img src="{{ orderItem?.product.images[0].url }}" class="img-thumbnail">
+                                        </div>
+                                        <div *ngIf="orderItem?.product.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2">
+                                            <img src="../../assets/default-plant.jpg" class="img-thumbnail">
+                                        </div>
+                                        <div class="col text-left">
+                                            <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
+                                            <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em></span>
+                                        </div>
+                                        <div class="col-2 text-center align-middle">
+                                            <input type="text" class="form-control form-control-sm text-center" [value]="orderItem.quantity" disabled>
+                                        </div>
+                                    </div>
+                              </div>
+                            </div>
+                        </div>
+
+                        <form [formGroup]="fulfillOrderFormGroup">
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="text-uppercase h6 regular-text">Tracking Information</span>&nbsp;
+                                <span class="text-uppercase text-muted regular-text">(Optional)</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="regular-text">Tracking number</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control form-control-sm" formControlName="trackingNumber">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="regular-text">Shipping carrier</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <select class="form-control form-control-sm" formControlName="shippingCarrier">
+                                            <option value="" selected>None</option>
+                                            <option value="NZPost">NZPost</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="text-uppercase h6 regular-text">Notify Customer of Shipment</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="notifyCustomer" formControlName="notifyCustomer">
+                                    <label class="form-check-label regular-text" for="notifyCustomer">
+                                        Send shipment details to your customer now
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4 pl-1 pr-1">
+            <div class="container">
+                <div class="row">
+                    <div class="container block pt-2 pb-3">
+                        <div class="row">
+                            <div class="col">
+                                <span class="title">Notes</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-muted regular-text">
+                                <span *ngIf="!order?.notes">No notes from customer</span>
+                                <span *ngIf="order?.notes">{{ order?.notes }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="container block pb-3">
+                        <div class="row">
+                            <div class="col col-form-label">
+                                <span class="title">Customer</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col text-muted regular-text">
+                                {{ order?.customer.firstname }} {{ order?.customer.lastname }}<br>
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+                        <div class="row mt-1">
+                            <div class="col col-form-label">
+                                <span class="text-uppercase h6 regular-text">Contact Information</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col text-muted regular-text">
+                                {{ order?.customer.contact }}<br>
+                                {{ order?.customer.email }}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mt-1">
+                            <div class="col col-form-label">
+                                <span class="text-uppercase h6 regular-text">Shipping Address</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col text-muted regular-text" *ngIf="order?.customer.address">
+                                <span *ngIf="selectedCustomer?.company">{{ order?.customer.company }}<br></span>
+                                {{ order?.customer.address }}<br>
+                                {{ order?.customer.city }}, {{ order?.customer.region }}<br>
+                                {{ order?.customer.country }} {{ order?.customer.postal }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="container block pb-2">
+                        <div class="row">
+                            <div class="col">
+                                <span class="title">Summary</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col text-muted regular-text">
+                                Mark as fulfilled
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-4">
+                            <div class="col text-center">
+                                <button type="button" class="btn btn-sm btn-primary fulfillBtn" (click)="fulfillItems()">Fulfill items</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalTitle">Items fulfilled</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Successfully fulfilled items.
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" [routerLink]="['/admin/orders', order?._id]" (click)="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,6 +16,12 @@
   font-size: 1.1rem;
 }
 
+.btn-success {
+  background-color: #6c9f7f !important;
+  border-color: #6c9f7f !important;
+  color: white !important;
+}
+
 .btn-disabled {
    pointer-events: none;
    cursor: default;
@@ -93,4 +99,8 @@
   @media (min-width: 768px) {
       display: block;
   }
+}
+
+.text-green {
+  color: #6c9f7f !important;
 }

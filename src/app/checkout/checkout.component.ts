@@ -1,5 +1,5 @@
 import { isMetadataImportedSymbolReferenceExpression } from '@angular/compiler-cli';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrderItem, Order, PaymentMethod, ShippingDetails, ShippingFeeMethod, PaymentStatus } from '../_models/order';
@@ -9,12 +9,15 @@ import { CustomerService } from '../_services/customer.service';
 import { OrderService } from '../_services/order.service';
 import { ProductService } from '../_services/product.service';
 import { SettingsService } from '../_services/settings.service';
+import { SendMailService } from '../_services/send-mail.service';
 import location from '../../assets/cities.json';
 import { finalize, tap } from 'rxjs/operators';
 import { render } from 'creditcardpayments/creditCardPayments';
 import { Settings } from '../_models/settings';
 import { ContentService } from '../_services/content.service';
 import { Content } from '../_models/content';
+import { OrderTransaction, OrderTransactionType } from 'app/_models/ordertransaction';
+import { OrderTransactionService } from 'app/_services/order-transaction.service';
 
 declare const clickTab: any;
 declare var paypal;
@@ -24,8 +27,7 @@ declare var paypal;
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent implements OnInit {
-  @ViewChild('paypalCompleteOrderButton', { static: true }) paypalCompleteOrderElement: ElementRef;
+export class CheckoutComponent implements OnInit, OnDestroy {
 
   subTotal: number;
   orderItems: OrderItem[] = [];
@@ -53,6 +55,9 @@ export class CheckoutComponent implements OnInit {
   forShipping: boolean;
   isShippingStep = false;
 
+  itemList = [];
+  itemTotal = 0;
+
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -61,7 +66,9 @@ export class CheckoutComponent implements OnInit {
     private orderService: OrderService,
     private productService: ProductService,
     private settingsService: SettingsService,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private sendMailService: SendMailService,
+    private orderTransactionService: OrderTransactionService
   ) {
 
     this.userInfoFormGroup = this.formBuilder.group({
@@ -78,7 +85,7 @@ export class CheckoutComponent implements OnInit {
       save: [true]
     });
     this.shippingFormGroup = this.formBuilder.group({
-      forShipping: [false]
+      forShipping: [true]
     });
     this.paymentFormGroup = this.formBuilder.group({
       paymentMethod: ['', Validators.required]
@@ -97,14 +104,14 @@ export class CheckoutComponent implements OnInit {
       postal: ['', Validators.required]
     });
 
-    this.paymentFormGroup.get('paymentMethod').valueChanges.subscribe(method => {
-      let element = document.querySelector<HTMLElement>('#paypalCompleteOrderButton');
-      if (method === PaymentMethod.PAYPAL) {
-        element.style.display = 'inline-block';
-      } else {
-        element.style.display = 'none';
-      }
-    });
+    // this.paymentFormGroup.get('paymentMethod').valueChanges.subscribe(method => {
+    //   let element = document.querySelector<HTMLElement>('#paypalCompleteOrderButton');
+    //   if (method === PaymentMethod.PAYPAL) {
+    //     element.style.display = 'inline-block';
+    //   } else {
+    //     element.style.display = 'none';
+    //   }
+    // });
   }
 
   ngOnInit() {
@@ -112,11 +119,16 @@ export class CheckoutComponent implements OnInit {
     this.loadCart();
     this.loadCountries();
     this.getContent();
-    document.querySelector<HTMLElement>('#paypalCompleteOrderButton');
-    if (this.paymentFormGroup.get('paymentMethod').value == PaymentMethod.PAYPAL) {
-      document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'inline-block';
-    } else {
-      document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'none';
+    // if (this.paymentFormGroup.get('paymentMethod').value == PaymentMethod.PAYPAL) {
+    //   document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'inline-block';
+    // } else {
+    //   document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'none';
+    // }
+  }
+
+  ngOnDestroy() {
+    if (this.paypalButton != undefined || this.paypalButton != null) {
+      this.paypalButton.close();
     }
   }
   
@@ -133,6 +145,14 @@ export class CheckoutComponent implements OnInit {
       .pipe(tap(settings => {
         this.settings = settings;
         this.shippingFormGroup.get('forShipping').setValue(!this.settings.allowPickup);
+
+        if (settings.acceptCash) {
+          this.paymentFormGroup.get('paymentMethod').setValue(PaymentMethod.CASH);
+        } else if (settings.acceptPaypal) {
+          this.paymentFormGroup.get('paymentMethod').setValue(PaymentMethod.PAYPAL);
+        } else if (settings.acceptBankTransfer) {
+          this.paymentFormGroup.get('paymentMethod').setValue(PaymentMethod.BANK_TRANSFER);
+        }
       }))
       .subscribe();
   }
@@ -154,6 +174,8 @@ export class CheckoutComponent implements OnInit {
     this.orderItems = [];
     this.isShippingAllowed = true;
     this.totalShippingFee = 0;
+    this.itemTotal = 0;
+    this.itemList = [];
     let totalBill = 0;
     const cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -162,15 +184,14 @@ export class CheckoutComponent implements OnInit {
     }
 
     for (let i = 0; i < cart.length; i++) {
-      const item = JSON.parse(cart[i]);
+      let item = JSON.parse(cart[i]);
       this.productService.getProductById(item.product)
         .pipe(finalize(() => {
-          if (i == cart.length - 1) {
+          if (this.itemList.length == cart.length) {
             totalBill = this.subTotal;
             if (this.isShippingAllowed) {
               totalBill += this.totalShippingFee + this.baseShippingFee;
             }
-
             this.renderPaypalButton();
           }
         }))
@@ -180,6 +201,16 @@ export class CheckoutComponent implements OnInit {
               product: prod,
               quantity: item.quantity
             });
+
+            let orderItem = {
+              name: prod.name,
+              quantity: item.quantity,
+              unit_amount: {value: prod.price/100, currency_code: 'NZD'}
+            };
+
+            this.itemTotal += item.quantity;
+
+            this.itemList.push(orderItem);
             
             this.subTotal += prod.price * item.quantity;
             this.totalShippingFee += prod.deliveryFee * item.quantity;
@@ -198,25 +229,16 @@ export class CheckoutComponent implements OnInit {
     let shipping = 0;
 
     if (this.forShipping) {
-      shipping = this.totalShippingFee + this.baseShippingFee;
+      shipping = (this.totalShippingFee + this.baseShippingFee) / 100;
     }
 
-    let totalBill = this.subTotal + shipping;
+    let tempSubTotal = 0;
 
-    let itemList = [];
-    let itemTotal = 0;
-    
-    this.orderItems.forEach(order => {
-      let item = {
-        name: order.product.name,
-        quantity: order.quantity,
-        unit_amount: {value: order.product.price/100, currency_code: 'NZD'}
-      };
-      itemTotal += order.quantity;
-      console.log(`${order.product.name}: ${order.product.price} x ${order.quantity} = ${order.product.price * order.quantity} `);
+    for (let i=0; i<this.itemList.length; i++) {
+      tempSubTotal += this.itemList[i].unit_amount.value * this.itemList[i].quantity;
+    }
 
-      itemList.push(item);
-    });
+    let totalBill = tempSubTotal + shipping;
 
     if (this.paypalButton != undefined || this.paypalButton != null) {
       this.paypalButton.close();
@@ -224,6 +246,8 @@ export class CheckoutComponent implements OnInit {
 
     console.log('totalBill: ', totalBill);
     console.log('shipping: ', shipping);
+    console.log('tempSubTotal: ', tempSubTotal);
+    console.log('itemslist: ', this.itemList);
 
     this.paypalButton = paypal.Buttons({
 
@@ -231,11 +255,10 @@ export class CheckoutComponent implements OnInit {
       commit: true,
 
       style: {
-        color: 'gold',
+        color: 'blue',
         shape: 'rect',
-        size: 'small',
-        height: 40,
-        layout: 'horizontal',
+        size: 'large',
+        layout: 'vertical',
         tagline: 'false'
       },
 
@@ -245,13 +268,13 @@ export class CheckoutComponent implements OnInit {
             {
               amount: {
                 currency_code: 'NZD',
-                value: JSON.parse(JSON.stringify(totalBill/100)),
+                value: JSON.parse(JSON.stringify(totalBill)),
                 breakdown: {
-                  item_total: {value: this.subTotal/100, currency_code: 'NZD'},
-                  shipping: {value: shipping/100, currency_code: 'NZD'}
+                  item_total: {value: tempSubTotal, currency_code: 'NZD'},
+                  shipping: {value: shipping, currency_code: 'NZD'}
                 }
               },
-              items: itemList
+              items: this.itemList
             }
           ],
           application_context: {
@@ -270,10 +293,7 @@ export class CheckoutComponent implements OnInit {
 
       onApprove: async (data, actions) => {
         const order = await actions.order.capture();
-        // Redirect to order successful page
-        // Mark order as paid
-        // Remove items in cart
-        // Record info of customers and order
+        console.log('Order: ', order);
         if (order.status == "COMPLETED") {
           this.completeOrder();
         }
@@ -281,10 +301,14 @@ export class CheckoutComponent implements OnInit {
 
       onCancel: function(data, actions) {
         console.log('onCancel() data: ', data);
+      },
+
+      onError: function(data, actions){
+        console.log('onError() data: ', data);
       }
     });
 
-    this.paypalButton.render(this.paypalCompleteOrderElement.nativeElement);
+    this.paypalButton.render('#paypalCompleteOrderButton');
 
   }
 
@@ -308,13 +332,8 @@ export class CheckoutComponent implements OnInit {
     this.cities = [];
     this.regionIndex = regionIndex;
     let data = location[this.countryIndex].regions[regionIndex].cities;
-    let island = location[this.countryIndex].regions[regionIndex].island;
-
-    if (island === "North Island") {
-      this.baseShippingFee = this.settings.northIslandShippingRate;
-    } else if (island === "South Island") {
-      this.baseShippingFee = this.settings.southIslandShippingRate;
-    }
+    
+    this.setBaseShippingFee();
 
     for (let i=0; i<data.length; i++) {
       this.cities.push(data[i]);
@@ -323,6 +342,16 @@ export class CheckoutComponent implements OnInit {
 
   selectCity(cityIndex) {
     this.cityIndex = cityIndex;
+  }
+
+  setBaseShippingFee() {
+    let island = location[this.countryIndex].regions[this.regionIndex].island;
+
+    if (island === "North Island") {
+      this.baseShippingFee = this.settings.northIslandShippingRate;
+    } else if (island === "South Island") {
+      this.baseShippingFee = this.settings.southIslandShippingRate;
+    }
   }
 
   removeFromCart(id: string) {
@@ -350,6 +379,7 @@ export class CheckoutComponent implements OnInit {
 
   continueToShipping() {
     this.onTabClick();
+    this.setBaseShippingFee();
     this.isShippingStep = true;
   }
 
@@ -424,7 +454,9 @@ export class CheckoutComponent implements OnInit {
     .subscribe(
       order => {
         this.emptyCart();
-
+        this.createOrderTransaction(order, OrderTransactionType.ORDER_CREATED);
+        this.createOrderTransaction(order, OrderTransactionType.PAYMENT_RECEIVED);
+        this.sendConfirmationEmail(order);
         this.router.navigate(['/order-confirmation'], 
           {queryParams: { orderId: order._id}});
       },
@@ -432,6 +464,44 @@ export class CheckoutComponent implements OnInit {
         console.log('Error: ', error);
       }
     );
+  }
+
+  sendConfirmationEmail(order) {
+    order.orderItems = this.orderItems;
+    order.url = window.location.origin + '/order-confirmation?orderId=' + order._id;
+    this.sendMailService.sendOrderConfirmationMail(order)
+      .pipe()
+      .subscribe(
+        success => {
+          // Todo: Mark order property - emailSent
+
+          console.log('Successfully sent order confirmation email');
+        },
+        error => {
+          console.log('Failed to send order confirmation email: ', error);
+        }
+      );
+  }
+
+  createOrderTransaction(order: Order, type: string) {
+    const orderTotal = (order.total/100).toFixed(2);
+    let transaction = new OrderTransaction();
+    transaction.orderId = order._id;
+    transaction.type = type;
+    
+    switch(type) {
+      case OrderTransactionType.ORDER_CREATED:
+        transaction.summary = `Order created by customer thru website`;
+        break;
+      case OrderTransactionType.PAYMENT_RECEIVED:
+        transaction.summary = `Payment of NZD ${orderTotal} was accepted thru ${order.paymentMethod}`;
+        break;
+      default:
+        break;
+    }
+    this.orderTransactionService.addOrderTransaction(transaction)
+      .pipe()
+      .subscribe();
   }
 
   addToSubscriptionList() {

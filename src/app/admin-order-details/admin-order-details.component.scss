@@ -29,3 +29,25 @@
 .custom-input {
     width: 100%;
 }
+
+// @media (max-width: 767.98px) {
+@media (max-width: 929.99px) {
+    #order-details-div, #customer-div, #timeline-div {
+        width: 100% !important;
+    }
+    
+}
+// @media (min-width: 768px) {
+@media (min-width: 930px) {
+
+    #order-details-div, #timeline-div {
+        width: 65% !important;
+        float: left !important;
+        clear: left !important;
+    }
+    
+    #customer-div {
+        width: 32% !important;
+        float: right !important;
+    }
+}

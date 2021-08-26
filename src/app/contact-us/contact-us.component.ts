@@ -36,7 +36,8 @@ export class ContactUsComponent implements OnInit {
       contact: [''],
       email: ['', Validators.required],
       type: ['', Validators.required],
-      message: ['', Validators.required]
+      message: ['', Validators.required],
+      recipient: ['info@thefoliagefix.co.nz']
     });
   }
 
@@ -84,6 +85,7 @@ export class ContactUsComponent implements OnInit {
     }
     this.loading = true;
     const content: Message = this.contactUsFormGroup.value;
+    content.recipient = 'info@thefoliagefix.co.nz';
     this.sendMailService.sendMail(content)
       .pipe(finalize(() => {
         this.loading = false;
@@ -92,13 +94,16 @@ export class ContactUsComponent implements OnInit {
       }))
       .subscribe(
         success => {
-          // TODO: Prompt user that the message was sent successfully
-          console.log('Message sent successfully!');
+          this.showMessageModal();
         },
         error => {
           console.log('Message sending failed.');
         }
       );
+  }
+
+  showMessageModal() {
+    $('#messageModal').modal('show');
   }
 
 }
