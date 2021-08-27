@@ -244,11 +244,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.paypalButton.close();
     }
 
-    console.log('totalBill: ', totalBill);
-    console.log('shipping: ', shipping);
-    console.log('tempSubTotal: ', tempSubTotal);
-    console.log('itemslist: ', this.itemList);
-
     this.paypalButton = paypal.Buttons({
 
       // Show the buyer a 'Pay Now' button in the checkout flow
@@ -293,8 +288,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
       onApprove: async (data, actions) => {
         const order = await actions.order.capture();
-        console.log('Order: ', order);
         if (order.status == "COMPLETED") {
+          this.displayLoading();
           this.completeOrder();
         }
       },
@@ -457,6 +452,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.createOrderTransaction(order, OrderTransactionType.ORDER_CREATED);
         this.createOrderTransaction(order, OrderTransactionType.PAYMENT_RECEIVED);
         this.sendConfirmationEmail(order);
+        this.removeLoading();
         this.router.navigate(['/order-confirmation'], 
           {queryParams: { orderId: order._id}});
       },
@@ -502,6 +498,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.orderTransactionService.addOrderTransaction(transaction)
       .pipe()
       .subscribe();
+  }
+
+  displayLoading() {
+    window.scroll(0, 0);
+    $('#loadingModal').modal('show');
+  }
+
+  removeLoading() {
+    $('#loadingModal').modal('hide');
+    $('.modal-backdrop').remove();
   }
 
   addToSubscriptionList() {
