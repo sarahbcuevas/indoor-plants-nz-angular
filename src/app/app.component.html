@@ -1,32 +1,12 @@
 <div class="wrapper" *ngIf="!isAdmin && !isLogin && !isCustomerOrder">
     <div class="header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <div class="navbar-brand">
-                <a class="btn btn-link" *ngIf="socialMedia?.facebook" [href]="socialMedia?.facebook"><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-link" *ngIf="socialMedia?.instagram" [href]="socialMedia?.instagram"><i class="fab fa-instagram"></i></a>
-                <a class="btn btn-link" *ngIf="socialMedia?.trademe" [href]="socialMedia?.trademe"><img class="fab" src="../assets/trademe-white.png" style="width:20px;height:20px;"></a>
-                <a class="btn btn-link" *ngIf="socialMedia?.twitter" [href]="socialMedia?.twitter"><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-link" *ngIf="socialMedia?.youtube" [href]="socialMedia?.youtube"><i class="fab fa-youtube"></i></a>
-            </div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle Navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggler">
-                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-white text-center font-weight-light">{{ contact?.email }} <i class="fas fa-envelope"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white text-center font-weight-light" routerLink="/cart">SHOPPING CART <i class="fas fa-shopping-cart"></i></a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link text-white text-center font-weight-light" routerLink="/login">LOGIN <i class="fas fa-user-circle"></i></a>
-                    </li> -->
-                </ul>
-            </div>
+        <nav class="navbar navbar-expand-md topBar">
+          <div class="text-uppercase mt-2 mb-2">
+            <span *ngIf="content?.topBarContent">{{ content?.topBarContent }}</span>
+          </div>
         </nav>
 
-        <div class="container-fluid pt-2 pb-2 bg-light-yellow">
+        <div class="container-fluid pt-4 pb-2 bg-light-yellow">
             <div class="row justify-content-center">
               <div class="col-4 col-md-3 col-lg-2">
                 <img src="../assets/logo_transparent_background.png" class="d-block w-100" alt="The Foliage Fix">

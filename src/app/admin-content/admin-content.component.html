@@ -18,6 +18,13 @@
       </div>
     </div>
     <div class="form-group row">
+      <label for="topBarContent" class="col-lg-2 col-form-label col-form-label-sm">Top Bar Content</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control form-control-sm" formControlName="topBarContent" id="topBarContent" placeholder="e.g. Shipping Fee: North Island - $12 South Island - $15" value="{{ content?.topBarContent }}">
+        <p class="text-danger" *ngIf="!!editContentFormGroup.controls.topBarContent.errors?.required && submitted"></p>
+      </div>
+    </div>
+    <div class="form-group row">
       <label for="jumbotronImage" class="col-lg-2 col-form-label col-form-label-sm">Jumbotron Image</label>
       <div class="col-lg-10">
         <input type="file" class="form-control form-control-sm image-upload-input" formControlName="jumbotronImage" id="jumbotronImage" placeholder="Jumbotron Image" accept="image/*" (change)="onFileChange($event)">

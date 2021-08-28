@@ -46,6 +46,7 @@ export class AdminContentComponent implements OnInit {
     this.editContentFormGroup = this.formBuilder.group({
       shopName: ['', Validators.required],
       shopSubtitle: ['', Validators.required],
+      topBarContent: [''],
       jumbotronImage: ['', Validators.required],
       jumbotronTitle: ['', Validators.required],
       jumbotronDescription: ['', Validators.required],
