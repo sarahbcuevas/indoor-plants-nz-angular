@@ -6,3 +6,24 @@
   font-weight: 300;
   letter-spacing: .1rem;
 }
+
+.regular-text {
+  font-size: 0.8rem;
+}
+
+.text-bold {
+  font-weight: 500;
+}
+
+.text-dark {
+  color: black;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  cursor: pointer;
+  display: inline-block;
+}

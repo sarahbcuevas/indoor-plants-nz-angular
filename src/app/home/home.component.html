@@ -1,10 +1,27 @@
-<div class="jumbotron-fluid d-flex align-items-center">
-  <img *ngIf="content?.jumbotronImage" src="{{ content?.jumbotronImage }}" class="jumbotron">
-    <div class="container jumbotron-content text-center">
-        <h3 class="display-4">{{ content?.jumbotronTitle }}</h3>
-        <p class="lead">{{ content?.jumbotronDescription }}</p>
-        <button type="button" class="btn btn-black" [routerLink]="['/products']">SHOP NOW</button>
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" *ngFor="let item of content?.slideshow; let i=index" data-slide-to="i" [ngClass]="[(i == 0) ? 'active' : '']"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item" *ngFor="let item of content?.slideshow; let i=index" [ngClass]="[(i == 0) ? 'active' : '']">
+            <img class="jumbotron" src="{{ item.image }}" alt="{{ item.title }}">
+            <div class="carousel-caption jumbotron-content">
+                <div class="center">
+                    <h3 class="display-4">{{ item.title }}</h3>
+                    <p class="lead" *ngIf="item.description">{{ item.description }}</p>
+                    <a class="btn btn-black text-uppercase mt-2" href="{{ item.url }}" *ngIf="item.url && item.action">{{ item.action }}</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
 </div>
 
 <div class="container-fluid pt-5 pb-5 bg-light-yellow" *ngIf="(bestsellers | async)?.length > 0">

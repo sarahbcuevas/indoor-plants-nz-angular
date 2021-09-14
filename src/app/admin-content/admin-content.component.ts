@@ -4,7 +4,7 @@ import { ContactService } from '../_services/contact.service';
 import { CategoryService } from '../_services/category.service';
 import { SocialmediaService } from '../_services/socialmedia.service';
 import { UploadService } from '../_services/upload.service';
-import { Content } from '../_models/content';
+import { Content, Item } from '../_models/content';
 import { Contact } from '../_models/contact';
 import { Category } from '../_models/category';
 import { SocialMedia } from '../_models/socialmedia';
@@ -27,11 +27,13 @@ export class AdminContentComponent implements OnInit {
   content: Content;
   contact: Contact;
   socialMedia: SocialMedia;
+  slideShowItems: Item[] = [];
+  tempSlideShowItems: Item[] = [];
   editContentError: string;
   editContentFormGroup: FormGroup;
   editContactFormGroup: FormGroup;
   editSocialMediaFormGroup: FormGroup;
-  tempImage: string;
+  slideShowFormGroup: FormGroup;
   categories: Observable<Category[]>;
 
   constructor(
@@ -47,9 +49,6 @@ export class AdminContentComponent implements OnInit {
       shopName: ['', Validators.required],
       shopSubtitle: ['', Validators.required],
       topBarContent: [''],
-      jumbotronImage: ['', Validators.required],
-      jumbotronTitle: ['', Validators.required],
-      jumbotronDescription: ['', Validators.required],
       footerDescription: ['', Validators.required]
     });
 
@@ -66,6 +65,14 @@ export class AdminContentComponent implements OnInit {
       twitter: [''],
       youtube: ['']
     });
+
+    this.slideShowFormGroup = this.formBuilder.group({
+      image: ['', Validators.required],
+      title: [''],
+      description: [''],
+      url: [''],
+      action: ['']
+    });
   }
 
   ngOnInit() {
@@ -80,6 +87,7 @@ export class AdminContentComponent implements OnInit {
       this.contentService.addContent(content)
         .pipe(finalize(() => {
           this.loading = false;
+          this.tempSlideShowItems = [];
           this.getContent();
         }))
         .subscribe(
@@ -151,29 +159,30 @@ export class AdminContentComponent implements OnInit {
   saveContent() {
     this.submitted = true;
     const content: Content = this.editContentFormGroup.value;
-    if (this.editContentFormGroup.invalid) {
-      if ((content.jumbotronImage === null || content.jumbotronImage === undefined || content.jumbotronImage === '') &&
-        (this.content !== undefined && this.content.jumbotronImage !== null && this.content.jumbotronImage !== undefined)) {
-          // proceed
-      } else {
-        return;
-      }
 
-      if (content.shopName === '' || content.shopSubtitle === '' || content.jumbotronTitle === '' ||
-        content.jumbotronDescription === '' || content.footerDescription === '') {
+    if (this.editContentFormGroup.invalid) {
+      if (content.shopName === '' || content.shopSubtitle === '' || content.footerDescription === '') {
         return;
       }
     }
 
+    if (this.slideShowItems.length == 0 && this.tempSlideShowItems.length == 0) {
+      return;
+    }
+
     this.loading = true;
+
+    if (this.slideShowFormGroup.valid) {
+      var item: Item = this.slideShowFormGroup.value;
+      this.tempSlideShowItems.push(item);
+      this.slideShowFormGroup.reset();
+    }
+
+    content.slideshow = this.slideShowItems.concat(this.tempSlideShowItems);
+
     // If there is an existing content, set new content id with the current id.
     if (this.content !== null && this.content !== undefined) {
       content._id = this.content._id;
-      content.jumbotronImage = this.content.jumbotronImage;
-    } else {
-      if (this.tempImage !== null && this.tempImage !== undefined) {
-        content.jumbotronImage = this.tempImage;
-      }
     }
 
     this.save(content);
@@ -295,17 +304,13 @@ export class AdminContentComponent implements OnInit {
     if (this.content === undefined) {
       return;
     }
-    if (this.tempImage) {
-      this.content.jumbotronImage = this.tempImage;
-      this.tempImage = '';
-    }
 
+    this.slideShowItems = this.content.slideshow;
+    this.tempSlideShowItems = [];
     this.editContentFormGroup.get('shopName').setValue(this.content.shopName);
     this.editContentFormGroup.get('shopSubtitle').setValue(this.content.shopSubtitle);
-    this.editContentFormGroup.get('jumbotronTitle').setValue(this.content.jumbotronTitle);
-    this.editContentFormGroup.get('jumbotronDescription').setValue(this.content.jumbotronDescription);
+    this.editContentFormGroup.get('topBarContent').setValue(this.content.topBarContent);
     this.editContentFormGroup.get('footerDescription').setValue(this.content.footerDescription);
-    this.editContentFormGroup.get('jumbotronImage').reset();
   }
 
   resetSocialMedia() {
@@ -320,14 +325,11 @@ export class AdminContentComponent implements OnInit {
     this.editSocialMediaFormGroup.get('youtube').setValue(this.socialMedia.youtube);
   }
 
-  onFileChange(fileInput) {
-    const files = (<HTMLInputElement>document.getElementById('jumbotronImage')).files;
-    const file = files[0];
-    if (file === null) {
-      return console.log('No file selected.');
+  onFileChange(event) {
+    if (event.target.files) {
+      this.isImageUploading = true;
+      this.getSignedRequest(event.target.files[0]);
     }
-    this.isImageUploading = true;
-    this.getSignedRequest(file);
   }
 
   getSignedRequest(file) {
@@ -359,20 +361,33 @@ export class AdminContentComponent implements OnInit {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          (<HTMLImageElement>document.getElementById('jumbotronPreview')).src = url;
-          if (this.content !== undefined && this.content !== null) {
-            this.content.jumbotronImage = url;
-          } else {
-            this.tempImage = url;
-          }
+          this.slideShowFormGroup.get('image').setValue(url);
         } else {
           console.log('Could not upload file.');
         }
         this.isImageUploading = false;
         this.loading = false;
-        (<HTMLImageElement>document.getElementById('jumbotronImageUploadLoading')).style.visibility = 'hidden';
       }
     };
     xhr.send(file);
+  }
+
+  addSlideShowItem() {
+    if (this.slideShowFormGroup.invalid) {
+      return;
+    }
+
+    var item: Item = this.slideShowFormGroup.value;
+
+    this.tempSlideShowItems.push(item);
+    this.slideShowFormGroup.reset();
+  }
+
+  removeSlideShowItem(index) {
+    this.slideShowItems.splice(index, 1);
+  }
+
+  removeTempSlideShowItem(index) {
+    this.tempSlideShowItems.splice(index, 1);
   }
 }
