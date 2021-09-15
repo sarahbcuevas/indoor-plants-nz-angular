@@ -32,7 +32,6 @@
     "bootstrap": "^4.6.0",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
-    "creditcardpayments": "^1.0.3",
     "express": "^4.16.4",
     "jquery": "^3.5.1",
     "ng2-file-upload": "^1.4.0",

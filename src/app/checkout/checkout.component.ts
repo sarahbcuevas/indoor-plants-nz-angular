@@ -12,7 +12,6 @@ import { SettingsService } from '../_services/settings.service';
 import { SendMailService } from '../_services/send-mail.service';
 import location from '../../assets/cities.json';
 import { finalize, tap } from 'rxjs/operators';
-import { render } from 'creditcardpayments/creditCardPayments';
 import { Settings } from '../_models/settings';
 import { ContentService } from '../_services/content.service';
 import { Content } from '../_models/content';
