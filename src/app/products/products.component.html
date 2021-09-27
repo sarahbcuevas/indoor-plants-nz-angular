@@ -9,27 +9,27 @@
     <div class="row">
         <div class="col-12 col-md-4 col-lg-3 text-left categories pt-3 pl-lg-4 bg-light collapse" id="sidebar">
             <h5 class="title">Categories</h5>
-            <p *ngIf="(categories | async)?.length == 0">No available categories.</p>
-            <div *ngIf="(categories | async)?.length > 0">
+            <p *ngIf="(categories)?.length == 0">No available categories.</p>
+            <div *ngIf="(categories)?.length > 0">
                 <ul class="list-group list-unstyled accordion" id="accordion-parent">
                     <li class="list-group-item bg-transparent">
                       <span (click)="getAllProducts()">Show All Products</span>
                     </li>
                 </ul>
-              <ul class="list-group list-unstyled accordion" id="accordion-parent" *ngFor="let category of categories | async; index as i">
+              <ul class="list-group list-unstyled accordion" id="accordion-parent" *ngFor="let category of categories; index as i">
                 <li class="list-group-item bg-transparent" *ngIf="category.parent===null">
                   <span [routerLink]="['/products']" [queryParams]="{category:category._id}">{{ category.name }}</span>
                     <a class="float-right collapsed" data-toggle="collapse" data-target="{{ '#category' + i + '-list' }}" href="{{ '#category' + i + '-list' }}" *ngIf="hasSubCategory(category._id)">
                         <i class="fas fa-plus"></i>
                     </a>
                     <div class="pt-1"></div>
-                    <ul class="list-group list-unstyled sub-list collapse" id="{{ 'category' + i + '-list' }}" *ngFor="let subcategory of categories | async; index as j">
+                    <ul class="list-group list-unstyled sub-list collapse" id="{{ 'category' + i + '-list' }}" *ngFor="let subcategory of categories; index as j">
                         <li class="list-group-item  bg-transparent" *ngIf="subcategory.parent!==null && subcategory.parent._id===category._id">
                           <span [routerLink]="['/products']" [queryParams]="{category:subcategory._id}">{{ subcategory.name }}</span>
                             <a class="float-right collapsed" data-toggle="collapse" data-target="{{ '#subcategory' + j + '-list' }}" href="{{ '#subcategory' + j + '-list' }}" *ngIf="hasSubCategory(subcategory._id)">
                                 <i class="fas fa-plus"></i>
                             </a>
-                            <ul class="list-group list-unstyled sub-list collapse" id="{{ 'subcategory' + j + '-list' }}" *ngFor="let subsubcategory of categories | async">
+                            <ul class="list-group list-unstyled sub-list collapse" id="{{ 'subcategory' + j + '-list' }}" *ngFor="let subsubcategory of categories">
                                 <li class="list-group-item  bg-transparent" *ngIf="subsubcategory.parent!==null && subsubcategory.parent._id===subcategory._id">
                                   <span [routerLink]="['/products']" [queryParams]="{category:subsubcategory._id}">{{ subsubcategory.name }}</span>
                                 </li>
@@ -112,11 +112,11 @@
                 </div>
             </div>
 
-            <div class="container d-flex justify-content-center" *ngIf="(products | async)?.length == 0">
+            <div class="container d-flex justify-content-center" *ngIf="(products)?.length == 0">
                 <p>No available products.</p>
             </div>
-            <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products | async)?.length > 0 && !viewAsList">
-              <div class="card border-light" *ngFor="let product of products | async">
+            <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products)?.length > 0 && !viewAsList">
+              <div class="card border-light" *ngFor="let product of products">
                 <div *ngIf="product?.images.length > 0">
                   <div [id]="'carouselExampleIndicators-' + product?._id" class="carousel slide" data-ride="carousel" data-interval="false">
                     <ol class="carousel-indicators">
@@ -153,9 +153,9 @@
               </div>
             </div>
 
-            <div class="container" *ngIf="(products | async)?.length > 0 && viewAsList">
+            <div class="container" *ngIf="(products)?.length > 0 && viewAsList">
               <ul class="list-unstyled mx-md-1 mx-lg-5">
-                <li class="media my-5" *ngFor="let product of products | async">
+                <li class="media my-5" *ngFor="let product of products">
                   <img class="mr-3 align-self-center img-thumbnail" *ngIf="product?.images.length > 0" src="{{ product?.images[0].url }}" alt="Plant image">
                   <img class="mr-3 align-self-center img-thumbnail" *ngIf="product?.images.length == 0" src="../../assets/default-plant.jpg" alt="Plant image">
                   <div class="media-body text-left">
@@ -228,7 +228,7 @@
             <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(true)" *ngIf="!isCheckAllCategories">Select All</a>
           </small>
         </h6>
-        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories | async; index as i">
+        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories; index as i">
           <label class="form-check-label" for="checkBox">
             <span *ngIf="category.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span *ngIf="category.parent!==null && category.parent.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>

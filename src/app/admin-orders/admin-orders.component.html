@@ -154,8 +154,8 @@
             <th scope="col">Total</th>
           </tr>
         </thead>
-        <tbody *ngIf="(orders | async)?.length > 0">
-          <tr *ngFor="let order of orders | async | filterOrder : SearchBarFilter : searchText; let i=index">
+        <tbody *ngIf="(orders)?.length > 0">
+          <tr *ngFor="let order of orders | filterOrder : SearchBarFilter : searchText; let i=index">
             <td class="pr-0"><input type="checkbox" [id]="order?._id" class="checkbox" [value]="isOrderSelected(order?._id)" (click)="toggleSelection(order)"></td>
             <td scope="row" [routerLink]="['/admin/orders', order._id]" routerLinkActive="router-link-active" routerLink="/admin/orders/{{order._id}}" routerLinkActive="router-link-active" class="underline pointer text-primary"><strong>#{{ order.code }}</strong></td>
             <td>{{ order.createdAt | date:'MM/dd/yyyy h:mma' }}</td>
@@ -173,7 +173,7 @@
         </tbody>
       </table>
     </div>
-    <div class="row pb-3" *ngIf="(orders | async)?.length === 0" style="width:100%;">
+    <div class="row pb-3" *ngIf="(orders)?.length === 0" style="width:100%;">
       <span class="col-12">
         No orders available.
       </span>

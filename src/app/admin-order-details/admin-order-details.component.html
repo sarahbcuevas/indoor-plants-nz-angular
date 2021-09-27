@@ -272,8 +272,8 @@
             </div>
             <div class="col text-muted text-right regular-text">
               <i class="fas fa-clipboard-check mr-2"></i>
-              <span *ngIf="(customerOrders | async)?.length > 0">{{ (customerOrders | async)?.length }} orders</span>
-              <span *ngIf="(customerOrders | async)?.length <= 0">No orders</span>
+              <span *ngIf="(customerOrders)?.length > 0">{{ (customerOrders)?.length }} orders</span>
+              <span *ngIf="(customerOrders)?.length <= 0">No orders</span>
             </div>
           </div>
           <div class="row">

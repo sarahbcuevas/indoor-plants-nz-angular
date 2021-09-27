@@ -13,7 +13,6 @@ import { ProductService } from '../_services/product.service';
 import { OrderTransactionService } from 'app/_services/order-transaction.service';
 import { finalize, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import location from '../../assets/cities.json';
 import { Router } from '@angular/router';
 import { ProductsComponent } from '../products/products.component';
@@ -48,7 +47,7 @@ export class AdminOrderDetailsComponent implements OnInit {
   paymentStatuses = PaymentStatus;
   orderItems: OrderItem[] = [];
   customer: Customer;
-  customerOrders: Observable<Order[]>;
+  customerOrders: Order[];
   subTotal: number;
   shippingFee: number;
   discountAmount: number = 0;
@@ -137,7 +136,12 @@ export class AdminOrderDetailsComponent implements OnInit {
           this.order = order;
           this.orderItems = order.orderItems;
           this.customer = order.customer;
-          this.customerOrders = this.orderService.getOrdersByCustomerId(this.customer._id).pipe();
+          this.orderService.getOrdersByCustomerId(this.customer._id).pipe()
+            .subscribe(
+              customerOrders => {
+                this.customerOrders = customerOrders;
+              }
+            );
           if (order.notes) {
             this.additionalDetailsFormGroup.get('notes').setValue(order.notes);
           }

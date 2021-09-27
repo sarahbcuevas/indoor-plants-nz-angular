@@ -4,7 +4,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { OrderItem, Order, OrderStatus, PaymentStatus, FulfillmentStatus } from '../_models/order';
 import { CustomerService } from '../_services/customer.service';
 import { OrderService } from '../_services/order.service';
-import { Observable } from 'rxjs';
 import { finalize, tap, map } from 'rxjs/operators';
 
 export const Filter = {
@@ -31,7 +30,7 @@ export class AdminOrdersComponent implements OnInit {
 
   orderStatuses = OrderStatus;
   OrderItems: [OrderItem];
-  orders: Observable<Order[]>;
+  orders: Order[];
   isOrdersLoading: boolean;
 
   Payment_Status = PaymentStatus;
@@ -100,7 +99,7 @@ export class AdminOrdersComponent implements OnInit {
     $('#toggleAll').prop('checked', false);
     this.resetSelectedOrders();
 
-    this.orders = this.orderService.getOrders()
+    this.orderService.getOrders()
       .pipe(
         map((orders) => {
           return orders.filter(order => {
@@ -192,6 +191,11 @@ export class AdminOrdersComponent implements OnInit {
         finalize(() => {
           this.isOrdersLoading = false;
         })
+      )
+      .subscribe(
+        orders => {
+          this.orders = orders;
+        }
       );
   }
 
@@ -206,17 +210,15 @@ export class AdminOrdersComponent implements OnInit {
 
   toggleAll() {
     const isChecked = $('#toggleAll').prop('checked');
-    this.orders.forEach(orders => {
-      for (let order of orders) {
-        $('#' + order._id + '.checkbox').prop('checked', isChecked);
+    for (let order of this.orders) {
+      $('#' + order._id + '.checkbox').prop('checked', isChecked);
 
-        if (isChecked) {
-          if(!this.isOrderSelected(order._id)) {
-            this.selectedOrders.push(order._id);
-          }
-        } 
-      }
-    });
+      if (isChecked) {
+        if(!this.isOrderSelected(order._id)) {
+          this.selectedOrders.push(order._id);
+        }
+      } 
+    }
 
     if(isChecked) {
       this.checkStatusOfSelectedOrders();
@@ -232,37 +234,33 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   checkStatusOfSelectedOrders() {
-    this.orders.pipe(
-      map((orders) => {
-        this.isOpenOrderSelected = false;
-        this.isCanceledOrderSelected = false;
-        this.isPaidOrderSelected = false;
-        this.isUnpaidOrderSelected = false;
-        this.isFulfilledOrderSelected = false;
-        this.isUnfulfilledOrderSelected = false;
-        for (let order of orders) {
-          if (this.isOrderSelected(order._id)) {
-            if (order.orderStatus == OrderStatus.OPEN) {
-              this.isOpenOrderSelected = true;
-            } else if (order.orderStatus == OrderStatus.CANCELED) {
-              this.isCanceledOrderSelected = true;
-            }
-
-            if (order.paymentStatus == PaymentStatus.PAID) {
-              this.isPaidOrderSelected = true;
-            } else if (order.paymentStatus == PaymentStatus.PENDING) {
-              this.isUnpaidOrderSelected = true;
-            }
-
-            if (order.fulfillmentStatus == FulfillmentStatus.FULFILLED) {
-              this.isFulfilledOrderSelected = true;
-            } else if (order.fulfillmentStatus == FulfillmentStatus.UNFULFILLED) {
-              this.isUnfulfilledOrderSelected = true;
-            }
-          }
+    this.isOpenOrderSelected = false;
+    this.isCanceledOrderSelected = false;
+    this.isPaidOrderSelected = false;
+    this.isUnpaidOrderSelected = false;
+    this.isFulfilledOrderSelected = false;
+    this.isUnfulfilledOrderSelected = false;
+    for (let order of this.orders) {
+      if (this.isOrderSelected(order._id)) {
+        if (order.orderStatus == OrderStatus.OPEN) {
+          this.isOpenOrderSelected = true;
+        } else if (order.orderStatus == OrderStatus.CANCELED) {
+          this.isCanceledOrderSelected = true;
         }
-      })
-    ).subscribe();
+
+        if (order.paymentStatus == PaymentStatus.PAID) {
+          this.isPaidOrderSelected = true;
+        } else if (order.paymentStatus == PaymentStatus.PENDING) {
+          this.isUnpaidOrderSelected = true;
+        }
+
+        if (order.fulfillmentStatus == FulfillmentStatus.FULFILLED) {
+          this.isFulfilledOrderSelected = true;
+        } else if (order.fulfillmentStatus == FulfillmentStatus.UNFULFILLED) {
+          this.isUnfulfilledOrderSelected = true;
+        }
+      }
+    }
   }
 
   isOrderSelected(id) {

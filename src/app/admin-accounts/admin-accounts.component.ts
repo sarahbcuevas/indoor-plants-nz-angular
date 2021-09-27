@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
-import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PasswordValidator } from '../_helpers/password.validator';
@@ -14,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class AdminAccountsComponent implements OnInit {
 
-  users: Observable<User[]>;
+  users: User[];
   isUsersLoading = false;
   registrationFormGroup: FormGroup;
   passwordFormGroup: FormGroup;
@@ -55,8 +54,13 @@ export class AdminAccountsComponent implements OnInit {
 
   getUsers(): void {
     this.isUsersLoading = true;
-    this.users = this.userService.getUsers()
-      .pipe(finalize(() => this.isUsersLoading = false));
+    this.userService.getUsers()
+      .pipe(finalize(() => this.isUsersLoading = false))
+      .subscribe(
+        users => {
+          this.users = users;
+        }
+      );
   }
 
   createNewUser(): void {

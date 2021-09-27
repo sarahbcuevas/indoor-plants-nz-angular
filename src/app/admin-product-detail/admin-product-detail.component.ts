@@ -7,7 +7,6 @@ import { UploadService } from '../_services/upload.service';
 import { ActivatedRoute } from '@angular/router';
 import { finalize, map, tap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
 import { FileUploader } from 'ng2-file-upload';
 import { baseURL } from '../_helpers/baseurl';
 import { initTinyMCE } from '../_helpers/tinymce';
@@ -29,7 +28,7 @@ export class AdminProductDetailComponent implements OnInit {
 
   editProductError: string;
   product: Product;
-  categories: Observable<Category[]>;
+  categories: Category[];
   editProductFormGroup: FormGroup;
   loading: boolean;
   submitted: boolean;
@@ -92,11 +91,12 @@ export class AdminProductDetailComponent implements OnInit {
             }
           }
         }
-      }),
-      finalize(() => {
-        this.categories = of(tempCategories);
       })
-    ).subscribe();
+    ).subscribe(
+      categories => {
+        this.categories = categories;
+      }
+    );
   }
 
   getProductDetails() {
@@ -203,25 +203,21 @@ export class AdminProductDetailComponent implements OnInit {
     const product: Product = this.editProductFormGroup.value;
 
     const tempCategories = [];
-    this.categories.forEach(categories => {
-      for (let category of categories) {
-        if (category._id == this.editProductFormGroup.get('category').value) {
-          console.log('Category id: ', category._id);
-          tempCategories.push({_id: category._id});
-          if (category.parent !== null) {
-            tempCategories.push({_id: category.parent._id});
-            if (category.parent.parent !== null) {
-              tempCategories.push({_id: category.parent.parent});
-            }
+    for (let category of this.categories) {
+      if (category._id == this.editProductFormGroup.get('category').value) {
+        tempCategories.push({_id: category._id});
+        if (category.parent !== null) {
+          tempCategories.push({_id: category.parent._id});
+          if (category.parent.parent !== null) {
+            tempCategories.push({_id: category.parent.parent});
           }
-          console.log('tempCategories: ', tempCategories);
-          product.category = tempCategories;
-          product.images = this.imageUrls;
-          product.description = tinymce.get("description").getContent();
-          this.updateProduct(product);
         }
+        product.category = tempCategories;
+        product.images = this.imageUrls;
+        product.description = tinymce.get("description").getContent();
+        this.updateProduct(product);
       }
-    });
+    }
   }
 
   updateProduct(product: Product) {

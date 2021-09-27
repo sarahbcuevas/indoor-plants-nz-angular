@@ -3,7 +3,6 @@ import { CategoryService } from '../_services/category.service';
 import { Category } from '../_models/category';
 import { ProductService } from '../_services/product.service';
 import { Product } from '../_models/product';
-import { Observable, of } from 'rxjs';
 import { finalize, tap, filter, map } from 'rxjs/operators/';
 import { FormBuilder } from '@angular/forms';
 
@@ -17,8 +16,8 @@ export class AdminProductsComponent implements OnInit {
   searchText: string;
   noOfProducts: number;
   isProductsLoading: boolean;
-  products: Observable<Product[]>;
-  categories: Observable<Category[]>;
+  products: Product[];
+  categories: Category[];
   selectedProductId: string;
   selectedProductName: string;
   isCheckAllFilters = true;
@@ -55,12 +54,10 @@ export class AdminProductsComponent implements OnInit {
 
   checkAllCategories(isCheck: boolean) {
     this.isCheckAllCategories = isCheck;
-    this.categories.forEach(category => {
-      for (let i = 0; i < category.length; i++) {
-        $('input#' + category[i]._id + '.form-check-input').prop('checked', this.isCheckAllCategories);
-        this.isCategoryChecked[i] = isCheck;
-      }
-    });
+    for (let i = 0; i < this.categories.length; i++) {
+      $('input#' + this.categories[i]._id + '.form-check-input').prop('checked', this.isCheckAllCategories);
+      this.isCategoryChecked[i] = isCheck;
+    }
   }
 
   checkAllFilters(isCheckAllFilters: boolean) {
@@ -133,14 +130,14 @@ export class AdminProductsComponent implements OnInit {
         }
       }),
       finalize(() => {
-        this.categories = of(tempCategories);
+        this.categories = tempCategories;
       })
     ).subscribe();
   }
 
   getAllProducts() {
     this.isProductsLoading = true;
-    this.products = this.productService.getProducts()
+    this.productService.getProducts()
       .pipe(
           map((products) => {
             return products.filter(product => {
@@ -193,6 +190,11 @@ export class AdminProductsComponent implements OnInit {
           });
         }),
         finalize(() => this.isProductsLoading = false)
+      )
+      .subscribe(
+        products => {
+          this.products = products;
+        }
       );
   }
 

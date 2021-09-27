@@ -7,7 +7,6 @@ import { CategoryService } from '../_services/category.service';
 import { ContactService } from '../_services/contact.service';
 import { ProductService } from '../_services/product.service';
 import { SocialmediaService } from '../_services/socialmedia.service';
-import { Observable, of } from 'rxjs';
 import { finalize, tap, map } from 'rxjs/operators/';
 import { ActivatedRoute } from '@angular/router';
 import { OrderItem } from '../_models/order';
@@ -19,8 +18,8 @@ import { OrderItem } from '../_models/order';
 })
 export class ProductsComponent implements OnInit {
 
-  categories: Observable<Category[]>;
-  products: Observable<Product[]>;
+  categories: Category[];
+  products: Product[];
   noOfProducts: number;
   isCategoriesLoading = false;
   isProductsLoading = false;
@@ -166,12 +165,10 @@ export class ProductsComponent implements OnInit {
 
   checkAllCategories(isCheck: boolean) {
     this.isCheckAllCategories = isCheck;
-    this.categories.forEach(category => {
-      for (let i = 0; i < category.length; i++) {
-        $('input#' + category[i]._id + '.form-check-input').prop('checked', this.isCheckAllCategories);
-        this.isCategoryChecked[i] = isCheck;
-      }
-    });
+    for (let i = 0; i < this.categories.length; i++) {
+      $('input#' + this.categories[i]._id + '.form-check-input').prop('checked', this.isCheckAllCategories);
+      this.isCategoryChecked[i] = isCheck;
+    }
   }
 
   checkAllFilters(isCheckAllFilters: boolean) {
@@ -216,16 +213,17 @@ export class ProductsComponent implements OnInit {
             }
           }
         }
-      }),
-      finalize(() => {
-        this.categories = of(tempCategories);
       })
-    ).subscribe();
+    ).subscribe(
+      categories => {
+        this.categories = categories;
+      }
+    );
   }
 
   getAllProducts() {
     this.isProductsLoading = true;
-    this.products = this.productService.getProducts()
+    this.productService.getProducts()
       .pipe(
           map((products) => {
             return products.filter(product => {
@@ -282,15 +280,23 @@ export class ProductsComponent implements OnInit {
           });
         }),
         finalize(() => this.isProductsLoading = false)
+      ).subscribe(
+        products => {
+          this.products = products;
+        }
       );
   }
 
   getProductsByCategory(category_id: number): void {
     this.isProductsLoading = true;
-    this.products = this.productService.getProductsByCategory(category_id)
+    this.productService.getProductsByCategory(category_id)
       .pipe(
         tap(products => this.noOfProducts = products.length),
         finalize(() => this.isProductsLoading = false)
+      ).subscribe(
+        products => {
+          this.products = products;
+        }
       );
   }
 
@@ -314,14 +320,12 @@ export class ProductsComponent implements OnInit {
 
   hasSubCategory(id: string): boolean {
     let hasSubCategory = false;
-    this.categories.forEach(categories => {
-      for (let i = 0; i < categories.length; i++) {
-        if (categories[i].parent !== null && categories[i].parent._id === id) {
-          hasSubCategory = true;
-          break;
-        }
+    for (let i = 0; i < this.categories.length; i++) {
+      if (this.categories[i].parent !== null && this.categories[i].parent._id === id) {
+        hasSubCategory = true;
+        break;
       }
-    });
+    }
     return hasSubCategory;
   }
 

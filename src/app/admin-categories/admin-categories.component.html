@@ -2,7 +2,7 @@
 
 <div class="container bg-white border pb-3 px-lg-5 d-flex justify-content-between">
   <div class="categories mx-sm-3 mx-md-5 flex-grow-1 text-left">
-    <ul class="list-group list-unstyled accordion" *ngFor="let category of categories | async">
+    <ul class="list-group list-unstyled accordion" *ngFor="let category of categories">
       <li class="list-group-item bg-transparent" *ngIf="category.parent===null">
         <span *ngIf="!(isEditOn && selectedCategoryId === category._id)">{{ category.name }}</span>
         <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === category._id">
@@ -19,7 +19,7 @@
           <button type="button" class="btn btn-light btn-sm" (click)="selectCategory(category._id, category.name)" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fas fa-trash-alt"></i></button>
         </div>
         <div class="sub-list">
-          <ul class="list-group list-unstyled" *ngFor="let subcategory of categories | async">
+          <ul class="list-group list-unstyled" *ngFor="let subcategory of categories">
             <li class="list-group-item  bg-transparent" *ngIf="subcategory.parent!==null && subcategory.parent._id===category._id">
               <span *ngIf="!(isEditOn && selectedCategoryId === subcategory._id)">{{ subcategory.name }}</span>
               <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === subcategory._id">
@@ -36,7 +36,7 @@
                 <button type="button" class="btn btn-light btn-sm" (click)="selectCategory(subcategory._id, subcategory.name)" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fas fa-trash-alt"></i></button>
               </div>
               <div class="sub-list">
-                <ul class="list-group list-unstyled" *ngFor="let subsubcategory of categories | async">
+                <ul class="list-group list-unstyled" *ngFor="let subsubcategory of categories">
                   <li class="list-group-item  bg-transparent" *ngIf="subsubcategory.parent!==null && subsubcategory.parent._id===subcategory._id">
                     <span *ngIf="!(isEditOn && selectedCategoryId === subsubcategory._id)">{{ subsubcategory.name }}</span>
                     <form [formGroup]="editCategoryFormGroup" class="form-inline" *ngIf="isEditOn && selectedCategoryId === subsubcategory._id">
@@ -86,7 +86,7 @@
       </form>
   </div>
 </div>
-<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(categories | async)?.length > 0" data-toggle="modal" data-target="#deleteAllCategoriesModal"><i class="fas fa-trash-alt"></i> Delete All Categories</button>
+<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(categories)?.length > 0" data-toggle="modal" data-target="#deleteAllCategoriesModal"><i class="fas fa-trash-alt"></i> Delete All Categories</button>
 
 <!-- Delete Category Modal -->
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryTitle" aria-hidden="true">

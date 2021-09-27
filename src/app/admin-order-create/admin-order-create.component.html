@@ -56,8 +56,8 @@
                             <div class="custom-file dropdown">
                               <input type="text" class="search custom-input pl-2 dropdown-toggle" id="searchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search products" [(ngModel)]="searchProductText">
                               <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchDropdown">
-                                <div class="container" *ngIf="(products | async)?.length > 0">
-                                    <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | async | filter : searchProductText" (click)="selectProduct(product)">
+                                <div class="container" *ngIf="(products)?.length > 0">
+                                    <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | filter : searchProductText" (click)="selectProduct(product)">
                                         <div *ngIf="product?.image !== null && product?.image !== '' && product?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
                                             <img src="{{ product?.image }}" class="img-thumbnail">
                                         </div>
@@ -74,7 +74,7 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="container pt-2 pb-2" *ngIf="(products | async)?.length === 0">
+                                <div class="container pt-2 pb-2" *ngIf="(products)?.length === 0">
                                     <div class="row justify-content-center">
                                         <span class="align-middle">No products yet.</span>
                                     </div>
@@ -234,8 +234,8 @@
                         <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
                     </div>
                     <div class="col text-right">
-                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders | async)?.length === 0"><i class="fas fa-download mr-1"></i> No orders</span>
-                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders | async)?.length > 0"><i class="fas fa-download mr-1"></i> {{ (selectedCustomerOrders | async)?.length }} order(s)</span>
+                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders)?.length === 0"><i class="fas fa-download mr-1"></i> No orders</span>
+                        <span class="text-muted regular-text" *ngIf="(selectedCustomerOrders)?.length > 0"><i class="fas fa-download mr-1"></i> {{ (selectedCustomerOrders)?.length }} order(s)</span>
                     </div>
                 </div>
                 <div class="row pb-3 border-bottom">
@@ -304,8 +304,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="container" *ngIf="(customers | async)?.length > 0">
-                                        <a class="row border-bottom pl-2 pr-2 pt-2 pb-3 product-item align-items-center" (click)="selectCustomer(customer)" *ngFor="let customer of customers | async | filter : searchCustomerText">
+                                    <div class="container" *ngIf="(customers)?.length > 0">
+                                        <a class="row border-bottom pl-2 pr-2 pt-2 pb-3 product-item align-items-center" (click)="selectCustomer(customer)" *ngFor="let customer of customers | filter : searchCustomerText">
                                             <div *ngIf="customer?.image !== null && customer?.image !== '' && customer?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
                                                 <img src="{{ customer?.image }}" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
                                             </div>

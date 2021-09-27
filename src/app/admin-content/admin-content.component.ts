@@ -8,7 +8,6 @@ import { Content, Item } from '../_models/content';
 import { Contact } from '../_models/contact';
 import { Category } from '../_models/category';
 import { SocialMedia } from '../_models/socialmedia';
-import { Observable, of } from 'rxjs';
 import { finalize, tap, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -34,7 +33,6 @@ export class AdminContentComponent implements OnInit {
   editContactFormGroup: FormGroup;
   editSocialMediaFormGroup: FormGroup;
   slideShowFormGroup: FormGroup;
-  categories: Observable<Category[]>;
 
   constructor(
     private contentService: ContentService,
@@ -79,7 +77,6 @@ export class AdminContentComponent implements OnInit {
     this.getContent();
     this.getContact();
     this.getSocialMedia();
-    this.getAllCategories();
   }
 
   save(content: Content) {
@@ -232,32 +229,6 @@ export class AdminContentComponent implements OnInit {
   showMessageModal(message: string) {
     $('div.modal-body').text(message);
     $('#messageModal').modal('show');
-  }
-
-  getAllCategories() {
-    const tempCategories: Category[] = [];
-    this.categoryService.getCategories().pipe(
-      tap((categories: Category[]) => {
-        for (let i = 0; i < categories.length; i++) {
-          if (categories[i].parent === null) {
-            tempCategories.push(categories[i]);
-            for (let j = 0; j < categories.length; j++) {
-              if (categories[j].parent !== null && categories[j].parent._id === categories[i]._id) {
-                tempCategories.push(categories[j]);
-                for (let k = 0; k < categories.length; k++) {
-                  if (categories[k].parent !== null && categories[k].parent._id === categories[j]._id) {
-                    tempCategories.push(categories[k]);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }),
-      finalize(() => {
-        this.categories = of(tempCategories);
-      })
-    ).subscribe();
   }
 
   getContact() {

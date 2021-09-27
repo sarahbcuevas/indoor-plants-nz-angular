@@ -8,7 +8,6 @@ import { finalize, tap, map } from 'rxjs/operators';
 import { Customer } from '../_models/customer';
 import { Product } from '../_models/product';
 import { Order, OrderItem, OrderDiscount, DiscountMethod, PaymentStatus, FulfillmentStatus, ShippingFeeMethod, ShippingDetails } from '../_models/order';
-import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import location from '../../assets/cities.json';
 
@@ -33,7 +32,7 @@ export class AdminOrderEditComponent implements OnInit {
   order: Order = null;
   originalOrder: Order = null;
   orderItems: OrderItem[] = [];
-  customerOrders: Observable<Order[]>;
+  customerOrders: Order[];
   saveOrderLoading: boolean;
 
   additionalDetailsFormGroup: FormGroup;
@@ -56,7 +55,7 @@ export class AdminOrderEditComponent implements OnInit {
 
   editShippingAddressError: string;
 
-  customers: Observable<Customer[]>;
+  customers: Customer[];
   isCustomersLoading: boolean;
   editOrderContactLoading: boolean;
   editOrderContactError: string;
@@ -67,7 +66,7 @@ export class AdminOrderEditComponent implements OnInit {
   selectedTags: SelectedTag[] = [];
   selectedTagsDraft: SelectedTag[] = [];
 
-  products: Observable<Product[]>;
+  products: Product[];
   isProductsLoading:boolean;
   selectedProducts = [];
 
@@ -151,7 +150,7 @@ export class AdminOrderEditComponent implements OnInit {
 
   loadProducts() {
     this.isProductsLoading = true;
-    this.products = this.productService.getProducts()
+    this.productService.getProducts()
       .pipe(
         map((products) => {
           return products.filter(prod => {
@@ -161,7 +160,11 @@ export class AdminOrderEditComponent implements OnInit {
         finalize(() => {
           this.isProductsLoading = false;
         }
-      ));
+      )).subscribe(
+        products => {
+          this.products = products;
+        }
+      );
   }
 
   selectProduct(product:Product, quantity:number) {
@@ -194,11 +197,15 @@ export class AdminOrderEditComponent implements OnInit {
 
   loadCustomers() {
     this.isCustomersLoading = true;
-    this.customers = this.customerService.getCustomers()
+    this.customerService.getCustomers()
       .pipe(
         finalize(() => {
           this.isCustomersLoading = false;
         })
+      ).subscribe(
+        customers => {
+          this.customers = customers;
+        }
       );
   }
 
@@ -235,7 +242,12 @@ export class AdminOrderEditComponent implements OnInit {
           this.originalOrder = JSON.parse(JSON.stringify(order));
           this.orderItems = order.orderItems;
           this.selectedCustomer = order.customer;
-          this.customerOrders = this.orderService.getOrdersByCustomerId(this.selectedCustomer._id).pipe();
+          this.orderService.getOrdersByCustomerId(this.selectedCustomer._id).pipe()
+            .subscribe(
+              customerOrders => {
+                this.customerOrders = customerOrders;
+              }
+            );
           if (order.notes) {
             this.additionalDetailsFormGroup.get('notes').setValue(order.notes);
           }
@@ -348,7 +360,12 @@ export class AdminOrderEditComponent implements OnInit {
 
   selectCustomer(customer) {
     this.selectedCustomer = customer;
-    this.customerOrders = this.orderService.getOrdersByCustomerId(customer._id).pipe();
+    this.orderService.getOrdersByCustomerId(customer._id).pipe()
+      .subscribe(
+        customerOrders => {
+          this.customerOrders = customerOrders;
+        }
+      );
     
     this.loadOrderContact();
     this.loadShippingAddress(customer);

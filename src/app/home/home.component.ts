@@ -5,7 +5,6 @@ import { Content } from '../_models/content';
 import { Product } from '../_models/product';
 import { baseURL } from '../_helpers/baseurl';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 @Component({
@@ -15,7 +14,7 @@ import { map, filter } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit {
   content: Content;
-  bestsellers: Observable<Product[]>;
+  bestsellers: Product[];
 
   constructor(
     private contentService: ContentService,
@@ -31,12 +30,16 @@ export class HomeComponent implements OnInit {
 
   getBestsellers() {
     console.log('getbestsellers');
-    this.bestsellers = this.productService.getProducts()
+    this.productService.getProducts()
       .pipe(
         map((products) => {
           return products.filter(product => product.isBestseller);
         }
-      ));
+      )).subscribe(
+        bestsellers => {
+          this.bestsellers = bestsellers;
+        }
+      );
   }
 
   getPrimaryPhoto(product: Product) {

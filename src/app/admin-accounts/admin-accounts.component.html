@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users | async | filter : searchText">
+          <tr *ngFor="let user of users | filter : searchText">
             <th scope="row" [routerLink]="['/admin/accounts', user._id]" routerLinkActive="router-link-active" routerLink="/admin/accounts/{{user._id}}" routerLinkActive="router-link-active" class="underline pointer">{{ user.username }}</th>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>

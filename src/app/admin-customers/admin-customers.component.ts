@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Customer } from '../_models/customer';
 import { CustomerService } from '../_services/customer.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import location from '../../assets/cities.json';
 
@@ -14,7 +13,7 @@ import location from '../../assets/cities.json';
 export class AdminCustomersComponent implements OnInit {
 
   searchText: string;
-  customers: Observable<Customer[]>;
+  customers: Customer[];
   isCustomersLoading: boolean;
   createCustomerError: string;
   loading: boolean;
@@ -53,8 +52,13 @@ export class AdminCustomersComponent implements OnInit {
 
   getCustomers(): void {
     this.isCustomersLoading = true;
-    this.customers = this.customerService.getCustomers()
-      .pipe(finalize(() => this.isCustomersLoading = false));
+    this.customerService.getCustomers()
+      .pipe(finalize(() => this.isCustomersLoading = false))
+      .subscribe(
+        customers => {
+          this.customers = customers;
+        }
+      );
   }
 
   loadCountries() {

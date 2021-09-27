@@ -99,7 +99,7 @@
                             <div class="col">
                                 <select class="form-control" id="category" formControlName="category">
                                     <option value="" disabled selected>Select category</option>
-                                    <option *ngFor="let category of categories | async" ngValue="{{ category._id }}">
+                                    <option *ngFor="let category of categories" ngValue="{{ category._id }}">
                                       <span *ngIf="category.parent!==null"><pre>&emsp;</pre></span>
                                       <span *ngIf="category.parent!==null && category.parent.parent!==null"><pre>&emsp;</pre></span>
                                       {{ category.name }}

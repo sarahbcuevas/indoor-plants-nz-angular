@@ -10,7 +10,6 @@ import { UserService } from 'app/_services/user.service';
 import { Product } from '../_models/product';
 import { Customer } from '../_models/customer';
 import { User } from '../_models/user';
-import { Observable, of } from 'rxjs';
 import { finalize, tap, map, filter } from 'rxjs/operators/';
 import location from '../../assets/cities.json';
 import { Router } from '@angular/router';
@@ -41,8 +40,8 @@ export class AdminOrderCreateComponent implements OnInit {
   editCustomerFormGroup: FormGroup;
   editShippingAddressFormGroup: FormGroup;
   orderItems: OrderItem[] = [];
-  products: Observable<Product[]>;
-  customers: Observable<Customer[]>;
+  products: Product[];
+  customers: Customer[];
   isProductsLoading: boolean;
   isCustomersLoading: boolean;
   selectedProducts = [];
@@ -83,7 +82,7 @@ export class AdminOrderCreateComponent implements OnInit {
   createCustomerSubmitted: boolean;
   createCustomerLoading: boolean;
   selectedCustomer: any = null;;
-  selectedCustomerOrders: Observable<Order[]>;
+  selectedCustomerOrders: Order[];
 
   editCustomerLoading: boolean;
   editCustomerError: string;
@@ -190,7 +189,7 @@ export class AdminOrderCreateComponent implements OnInit {
 
   loadProducts() {
     this.isProductsLoading = true;
-    this.products = this.productService.getProducts()
+    this.productService.getProducts()
       .pipe(
         map((products) => {
           return products.filter(prod => {
@@ -200,17 +199,27 @@ export class AdminOrderCreateComponent implements OnInit {
         finalize(() => {
           this.isProductsLoading = false;
         }
-      ));
+      ))
+      .subscribe(
+        products => {
+          this.products = products;
+        }
+      );
       
   }
 
   loadCustomers() {
     this.isCustomersLoading = true;
-    this.customers = this.customerService.getCustomers()
+    this.customerService.getCustomers()
       .pipe(
         finalize(() => {
           this.isCustomersLoading = false;
         })
+      )
+      .subscribe(
+        customers => {
+          this.customers = customers;
+        }
       );
   }
 
@@ -492,7 +501,12 @@ export class AdminOrderCreateComponent implements OnInit {
 
   selectCustomer(customer) {
     this.selectedCustomer = customer;
-    this.selectedCustomerOrders = this.orderService.getOrdersByCustomerId(customer._id).pipe();
+    this.orderService.getOrdersByCustomerId(customer._id).pipe()
+      .subscribe(
+        selectedCustomerOrders => {
+          this.selectedCustomerOrders = selectedCustomerOrders;
+        }
+      );
     
     this.editCustomerFormGroup.setValue({
       _id: customer._id,

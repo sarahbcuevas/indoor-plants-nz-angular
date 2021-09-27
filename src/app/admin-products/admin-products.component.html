@@ -41,7 +41,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products | async | filter : searchText">
+          <tr *ngFor="let product of products | filter : searchText">
             <th scope="row" [routerLink]="['/admin/products', product._id]" routerLinkActive="router-link-active" routerLink="/admin/products/{{product._id}}" routerLinkActive="router-link-active" class="underline pointer">{{ product.name }}</th>
             <td>{{ product.category[0].name }}</td>
             <td>{{ (product.price/100) | currency:'NZD' }}</td>
@@ -54,7 +54,7 @@
     </div>
 
     <div class="container d-flex flex-wrap justify-content-around mt-3" *ngIf="!viewAsList">
-      <div class="card border-light" *ngFor="let product of products | async | filter : searchText">
+      <div class="card border-light" *ngFor="let product of products | filter : searchText">
         <img class="card-img-top img-fluid" *ngIf="product.image" src="{{ product.image }}" alt="Plant image">
         <img class="card-img-top img-fluid" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image">
         <div class="card-badge" *ngIf="product.isBestseller">
@@ -78,10 +78,10 @@
 <div class="justify-content-center bg-white" *ngIf="isProductsLoading">
   <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving products
 </div>
-<div class="justify-content-center bg-white" *ngIf="(products | async)?.length === 0">
+<div class="justify-content-center bg-white" *ngIf="(products)?.length === 0">
   No products available.
 </div>
-<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products | async)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
+<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
 
 <!-- Delete Product Modal -->
 <div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true">
@@ -155,7 +155,7 @@
             <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(true)" *ngIf="!isCheckAllCategories">Select All</a>
           </small>
         </h6>
-        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories | async; index as i">
+        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories; index as i">
           <label class="form-check-label" for="checkBox">
             <span *ngIf="category.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span *ngIf="category.parent!==null && category.parent.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>

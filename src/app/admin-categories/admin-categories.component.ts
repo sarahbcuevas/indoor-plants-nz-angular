@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../_services/category.service';
 import { Category } from '../_models/category';
-import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class AdminCategoriesComponent implements OnInit {
 
-  categories: Observable<Category[]>;
+  categories: Category[];
   categoriesLoading: boolean;
   selectedCategoryId: string;
   selectedCategoryName: string;
@@ -99,8 +98,13 @@ export class AdminCategoriesComponent implements OnInit {
 
   getAllCategories() {
     this.categoriesLoading = true;
-    this.categories = this.categoryService.getCategories()
-      .pipe(finalize(() => this.categoriesLoading = false));
+    this.categoryService.getCategories()
+      .pipe(finalize(() => this.categoriesLoading = false))
+      .subscribe(
+        categories => {
+          this.categories = categories;
+        }
+      );
   }
 
   selectCategory(id: string, category: string) {

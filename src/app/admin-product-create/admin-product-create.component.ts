@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../_services/category.service';
 import { Category } from '../_models/category';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
 import { ProductService } from '../_services/product.service';
 import { Product, Photo } from '../_models/product';
 import { tap, finalize } from 'rxjs/operators/';
@@ -20,7 +19,7 @@ declare const tinymce: any;
 })
 export class AdminProductCreateComponent implements OnInit {
 
-  categories: Observable<Category[]>;
+  categories: Category[];
   createProductFormGroup: FormGroup;
   imageUrls: Photo[] = [];
   submitted: boolean;
@@ -72,11 +71,12 @@ export class AdminProductCreateComponent implements OnInit {
             }
           }
         }
-      }),
-      finalize(() => {
-        this.categories = of(tempCategories);
       })
-    ).subscribe();
+    ).subscribe(
+      categories => {
+        this.categories = categories;
+      }
+    );
   }
 
   makePrimaryPhoto(index) {

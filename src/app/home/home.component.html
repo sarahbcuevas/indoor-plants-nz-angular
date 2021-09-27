@@ -24,11 +24,11 @@
     </a>
 </div>
 
-<div class="container-fluid pt-5 pb-5 bg-light-yellow" *ngIf="(bestsellers | async)?.length > 0">
+<div class="container-fluid pt-5 pb-5 bg-light-yellow" *ngIf="(bestsellers)?.length > 0">
     <h6 class="sub-title text-uppercase mb-3">Featured Products</h6>
     <div class="row justify-content-around d-flex justify-content-center">
         <div class="col-lg-1"></div>
-        <ng-container *ngFor="let bestseller of bestsellers | async; let i=index">
+        <ng-container *ngFor="let bestseller of bestsellers; let i=index">
           <div class="col-10 col-sm-4 col-lg-3 text-center" *ngIf="i<3">
             <div class="container category">
                 <img [src]="getPrimaryPhoto(bestseller)" class="img-fluid" *ngIf="bestseller.images.length > 0">
