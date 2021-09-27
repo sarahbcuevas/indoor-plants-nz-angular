@@ -1,5 +1,5 @@
 import { isMetadataImportedSymbolReferenceExpression } from '@angular/compiler-cli';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrderItem, Order, PaymentMethod, ShippingDetails, ShippingFeeMethod, PaymentStatus } from '../_models/order';
@@ -67,7 +67,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private contentService: ContentService,
     private sendMailService: SendMailService,
-    private orderTransactionService: OrderTransactionService
+    private orderTransactionService: OrderTransactionService,
+    private zone: NgZone
   ) {
 
     this.userInfoFormGroup = this.formBuilder.group({
@@ -452,8 +453,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.createOrderTransaction(order, OrderTransactionType.PAYMENT_RECEIVED);
         this.sendConfirmationEmail(order);
         this.removeLoading();
-        this.router.navigate(['/order-confirmation'], 
-          {queryParams: { orderId: order._id}});
+        this.zone.run(() => {
+          this.router.navigate(['/order-confirmation'], 
+            {queryParams: { orderId: order._id}});
+        });
       },
       error => {
         console.log('Error: ', error);
