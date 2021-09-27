@@ -6,7 +6,7 @@
         <div class="carousel-item" *ngFor="let item of content?.slideshow; let i=index" [ngClass]="[(i == 0) ? 'active' : '']">
             <img class="jumbotron" src="{{ item.image }}" alt="{{ item.title }}">
             <div class="carousel-caption jumbotron-content">
-                <div class="center">
+                <div class="center jumbotron-text">
                     <h3 class="display-4">{{ item.title }}</h3>
                     <p class="lead" *ngIf="item.description">{{ item.description }}</p>
                     <a class="btn btn-black text-uppercase mt-2" href="{{ item.url }}" *ngIf="item.url && item.action">{{ item.action }}</a>

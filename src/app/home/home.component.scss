@@ -51,12 +51,12 @@
 
         p {
             @media (max-width: 767.98px) {
-                font-size: 1rem;
+                font-size: 0.8rem;
             }
             @media (min-width: 768px) and (max-width: 991.98px) {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
     }
 
@@ -82,6 +82,10 @@
     text-align: center;
     margin-bottom: 0px;
     padding: 0;
+}
+
+.jumbotron-text {
+    width: 85%;
 }
 
 .jumbotron-content {
@@ -112,7 +116,8 @@
         @media (min-width: 768px) and (max-width: 991.98px) {
             font-size: 2rem;
         }
-        font-size: 3.5rem;
+        font-size: 2.5rem;
+        font-weight: 300;
     }
 
     .lead {
