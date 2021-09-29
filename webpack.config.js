@@ -4,8 +4,6 @@ module.exports = {
   plugins: [],
 
   devServer: {
-    allowedHosts: [
-        'all'
-      ],
+    disableHostCheck: true
   }
 };
