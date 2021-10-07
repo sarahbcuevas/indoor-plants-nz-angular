@@ -39,8 +39,8 @@ export class AdminAccountsComponent implements OnInit {
       passwordFormGroup: this.passwordFormGroup,
       name: ['', Validators.required],
       email: ['', Validators.required],
-      contact: ['', Validators.required],
-      address: ['', Validators.required],
+      contact: [''],
+      address: [''],
       role: ['admin', Validators.required]
     });
   }
