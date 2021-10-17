@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <div class="row justify-content-around h-100" style="max-height: 100%;">
+  <div class="row mx-0 justify-content-around h-100" style="max-height: 100%;">
     <div class="col-sm-12 col-md-7 bg-white pt-4 pb-4 pl-0 pr-0 pl-md-4 pr-md-4 order-last order-md-first">
       <div class="container bg-white pt-2 pb-5 text-center justify-content-end">
         <div class="row justify-content-center">
@@ -22,35 +22,36 @@
           </div>
         </div>
         <div class="row justify-content-center align-items-center">
-          <a class="mr-3 text-info" [routerLink]="['/cart']">Cart</a>
+          <a class="mr-1 mr-md-3 text-info" [routerLink]="['/cart']">Cart</a>
           <ul class="nav justify-content-center align-items-center">
             <i class="fas fa-chevron-right text-muted"></i>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#customer-information" data-toggle="tab">Customer Information</a>
+              <a class="nav-link disabled px-1 px-md-3" href="#customer-information" data-toggle="tab">Customer Information</a>
             </li>
             <i class="fas fa-chevron-right text-muted"></i>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#shipping" data-toggle="tab">Shipping</a>
+              <a class="nav-link disabled px-1 px-md-3" href="#shipping" data-toggle="tab">Shipping</a>
             </li>
             <i class="fas fa-chevron-right text-muted"></i>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#payment" data-toggle="tab">Payment</a>
+              <a class="nav-link disabled px-1 px-md-3" href="#payment" data-toggle="tab">Payment</a>
             </li>
           </ul>
         </div>
-        <div class="row justify-content-around d-flex justify-content-center">
-          <div class="tab-content pt-4 pb-4 pl-4 pr-4 col align-items-center justify-content-center">
+        <div class="row justify-content-around d-flex justify-content-center px-3 px-md-0">
+          <div class="tab-content pt-4 pb-4 px-0 col align-items-center justify-content-center">
+            
             <div class="tab-pane fade show active" id="customer-information">
               <h4>Customer Information</h4>
               <div class="container align-items-center justify-content-center">
                 <div class="row mt-4 mb-3 justify-content-center align-items-center">
-                  <form [formGroup]="userInfoFormGroup" class="col-12 col-md-10 justify-content-center">
+                  <form [formGroup]="userInfoFormGroup" class="col-12 col-md-11 justify-content-center">
                     <div class="row mb-3 justify-content-around">
                       <div class="col-12 col-sm-6 pl-0 pr-0">
                         <h5 class="title mb-0 float-left">Contact Information</h5>
                       </div>
                       <div class="col-12 col-sm-6 pl-0 pr-0">
-                        <span class="float-left float-sm-right">Already have an account? <a href="" class="text-green"><u>Log in</u></a></span>
+                        <span class="float-left float-sm-right login">Already have an account? <a class="text-green" disabled="true"><u>Log in</u></a></span>
                       </div>
                     </div>
                     <div class="form-group row mb-1 justify-content-center">
@@ -132,20 +133,20 @@
                     </div>
                   </form>
                 </div>
-                <div class="row mt-md-2 justify-content-center">
-                  <div class="col-12 col-md-10 pr-0">
-                    <ul class="nav float-right">
+                <div class="row mt-2 d-flex justify-content-center">
+                  <div class="col-12 col-md-11 px-0 d-flex justify-content-center justify-content-md-end">
+                    <ul class="nav continueBtn">
                       <li class="nav-item">
-                        <a class="btn btn-success nav-link" href="#shipping" data-toggle="tab" (click)="continueToShipping()" [ngClass]="{'btn-disabled': (!userInfoFormGroup.valid)}">Continue to Shipping</a>
+                        <a class="btn btn-success nav-link text-uppercase" href="#shipping" data-toggle="tab" (click)="continueToShipping()" [ngClass]="{'btn-disabled': (!userInfoFormGroup.valid)}">Continue to Shipping</a>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div class="row justify-content-center">
-                  <div class="col-12 col-md-10 pr-0">
-                    <ul class="nav float-right">
+                <div class="row d-flex justify-content-center">
+                  <div class="col-12 col-md-11 px-0 d-flex justify-content-center justify-content-md-end">
+                    <ul class="nav">
                       <li class="nav-item">
-                        <a class="btn nav-link" [routerLink]="['/cart']"><i class="fas fa-chevron-left"></i> Return to Cart</a>
+                        <a class="btn nav-link px-0" [routerLink]="['/cart']"><i class="fas fa-chevron-left"></i> Return to Cart</a>
                       </li>
                     </ul>
                   </div>
@@ -155,31 +156,31 @@
             <div class="tab-pane fade" id="shipping">
               <h4>Shipping</h4>
               <div class="container align-items-center justify-content-center">
-                <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
-                  <div class="col-12 col-md-10">
-                    <div class="border pt-1 pb-2">
-                      <div class="container">
-                        <div class="row d-flex align-items-center">
-                          <div class="col-2">
+                <div class="row mt-4 mb-3 justify-content-center align-items-center">
+                  <div class="col-12 col-md-11 justify-content-center">
+                    <div class="row border mb-3 justify-content-around">
+                      <div class="container px-0 py-0">
+                        <div class="row px-3 py-1 align-items-center">
+                          <div class="col-auto">
                             <span class="text-muted">Contact</span>
                           </div>
-                          <div class="col d-flex text-left">
-                            <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
+                          <div class="col px-2 text-left">
+                            <span>{{ userInfoFormGroup.controls.email.value }}<br>{{ userInfoFormGroup.controls.contact.value }}</span>
                           </div>
-                          <div class="col-2 text-left">
-                            <a class="btn btn-link pt-0 pb-0 pl-0 pr-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          <div class="col-auto px-2 text-left">
+                            <a class="btn btn-link py-0 px-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row d-flex align-items-center">
-                          <div class="col-2">
+                        <div class="row px-3 py-1 align-items-center">
+                          <div class="col-auto">
                             <span class="text-muted">Ship to</span>
                           </div>
-                          <div class="col d-flex text-left">
+                          <div class="col px-2 text-left">
                             <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
                           </div>
-                          <div class="col-2 text-left">
-                            <a class="btn btn-link pt-0 pb-0 pl-0 pr-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          <div class="col-auto px-2 text-left">
+                            <a class="btn btn-link px-0 py-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
                           </div>
                         </div>
                       </div>
@@ -187,16 +188,16 @@
                   </div>
                 </div>
                 <div class="row mb-3 align-items-center justify-content-center">
-                  <div class="col-12 col-md-10">
+                  <div class="col-12 col-md-11 px-0 justify-content-center">
                     <h5 class="title mb-0 float-left">Shipping</h5>
                   </div>
                 </div>
-                <div class="row d-flex mb-5 justify-content-center align-items-center">
-                  <div class="col-12 col-md-10">
+                <div class="row mb-5 justify-content-center align-items-center">
+                  <div class="col-12 col-md-11 px-0">
                     <div class="border pt-1 pb-1">
-                      <form [formGroup]="shippingFormGroup">
-                        <ul class="container" style="list-style-type:none;">
-                          <div class="row d-flex align-items-center mt-2" *ngIf="settings?.allowPickup">
+                      <form [formGroup]="shippingFormGroup" class="d-flex align-items-center">
+                        <ul class="container my-2" style="list-style-type:none;">
+                          <div class="row d-flex align-items-center my-1" *ngIf="settings?.allowPickup">
                             <div class="col d-flex text-left">
                               <li>
                                 <div class="form-check">
@@ -211,8 +212,8 @@
                               <h6 class="mb-0">Free</h6>
                             </div>
                           </div>
-                          <hr class="mt-2 mb-2" *ngIf="settings?.allowPickup">
-                          <div class="row d-flex align-items-center">
+                          <hr class="my-3" *ngIf="settings?.allowPickup">
+                          <div class="row d-flex align-items-center my-1">
                             <div class="col d-flex text-left">
                               <li>
                                 <div class="form-check">
@@ -233,20 +234,20 @@
                     </div>
                   </div>
                 </div>
-                <div class="row mt-md-2 justify-content-center">
-                  <div class="col-12 col-md-10">
-                    <ul class="nav float-right">
+                <div class="row mt-2 d-flex justify-content-center">
+                  <div class="col-12 col-md-11 px-0 d-flex justify-content-center justify-content-md-end">
+                    <ul class="nav continueBtn">
                       <li class="nav-item">
-                        <a class="btn btn-success nav-link" href="#payment" data-toggle="tab" (click)="continueToPayment()">Continue to Payment</a>
+                        <a class="btn btn-success nav-link text-uppercase" href="#payment" data-toggle="tab" (click)="continueToPayment()">Continue to Payment</a>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <div class="row justify-content-center">
-                  <div class="col-12 col-md-10 pr-0">
-                    <ul class="nav float-right">
+                <div class="row d-flex justify-content-center">
+                  <div class="col-12 col-md-11 px-0 d-flex justify-content-center justify-content-md-end">
+                    <ul class="nav">
                       <li class="nav-item">
-                        <a class="btn nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Information</a>
+                        <a class="btn nav-link px-0" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><i class="fas fa-chevron-left"></i> Return to Information</a>
                       </li>
                     </ul>
                   </div>
@@ -256,43 +257,43 @@
             <div class="tab-pane fade" id="payment">
               <h4>Payment</h4>
               <div class="container align-items-center justify-content-center">
-                <div class="row d-flex mt-5 mb-4 justify-content-center align-items-center">
-                  <div class="col-12 col-md-10">
-                    <div class="border pt-1 pb-2">
-                      <div class="container">
-                        <div class="row d-flex align-items-center">
-                          <div class="col-2">
+                <div class="row mt-4 mb-3 justify-content-center align-items-center">
+                  <div class="col-12 col-md-11 justify-content-center">
+                    <div class="row border mb-3 justify-content-around">
+                      <div class="container px-0 py-0">
+                        <div class="row px-3 py-1 align-items-center">
+                          <div class="col-auto">
                             <span class="text-muted">Contact</span>
                           </div>
-                          <div class="col d-flex text-left">
+                          <div class="col px-2 text-left">
                             <span>{{ userInfoFormGroup.controls.email.value }} | {{ userInfoFormGroup.controls.contact.value }}</span>
                           </div>
-                          <div class="col-2 text-left">
-                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          <div class="col-auto px-2 text-left">
+                            <a class="btn btn-link py-0 px-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row d-flex align-items-center">
-                          <div class="col-2">
+                        <div class="row px-3 py-1 align-items-center">
+                          <div class="col-auto">
                             <span class="text-muted">Ship to</span>
                           </div>
-                          <div class="col d-flex text-left">
+                          <div class="col px-2 text-left">
                             <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
                           </div>
-                          <div class="col-2 text-left">
-                            <a class="btn btn-link pt-0 pb-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
+                          <div class="col-auto px-2 text-left">
+                            <a class="btn btn-link px-0 py-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="onTabClick()"><u>Change</u></a>
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row d-flex align-items-center">
-                          <div class="col-2">
+                        <div class="row px-3 py-1 align-items-center">
+                          <div class="col-auto">
                             <span class="text-muted">Method</span>
                           </div>
-                          <div class="col d-flex text-left">
+                          <div class="col px-2 text-left">
                             <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping (2-4 days) <strong>{{ ((baseShippingFee + totalShippingFee)/100).toFixed(2) }} NZD</strong></span>
                             <span *ngIf="!shippingFormGroup.controls.forShipping.value">For Pick Up</span>
                           </div>
-                          <div class="col-2 text-left">
+                          <div class="col-auto px-2 text-left">
                           </div>
                         </div>
                       </div>
@@ -300,13 +301,13 @@
                   </div>
                 </div>
                 <div class="row mb-1 align-items-center justify-content-center">
-                  <div class="col-12 col-md-10">
+                  <div class="col-12 col-md-11">
                     <h5 class="title mb-0 float-left">Payment</h5><br>
                     <p class="text-muted text-left">All transactions are secure and encrypted.</p>
                   </div>
                 </div>
-                <div class="row d-flex mb-5 justify-content-center align-items-center">
-                  <div class="col-12 col-md-10">
+                <div class="row mb-5 justify-content-center align-items-center">
+                  <div class="col-12 col-md-11">
                     <div>
                       <form [formGroup]="paymentFormGroup">
                         <ul style="list-style-type:none;" class="container pl-0 pr-0">
@@ -569,29 +570,6 @@
                 <strong class="h5" *ngIf="!isShippingStep || !shippingFormGroup.controls.forShipping.value">NZD {{ (subTotal / 100).toFixed(2) }}</strong>
             </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Remove Product Modal -->
-<div class="modal fade" id="removeProductModal" tabindex="-1" role="dialog" aria-labelledby="removeProductTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="removeProductTitle">Remove Product</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to remove <strong>{{ selectedProduct?.name }}</strong>?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" (click)="removeProduct()">Remove</button>
       </div>
     </div>
   </div>

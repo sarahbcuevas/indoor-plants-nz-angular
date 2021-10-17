@@ -3,3 +3,38 @@
     border-color: #6c9f7f;
     color: white;
 }
+
+.quantity {
+    width: 70px;
+    margin: 1px 2px;
+}
+
+.qty {
+    font-size: 0.8rem;
+}
+
+.stock {
+    font-size: 0.7rem;
+}
+
+@media only screen and (max-width:700px) {
+
+    .nav {
+        display: block;
+        width: 100%;
+    }
+
+    .proceedBtn {
+        padding: 12px;
+    }
+
+    .h5 {
+        font-size: 1rem;
+    }
+
+    .quantity {
+        width: 60px;
+        margin-top: 2px;
+        margin-left: 3px;
+    }
+}

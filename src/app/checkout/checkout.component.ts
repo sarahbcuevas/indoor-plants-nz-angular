@@ -136,10 +136,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     clickTab();
   }
 
-  selectProduct(product: Product) {
-    this.selectedProduct = product;
-  }
-
   getSettings(): void {
     this.settingsService.getSettings()
       .pipe(tap(settings => {
@@ -177,9 +173,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.itemTotal = 0;
     this.itemList = [];
     let totalBill = 0;
-    const cart = JSON.parse(localStorage.getItem('cart'));
-
-    if (cart === null) {
+    let cart = localStorage.getItem('cart');
+    if (cart) {
+      cart = JSON.parse(cart);
+    } else {
       return;
     }
 
@@ -347,29 +344,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     } else if (island === "South Island") {
       this.baseShippingFee = this.settings.southIslandShippingRate;
     }
-  }
-
-  removeFromCart(id: string) {
-    const cart: any = JSON.parse(localStorage.getItem('cart'));
-    const index = -1;
-    for (let i = 0; i < cart.length; i++) {
-      const item: OrderItem = JSON.parse(cart[i]);
-      if (item.product._id === id) {
-        cart.splice(i, 1);
-        break;
-      }
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    this.loadCart();
-  }
-
-  removeProduct() {
-    if (this.selectedProduct === null) {
-      return;
-    }
-    this.removeFromCart(this.selectedProduct._id);
-    $('#removeProductModal').hide();
-    $('.modal-backdrop').remove();
   }
 
   continueToShipping() {

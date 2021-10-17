@@ -1,10 +1,19 @@
 <div class="wrapper" *ngIf="!isAdmin && !isLogin && !isCustomerOrder">
     <div class="header">
+
         <nav class="navbar navbar-expand-md topBar" *ngIf="content?.topBarContent">
-          <div class="text-uppercase mt-2 mb-2">
+          <div class="text-uppercase text-center mt-2 mb-2">
             <span>{{ content?.topBarContent }}</span>
           </div>
         </nav>
+
+        <div class="d-flex justify-content-end bg-light-yellow pr-md-2 pt-md-2">
+          <!-- <a class="btn px-2 py-2" id="searchPlantBtn"><i class="fas fa-search"></i></a> -->
+          <a class="btn px-2 py-2" routerLink="/cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge badge-pill badge-dark shopping-cart-badge" *ngIf="noOfItemsCart > 0">{{ noOfItemsCart }}</span>
+          </a>
+        </div>
 
         <div class="container-fluid pt-4 pb-2 bg-light-yellow">
             <div class="row justify-content-center">
@@ -14,23 +23,13 @@
             </div>
         </div>
 
-        <div class="container-fluid bg-white text-center">
-            <ul class="row nav justify-content-around no-gutters">
-                <div class="col-lg-2"></div>
-                <li class="col-12 col-sm-auto col-lg-2 nav-item">
-                    <a class="nav-link text-uppercase text-center text-nowrap active" routerLink="/">Home</a>
-                </li>
-                <li class="col-12 col-sm-auto col-lg-2 nav-item">
-                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/aboutus">About Us</a>
-                </li>
-                <li class="col-12 col-sm-auto col-lg-2 nav-item">
-                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/products">Shop</a>
-                </li>
-                <li class="col-12 col-sm-auto col-lg-2 nav-item">
-                    <a class="nav-link text-uppercase text-center text-nowrap" routerLink="/contactus">Contact Us</a>
-                </li>
-                <div class="col-lg-2"></div>
-            </ul>
+        <div class="bg-white nav-scroller">
+          <nav class="nav d-flex justify-content-start justify-content-md-center">
+            <a class="nav-link text-uppercase active" routerLink="/">Home</a>
+            <a class="nav-link text-uppercase" routerLink="/aboutus">About Us</a>
+            <a class="nav-link text-uppercase" routerLink="/products">Shop</a>
+            <a class="nav-link text-uppercase" routerLink="/contactus">Contact Us</a>
+          </nav>
         </div>
     </div>
 

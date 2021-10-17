@@ -5,6 +5,7 @@ import { AuthenticationService } from './_services/authentication.service';
 import { UserService } from './_services/user.service';
 import { ContentService } from './_services/content.service';
 import { ContactService } from './_services/contact.service';
+import { ProductService } from './_services/product.service';
 import { SocialmediaService } from './_services/socialmedia.service';
 import { Content } from './_models/content';
 import { Contact } from './_models/contact';
@@ -15,6 +16,7 @@ import { SocialMedia } from './_models/socialmedia';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit {
 
   isAdmin: boolean;
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit {
   content: Content;
   contact: Contact;
   socialMedia: SocialMedia;
+  noOfItemsCart = 0;
 
   constructor(
     private route: Router,
@@ -31,6 +34,7 @@ export class AppComponent implements OnInit {
     private userService: UserService,
     private contentService: ContentService,
     private contactService: ContactService,
+    private productService: ProductService,
     private socialMediaService: SocialmediaService
   ) { }
 
@@ -51,6 +55,7 @@ export class AppComponent implements OnInit {
     this.getContact();
     this.getContent();
     this.getSocialMedia();
+    this.loadCart();
   }
 
   getCurrentUser() {
@@ -95,5 +100,21 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
     location.replace('/login');
+  }
+
+  public loadCart() {
+    this.noOfItemsCart = 0;
+    let cart = localStorage.getItem('cart');
+    console.log('cart: ', cart);
+    if (cart) {
+      cart = JSON.parse(cart);
+    } else {
+      return;
+    }
+    for (let i = 0; i < cart.length; i++) {
+      const item = JSON.parse(cart[i]);
+      this.noOfItemsCart += item.quantity;
+    }
+    $('span.shopping-cart-badge').text(this.noOfItemsCart);
   }
 }

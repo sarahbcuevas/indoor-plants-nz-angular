@@ -104,3 +104,24 @@
 .text-green {
   color: #6c9f7f !important;
 }
+
+@media only screen and (max-width:700px) {
+
+  .continueBtn {
+    width: 100%;
+
+    li.nav-item {
+      width: 100%;
+    }
+
+    a.btn {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .login {
+      font-size: 0.9rem;
+    }
+  }
+
+}

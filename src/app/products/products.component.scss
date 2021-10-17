@@ -1,3 +1,48 @@
+
+.card {
+  border-radius: 0;
+  width: 210px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  .card-badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .card-body {
+      padding: 0.5rem;
+      line-height: 1rem;
+
+      a:hover {
+          color: white;
+          background: dimgray;
+      }
+  }
+
+  .card-text {
+      font-size: 1rem;
+  }
+
+  .card-title {
+      margin-bottom: 0;
+  }
+
+  .price {
+      font-weight: 500;
+      font-size: 1rem;
+  }
+}
+
+.card:hover {
+  background: rgba(153, 153, 102, 0.1);
+
+  img {
+      opacity: 0.75;
+  }
+}
+
 .img-thumbnail {
   width: 100px;
   height: 100px;
@@ -47,5 +92,86 @@ p.description {
     position: absolute;
     right: 0;
     top: 0;
+  }
+}
+
+.modal-backdrop {
+  background-color: transparent;
+}
+
+#justAddedModal {
+
+  .modal-dialog {
+    margin: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 380px;
+  }
+
+  .modal-header {
+    padding: 0.5rem 1rem;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .modal-body {
+    padding: 0.5rem;
+  }
+
+  .modal-footer {
+    border-top: 0;
+  }
+
+  .product-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .btn {
+    border-color: #6c9f7f;
+    color: #6c9f7f;
+    width: 100%;
+    padding: 5px;
+  }
+
+  .continue-shopping {
+    color: #6c9f7f;
+    text-decoration: underline;
+  }
+}
+
+.results-text {
+  font-size: 1rem;
+}
+
+#addToCartModal {
+
+  input {
+    margin-left: 1px;
+  }
+}
+
+@media only screen and (max-width:700px) {
+
+  .card {
+    width: 155px;
+  }
+
+  .results-text {
+    font-size: 0.8rem;
+  }
+
+  #justAddedModal {
+
+    .modal-dialog {
+      margin: 3px;
+      width: 100%;
+      margin: 0;
+      position: fixed;
+      top: 0;
+    }
   }
 }

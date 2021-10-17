@@ -8,60 +8,88 @@
                 </div>
                 <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
                     <div class="container">
-                        <div class="row border justify-content-around align-items-center" *ngFor="let orderItem of orderItems">
-                            <div *ngIf="orderItem?.product.images.length > 0" class="col-4 col-sm-3 col-md-3 col-lg-2 pl-0 pr-0">
+                        <div class="row border-top justify-content-around align-items-center py-3 mt-2" *ngFor="let orderItem of orderItems">
+                            <div *ngIf="orderItem?.product.images.length > 0" class="col-3 col-md-2 pl-0 pr-0">
                                 <img src="{{ orderItem?.product.images[0].url }}" class="img-thumbnail">
                             </div>
-                            <div *ngIf="orderItem?.product.images.length === 0" class="col-4 col-sm-3 col-md-3 col-lg-2 pl-0 pr-0">
+                            <div *ngIf="orderItem?.product.images.length === 0" class="col-3 col-md-2 pl-0 pr-0">
                                 <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                             </div>
                             <div class="col text-left">
-                                <span class="h5">{{ orderItem?.product.name }}</span>
-                                <span class="text-muted ml-2">x{{ orderItem?.quantity }}</span><br>
-                                <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly && settings?.allowPickup"><em>For Pickup Only</em></span>
+                                <span class="h5">{{ orderItem?.product.name }}</span><br>
+                                <span class="text-muted">NZD {{ (orderItem?.product.price / 100).toFixed(2) }}</span><br>
+                                <u><a class="text-green pointer" data-toggle="modal" data-target="#removeProductModal" aria-label="Close" (click)="selectProduct(orderItem?.product)">Remove</a></u>
                             </div>
-                            <div class="col-3 col-sm-2 align-middle">NZD {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}</div>
-                                <button type="button" class="close align-self-start pr-1" data-toggle="modal" data-target="#removeProductModal" aria-label="Close" (click)="selectProduct(orderItem?.product)">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div class="col-3 col-md-2 align-middle">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <span class="qty">Qty:</span><br>
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" name="quantity" min="1" value="{{ orderItem?.quantity }}" [(ngModel)]="orderItem.quantity" class="quantity text-center form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="text-muted stock"><em>Stock: {{ orderItem?.product.stock }}</em></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row border justify-content-center">
-                        <div class="col-12 col-md-7 col-lg-7 offset-md-5 offset-lg-5">
-                            <table class="table table-borderless text-right">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row" class="pt-1 pb-1">Sub-total</th>
-                                        <td class="pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" class="pt-1 pb-1">Shipping Fee</th>
-                                        <td class="pt-1 pb-1"><em>Calculated at checkout</em></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" class="h5 pt-1 pb-1">TOTAL</th>
-                                        <td class="h5 pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                </div>
+                <div class="row border-top justify-content-center">
+                    <div class="col-12 col-md-7 col-lg-7 px-0 offset-md-5 offset-lg-5 mt-3">
+                        <table class="table table-borderless text-right">
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="py-0 py-md-1">Sub-total</th>
+                                    <td class="py-0 py-md-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="py-0 py-md-1">Shipping Fee</th>
+                                    <td class="py-0 py-md-1 text-muted"><em>Calculated at checkout</em></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="py-0 py-md-1">TOTAL</th>
+                                    <td class="py-0 py-md-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <ul class="nav float-right">
-                                <li class="nav-item">
-                                    <a class="btn nav-link proceedBtn" [routerLink]="['/checkout']" [ngClass]="{'btn-disabled': (orderItems?.length===0)}">Proceed to Checkout</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <a type="button" [routerLink]="['/products']" class="btn float-right"><i class="fas fa-chevron-left"></i> Continue Shopping</a>
-                        </div>
-                    </div>
+                </div>
+                <div class="row mt-4 d-flex justify-content-center justify-content-md-end">
+                    <ul class="nav px-0 px-md-2">
+                        <li class="nav-item">
+                            <a class="btn nav-link proceedBtn text-uppercase" (click)="proceedToCheckout()" [ngClass]="{'btn-disabled': (orderItems?.length===0)}">Proceed to Checkout</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row d-flex justify-content-center justify-content-md-end">
+                    <a type="button" [routerLink]="['/products']" class="btn"><i class="fas fa-chevron-left d-sm-none d-md-inline-block"></i> Continue Shopping</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Remove Product Modal -->
+<div class="modal fade" id="removeProductModal" tabindex="-1" role="dialog" aria-labelledby="removeProductTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeProductTitle">Remove Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>Are you sure you want to remove <strong>{{ selectedProduct?.name }}</strong>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" (click)="removeProduct()">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>

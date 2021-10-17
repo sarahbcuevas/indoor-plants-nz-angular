@@ -26,6 +26,22 @@ html, body {
   border-radius: .25rem; 
 }
 
+.border-top {
+  border-top: 1px solid #dee2e6!important;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #dee2e6!important;
+}
+
+.border-left {
+  border-left: 1px solid #dee2e6!important;
+}
+
+.border-right {
+  border-right: 1px solid #dee2e6!important;
+}
+
 .btn:focus, button:focus {
   outline-style: none;
   box-shadow: none;
@@ -45,7 +61,7 @@ html, body {
 }
 
 .text-green {
-  color: #004d00;
+  color: #6c9f7f;
 }
 
 .text-sm {
@@ -54,52 +70,6 @@ html, body {
 
 .bg-light-yellow {
     background: #fdfdf1;
-}
-
-.card {
-  border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
-  width: 210px;
-  margin-bottom: 10px;
-  cursor: pointer;
-
-  .card-badge {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-  }
-
-  .card-body {
-      padding: 0.5rem;
-      line-height: 1rem;
-
-      a:hover {
-          color: white;
-          background: dimgray;
-      }
-  }
-
-  .card-text {
-      font-size: 1rem;
-  }
-
-  .card-title {
-      margin-bottom: 0;
-  }
-
-  .price {
-      font-weight: 500;
-      font-size: 1rem;
-  }
-}
-
-.card:hover {
-  background: rgba(153, 153, 102, 0.1);
-
-  img {
-      opacity: 0.75;
-  }
 }
 
 .loading-img {
@@ -313,7 +283,7 @@ ul.timeline > li:before {
 
 #sidebar-toggler {
   @media (max-width: 767.98px) {
-      visibility: visible;
+      display: none;
   }
   @media (min-width: 768px) {
       visibility: collapse;

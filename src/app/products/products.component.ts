@@ -8,10 +8,12 @@ import { ContactService } from '../_services/contact.service';
 import { ProductService } from '../_services/product.service';
 import { SocialmediaService } from '../_services/socialmedia.service';
 import { finalize, tap, map } from 'rxjs/operators/';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderItem } from '../_models/order';
+import { AppComponent } from 'app/app.component';
 
 @Component({
+  providers: [AppComponent],
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
@@ -32,6 +34,7 @@ export class ProductsComponent implements OnInit {
   noOfItemsCart = 1;
   orderItems: OrderItem[] = [];
   totalAmount: number;
+  selectedProductCount = 1;
 
   isCheckAllFilters = true;
   isCheckAllCategories = true;
@@ -41,6 +44,8 @@ export class ProductsComponent implements OnInit {
   filterBestseller: boolean;
   filterOutOfStock: boolean;
   filterForPickUpOnly: boolean;
+
+  searchText: string;
 
   /** For sort by */
   SORT_BY_PRODUCT_A_TO_Z = 0;
@@ -54,7 +59,9 @@ export class ProductsComponent implements OnInit {
     private contactService: ContactService,
     private productService: ProductService,
     private socialMediaService: SocialmediaService,
+    private appComponent: AppComponent,
     private route: ActivatedRoute,
+    private router: Router,
     @Inject('BaseURL') public BaseURL
   ) { }
 
@@ -77,6 +84,8 @@ export class ProductsComponent implements OnInit {
   }
 
   addToCart() {
+    this.selectedProductCount = this.noOfItemsCart;
+    
     if (this.selectedProduct._id) {
       const orderItem: OrderItem = {
         product: this.selectedProduct._id,
@@ -87,7 +96,12 @@ export class ProductsComponent implements OnInit {
         cart.push(JSON.stringify(orderItem));
         localStorage.setItem('cart', JSON.stringify(cart));
       } else {
-        const cart: any = JSON.parse(localStorage.getItem('cart'));
+        let cart: any = localStorage.getItem('cart');
+        if (cart) {
+          cart = JSON.parse(cart);
+        } else {
+          return;
+        }
         let index = -1;
         for (let i = 0; i < cart.length; i++) {
           const item: OrderItem = JSON.parse(cart[i]);
@@ -114,13 +128,18 @@ export class ProductsComponent implements OnInit {
     $('#addToCartModal').hide();
     $('.modal-backdrop').remove();
     this.noOfItemsCart = 1;
+    this.appComponent.loadCart();
+    this.showJustAddedModal();
   }
 
   loadCart() {
     this.totalAmount = 0;
     this.orderItems = [];
-    const cart = JSON.parse(localStorage.getItem('cart'));
-    if (cart === null) {
+    let cart = localStorage.getItem('cart');
+    console.log('Cart: ', cart);
+    if (cart) {
+      cart = JSON.parse(cart);
+    } else {
       return;
     }
     for (let i = 0; i < cart.length; i++) {
@@ -137,6 +156,7 @@ export class ProductsComponent implements OnInit {
           }
         );
     }
+    this.appComponent.loadCart();
   }
 
   emptyCart() {
@@ -144,7 +164,12 @@ export class ProductsComponent implements OnInit {
   }
 
   removeFromCart(id: string) {
-    const cart: any = JSON.parse(localStorage.getItem('cart'));
+    let cart: any = localStorage.getItem('cart');
+    if (cart) {
+      cart = JSON.parse(cart);
+    } else {
+      return;
+    }
     const index = -1;
     for (let i = 0; i < cart.length; i++) {
       const item: OrderItem = JSON.parse(cart[i]);
@@ -361,5 +386,9 @@ export class ProductsComponent implements OnInit {
 
   toggleView() {
     this.viewAsList = !this.viewAsList;
+  }
+
+  showJustAddedModal() {
+    $('#justAddedModal').modal('show');
   }
 }

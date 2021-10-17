@@ -86,28 +86,30 @@
             </div>
 
         </div>
-        <div class="col-12 col-md-8 col-lg-9 pt-4">
-            <h6 class="sub-title text-uppercase mb-4">Products</h6>
-            <div class="container mb-4">
+        <div class="col-12 col-md-8 col-lg-9 pt-md-4">
+            <h6 class="sub-title text-uppercase mt-4 mt-md-0 mb-4">Shop</h6>
+            <div class="container mb-md-4">
                 <div class="row justify-content-between align-items-center flex-column-reverse flex-lg-row">
-                    <div class="col-md-12 col-lg-4 text-lg-left mt-3 mt-lg-0">
+                    <div class="col-md-12 col-lg-4 text-lg-left mt-4 mt-md-3 mt-lg-0">
                         <span class="results-text text-uppercase text-nowrap">Showing all {{ noOfProducts }} results</span>
                     </div>
-                    <div class="col-md-12 col-lg-7 col-xl-5 form-inline d-flex">
-                        <div class="search input-group flex-grow-1 mr-1">
+                    <div class="col-md-12 col-lg-7 col-xl-5">
+                      <div class="row">
+                        <div class="col searc0h input-group mr-1 px-0">
                             <label for="searchInput" class="sr-only">Search Plant</label>
-                            <input type="search" class="form-control border-right-0" id="searchInput" aria-describedby="searchPlant" placeholder="Search Plant">
+                            <input type="search" class="form-control border-right-0" id="searchInput" aria-describedby="searchPlant" placeholder="Search Plant" [(ngModel)]="searchText" autocomplete="off">
                             <span class="input-group-append">
                                 <div class="input-group-text bg-transparent"><i class="fas fa-search"></i></div>
                             </span>
                         </div>
-                        <div class="btn-group" role="group">
+                        <div class="col-auto btn-group px-0" role="group">
                             <button type="button" class="btn btn-outline-secondary btn-light bg-transparent text-dark border rounded-border-25" data-toggle="modal" data-target="#sortFilterModal"><i class="fas fa-sort"></i></button>
                             <button type="button" class="btn btn-outline-secondary btn-light bg-transparent text-dark border rounded-border-25" (click)="toggleView()">
                               <i class="fas fa-list" *ngIf="!viewAsList"></i>
                               <i class="fas fa-th" *ngIf="viewAsList"></i>
                             </button>
                         </div>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -115,8 +117,8 @@
             <div class="container d-flex justify-content-center" *ngIf="(products)?.length == 0">
                 <p>No available products.</p>
             </div>
-            <div class="container d-flex flex-wrap justify-content-around" *ngIf="(products)?.length > 0 && !viewAsList">
-              <div class="card border-light" *ngFor="let product of products">
+            <div class="container d-flex flex-wrap justify-content-around px-1 mb-3" *ngIf="(products)?.length > 0 && !viewAsList">
+              <div class="card border-light my-3" *ngFor="let product of products | filter : searchText">
                 <div *ngIf="product?.images.length > 0">
                   <div [id]="'carouselExampleIndicators-' + product?._id" class="carousel slide" data-ride="carousel" data-interval="false">
                     <ol class="carousel-indicators">
@@ -261,7 +263,7 @@
   </div>
 </div>
 
-<!-- Add to Card Modal -->
+<!-- Add to Cart Modal -->
 <div class="modal fade" id="addToCartModal" tabindex="-1" role="dialog" aria-labelledby="addToCartTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content">
@@ -273,9 +275,13 @@
       </div>
       <div class="modal-body">
         <h6 class="text-uppercase text-center mb-2">{{ selectedProduct?.name }}</h6>
-        <div class="form-group text-center mb-1">
-          <label for="quantity" class="mr-1">Quantity</label>
-          <input type="number" name="quantity" min="1" [max]="selectedProduct?.stock" [(ngModel)]="noOfItemsCart" value="1" class="text-center">
+        <div class="form-group text-center mb-1 row justify-content-center">
+          <div class="col-auto px-0">
+            <label for="quantity" class="mr-1 px-0">Qty</label>
+          </div>
+          <div class="col-3 px-1">
+            <input type="number" name="quantity" min="1" [max]="selectedProduct?.stock" [(ngModel)]="noOfItemsCart" value="1" class="form-control form-control-sm text-center">
+          </div>
         </div>
         <div class="text-center">
           <span class="text-muted"><em>Stock: {{ selectedProduct?.stock }}</em></span>
@@ -283,6 +289,40 @@
       </div>
       <div class="modal-footer justify-content-center">
         <button type="button" class="btn btn-black text-uppercase" (click)="addToCart()" [disabled]="noOfItemsCart < 1 || noOfItemsCart > selectedProduct?.stock">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Just Added to your Cart -->
+<div class="modal fade" id="justAddedModal" tabindex="-1" role="dialog" aria-labelledby="justAddedTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title text-uppercase" id="justAddedTitle">Just added to your cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-3 px-1">
+              <img class="align-self-center img-thumbnail" *ngIf="selectedProduct?.images.length > 0" src="{{ selectedProduct?.images[0].url }}" alt="Plant image">
+              <img class="align-self-center img-thumbnail" *ngIf="selectedProduct?.images.length == 0" src="../../assets/default-plant.jpg" alt="Plant image">
+            </div>
+            <div class="col px-2">
+              <span class="product-name">{{ selectedProduct?.name }}</span>
+            </div>
+            <div class="col-auto px-0">
+              <span>Qty: {{ selectedProductCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center pt-0 pb-1">
+        <a type="button" class="btn text-uppercase" [routerLink]="['/cart']" data-dismiss="modal">View Cart</a>
+        <a class="continue-shopping" data-dismiss="modal" role="button">Continue shopping</a>
       </div>
     </div>
   </div>

@@ -29,10 +29,10 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-12 col-md-6 text-left">
-      <div class="row pt-2 mt-sm-3 mb-4">
+    <div class="col-sm-12 col-md-6 text-center text-md-left">
+      <div class="row pt-2 mt-sm-4 mt-md-3 mb-4">
         <div class="col">
-          <h6 class="sub-title text-uppercase text-left">{{ product?.name }}<br>
+          <h6 class="sub-title text-uppercase text-center text-md-left">{{ product?.name }}<br>
             <small class="text-muted">{{ product?.category[0].name }}</small>
           </h6>
         </div>
@@ -44,8 +44,8 @@
       </div>
       <div class="row">
         <div class="col">
-          <span class="badge badge-secondary text-uppercase" *ngIf="product?.isBestseller">Bestseller</span>&nbsp;
-          <span class="badge badge-danger text-uppercase" *ngIf="product?.stock <= 0">Out of Stock</span>
+          <span class="text-uppercase text-muted" *ngIf="product?.isBestseller">Bestseller</span>&nbsp;
+          <span class="text-uppercase text-muted" *ngIf="product?.stock <= 0">Sold Out</span>
         </div>
       </div>
       <div class="row">
@@ -56,13 +56,40 @@
       </div>
       <div class="row mt-3">
         <div class="col-md-10 col-lg-8">
-          <div class="results-text text-left" [innerHTML]="product?.description"></div>
+          <div class="results-text" [innerHTML]="product?.description"></div>
         </div>
       </div>
-      <div class="row mt-5 mb-3">
+      <div class="row mt-sm-4 mt-md-5 mb-3" *ngIf="product?.stock > 0">
         <div class="col">
-          <a class="btn btn-black text-light text-uppercase">Add to Cart</a>
+          <a class="btn btn-black text-light text-uppercase" data-toggle="modal" data-target="#addToCartModal">Add to Cart</a>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add to Card Modal -->
+<div class="modal fade" id="addToCartModal" tabindex="-1" role="dialog" aria-labelledby="addToCartTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title" id="addToCartTitle">Add to Cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-uppercase text-center mb-2">{{ product?.name }}</h6>
+        <div class="form-group text-center mb-1">
+          <label for="quantity" class="mr-1">Quantity</label>
+          <input type="number" name="quantity" min="1" [max]="product?.stock" [(ngModel)]="noOfItemsCart" value="1" class="text-center">
+        </div>
+        <div class="text-center">
+          <span class="text-muted"><em>Stock: {{ product?.stock }}</em></span>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-black text-uppercase" (click)="addToCart()" [disabled]="noOfItemsCart < 1 || noOfItemsCart > product?.stock">Add to Cart</button>
       </div>
     </div>
   </div>
