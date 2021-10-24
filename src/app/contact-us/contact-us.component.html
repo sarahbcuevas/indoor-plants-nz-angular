@@ -1,33 +1,33 @@
 <div class="container-fluid bg-white">
   <div class="row">
-  <div class="col-md-9 py-5">
+  <div class="col-md-8 py-5">
     <h4 class="title text-center mb-5">We'd love to hear from you!</h4>
     <form [formGroup]="contactUsFormGroup" class="container">
       <fieldset>
         <div class="form-group row justify-content-center">
-          <label for="name" class="col-sm-2 col-form-label text-left">Name</label>
-          <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="name" formControlName="name" placeholder="Name">
+          <label for="name" class="col-sm-2 col-md-3 col-lg-2 col-form-label text-left">Name</label>
+          <div class="col-sm-8 col-md-9 col-xl-7">
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Name">
           </div>
         </div>
         <div class="form-group row justify-content-center">
-          <label for="contact" class="col-sm-2 col-form-label text-left">Contact</label>
-          <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="contact" formControlName="contact" placeholder="Contact">
+          <label for="contact" class="col-sm-2 col-md-3 col-lg-2 col-form-label text-left">Contact</label>
+          <div class="col-sm-8 col-md-9 col-xl-7">
+            <input type="text" class="form-control" id="contact" formControlName="contact" placeholder="Contact">
           </div>
         </div>
         <div class="form-group row justify-content-center">
-          <label for="email" class="col-sm-2 col-form-label text-left">Email *</label>
-          <div class="col-sm-8">
-            <input type="email" class="form-control form-control-sm" id="email" formControlName="email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+          <label for="email" class="col-sm-2 col-md-3 col-lg-2 col-form-label text-left">Email *</label>
+          <div class="col-sm-8 col-md-9 col-xl-7">
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
             <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.email.errors?.pattern && submitted">Invalid email</p>
             <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.email.errors?.required && submitted">Email is required</p>
           </div>
         </div>
         <div class="form-group row justify-content-center">
-          <label for="type" class="col-sm-2 col-form-label text-left">Type *</label>
-          <div class="col-sm-8">
-            <select class="form-control form-control-sm" id="type" formControlName="type">
+          <label for="type" class="col-sm-2 col-md-3 col-lg-2 col-form-label text-left">Type *</label>
+          <div class="col-sm-8 col-md-9 col-xl-7">
+            <select class="form-control" id="type" formControlName="type">
               <option value="Inquiry">Inquiry</option>
               <option value="Feedback">Feedback</option>
               <option value="Others">Others</option>
@@ -36,22 +36,23 @@
           </div>
         </div>
         <div class="form-group row justify-content-center">
-          <label for="message" class="col-sm-2 col-form-label text-left">Message *</label>
-          <div class="col-sm-8">
-            <textarea rows="5" class="form-control form-control-sm" id="message" formControlName="message" placeholder="Type your message here"></textarea>
+          <label for="message" class="col-sm-2 col-md-3 col-lg-2 col-form-label text-left">Message *</label>
+          <div class="col-sm-8 col-md-9 col-xl-7">
+            <textarea rows="5" class="form-control" id="message" formControlName="message" placeholder="Type your message here"></textarea>
             <p class="text-danger" *ngIf="!!contactUsFormGroup.controls.message.errors?.required && submitted">Message is required</p>
           </div>
         </div>
         <div class="row justify-content-center">* Required</div>
         <div class="row justify-content-center mt-3">
-          <button type="button" class="btn btn-secondary btn-sm mr-1" [disabled]="true" (click)="resetForm()">Reset</button>
-          <button type="button" class="btn btn-primary btn-sm" [disabled]="this.contactUsFormGroup.invalid || loading" (click)="submit()">Send Message</button>
-          <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+          <div class="col col-md-11 col-xl-9 px-md-0 px-lg-3 justify-content-center justify-content-md-end">
+            <button type="button" class="btn btn-primary mx-0 px-md-4 px-lg-5 py-2 submitBtn text-uppercase float-md-right" [disabled]="this.contactUsFormGroup.invalid || loading" (click)="submit()">Send Message</button>
+            <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
+          </div>
         </div>
       </fieldset>
     </form>
   </div>
-  <div class="col-md-3 bg-light text-secondary">
+  <div class="col-md-4 bg-light text-secondary">
     <div class="container-fluid pt-4">
       <div class="row justify-content-center">
         <div class="col text-center">

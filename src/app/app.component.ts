@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { User } from './_models/user';
+import { Product } from './_models/product';
 import { AuthenticationService } from './_services/authentication.service';
 import { UserService } from './_services/user.service';
 import { ContentService } from './_services/content.service';
@@ -10,6 +11,7 @@ import { SocialmediaService } from './_services/socialmedia.service';
 import { Content } from './_models/content';
 import { Contact } from './_models/contact';
 import { SocialMedia } from './_models/socialmedia';
+import { finalize } from 'rxjs/operators/';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +29,8 @@ export class AppComponent implements OnInit {
   contact: Contact;
   socialMedia: SocialMedia;
   noOfItemsCart = 0;
+  isProductsLoading = false;
+  products: Product[];
 
   constructor(
     private route: Router,
@@ -56,6 +60,7 @@ export class AppComponent implements OnInit {
     this.getContent();
     this.getSocialMedia();
     this.loadCart();
+    this.getProducts();
   }
 
   getCurrentUser() {
@@ -63,6 +68,21 @@ export class AppComponent implements OnInit {
       .subscribe(
         data => {
           this.currentUser = data;
+        }
+      );
+  }
+
+  getProducts() {
+    this.isProductsLoading = true;
+    this.productService.getProducts()
+      .pipe(
+        finalize(() => {
+          this.isProductsLoading = false;
+        }
+      ))
+      .subscribe(
+        products => {
+          this.products = products;
         }
       );
   }
@@ -100,6 +120,28 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
     location.replace('/login');
+  }
+
+  showSearchBar() {
+    $('div.search').addClass('show');
+    $('#searchPlantBtn').addClass('hide');
+  }
+
+  hideSearchBar() {
+    if ($('div.search').hasClass('show')) {
+      $('div.search').removeClass('show');
+      $('#searchPlantBtn').removeClass('hide');
+    }
+  }
+
+  showDropdown() {
+    if (!$('div.dropdown-menu').hasClass('show')) {
+      $('div.dropdown-menu').addClass('show');
+    }
+  }
+
+  hideDropdown() {
+    $('div.dropdown-menu').removeClass('show');
   }
 
   public loadCart() {

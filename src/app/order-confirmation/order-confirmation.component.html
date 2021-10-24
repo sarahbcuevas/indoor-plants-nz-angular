@@ -1,7 +1,7 @@
 <div class="container-fluid ml-0 mr-0 pl-0 pr-0 h-100 d-inline-block" style="max-height: 100%;">
-    <div class="row" id="sidebar-toggler">
+    <div class="row mx-0" id="sidebar-toggler">
         <div class="navbar-toggler border collapsed" data-toggle="collapse" data-target="#orderSummary" aria-controls="orderSummary" aria-expanded="false" aria-label="Toggle navigation">
-            <div class="container-fluid ml-0 mr-0 pt-3 pb-3">
+            <div class="container-fluid ml-0 mr-0 px-0 py-3">
                 <div class="row">
                     <div class="col text-left">
                         <span class="text-info"><i class="fas fa-shopping-cart mr-2"></i> Show order summary <i class="fas fa-chevron-down ml-2"></i></span>
@@ -13,8 +13,8 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-around h-100" style="max-height: 100%;">
-        <div class="col-sm-12 col-md-7 bg-white pt-4 pb-4 pl-0 pr-0 pl-md-4 pr-md-4 order-last order-md-first">
+    <div class="row mx-0 justify-content-around h-100" style="max-height: 100%;">
+        <div class="col-sm-12 col-md-7 bg-white pt-md-2 pt-lg-4 pb-4 px-0 px-md-3 px-lg-4 order-last order-md-first">
             <div class="container mt-3 pl-3 pr-3">
                 <div class="row justify-content-center">
                     <div class="col-4 col-lg-3">
@@ -22,12 +22,12 @@
                     </div>
                 </div>
                 <div class="row justify-content-end mt-3">
-                    <div class="col-auto">
-                        <span class="text-info check"><i class="far fa-check-circle"></i></span>
-                    </div>
-                    <div class="col col-md-10 col-lg-9 text-left">
+                    <div class="col col-lg-10 text-left">
                         <div class="container">
                             <div class="row">
+                                <div class="col-auto pl-0">
+                                    <span class="text-info check"><i class="far fa-check-circle"></i></span>
+                                </div>
                                 <div class="col pl-0 pr-0">
                                     <span class="regular-text text-gray">Order #{{ order?.code }}</span><br>
                                     <span class="thank-you">Thank you {{ order?.customer.firstname }}!</span>
@@ -64,12 +64,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-4 mb-3 justify-content-around">
-                                <div class="col text-left">
+                            <div class="row mt-4 mb-3 justify-content-center justify-content-md-between flex-column-reverse flex-md-row">
+                                <div class="col-12 col-md-auto text-center text-md-left px-0">
                                     Need help? <a [routerLink]="['/contactus']" class="contactUs">Contact Us</a>
                                 </div>
-                                <div class="col text-right">
-                                    <a class="btn pt-md-2 pb-md-2 pl-md-4 pr-md-4 continueBtn" [routerLink]="['/products']">Continue Shopping</a>
+                                <div class="col-12 col-md text-right px-0">
+                                    <a class="btn py-3 py-md-2 px-md-4 continueBtn text-uppercase" [routerLink]="['/products']">Continue Shopping</a>
                                 </div>
                             </div>
                         </div>
@@ -77,8 +77,8 @@
                 </div> 
             </div>
         </div>
-        <div class="col-sm-12 col-md-5 bg-light pt-5 pb-4 pl-4 pr-4 border-left collapse navbar-collapse order-first order-md-last" id="orderSummary">
-            <div class="container pt-3 pb-3">
+        <div class="col-sm-12 col-md-5 bg-light py-0 py-md-4 px-1 px-lg-4 border-left collapse navbar-collapse order-first order-md-last" id="orderSummary">
+            <div class="container py-2 px-3">
                 <div class="row align-items-center mb-3">
                     <div class="col">
                         <span class="block-title">Order Summary</span>
@@ -96,7 +96,7 @@
                         <span>{{ (orderItem.product.price * orderItem.quantity / 100).toFixed(2) }}</span>
                     </div>
                 </div>
-                <hr class="mt-3 mb-3">
+                <hr class="mt-4 mb-4">
                 <div class="row align-items-center">
                     <div class="col text-left">
                         Subtotal

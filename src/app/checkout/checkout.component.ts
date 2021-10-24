@@ -1,7 +1,7 @@
 import { isMetadataImportedSymbolReferenceExpression } from '@angular/compiler-cli';
 import { Component, ElementRef, OnDestroy, OnInit, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 import { OrderItem, Order, PaymentMethod, ShippingDetails, ShippingFeeMethod, PaymentStatus } from '../_models/order';
 import { Customer } from '../_models/customer';
 import { Product } from '../_models/product';
@@ -53,6 +53,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   content: Content;
   forShipping: boolean;
   isShippingStep = false;
+
+  currentStep: string;
+  CUSTOMER_INFORMATION = 'customer-information';
+  SHIPPING = 'shipping';
+  PAYMENT = 'payment';
 
   itemList = [];
   itemTotal = 0;
@@ -119,6 +124,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.loadCart();
     this.loadCountries();
     this.getContent();
+    this.loadSavedCustomer();
+
+    this.currentStep = this.route.snapshot.queryParams['step'].trim();
+    
+    $('a[href="#' + this.currentStep.trim() + '"]').tab('show');
     // if (this.paymentFormGroup.get('paymentMethod').value == PaymentMethod.PAYPAL) {
     //   document.querySelector<HTMLElement>('#paypalCompleteOrderButton').style.display = 'inline-block';
     // } else {
@@ -131,7 +141,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.paypalButton.close();
     }
   }
-  
+
   onTabClick() {
     clickTab();
   }
@@ -189,7 +199,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             if (this.isShippingAllowed) {
               totalBill += this.totalShippingFee + this.baseShippingFee;
             }
-            this.renderPaypalButton();
           }
         }))
         .subscribe(
@@ -324,8 +333,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cities = [];
     this.regionIndex = regionIndex;
     let data = location[this.countryIndex].regions[regionIndex].cities;
-    
-    this.setBaseShippingFee();
 
     for (let i=0; i<data.length; i++) {
       this.cities.push(data[i]);
@@ -337,6 +344,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   setBaseShippingFee() {
+
+    if (this.countryIndex < 0 && this.regionIndex < 0) {
+      return;
+    }
+
     let island = location[this.countryIndex].regions[this.regionIndex].island;
 
     if (island === "North Island") {
@@ -346,15 +358,26 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  continueToShipping() {
+  continueToInformation() {
+    this.currentStep = 'customer-information';
     this.onTabClick();
+    this.router.navigate(['/checkout'], { queryParams: { step: 'customer-information' } });
+  }
+
+  continueToShipping() {
     this.setBaseShippingFee();
     this.isShippingStep = true;
+    this.currentStep = 'shipping';
+    this.onTabClick();
+    this.router.navigate(['/checkout'], { queryParams: { step: 'shipping' } });
   }
 
   continueToPayment() {
     this.loadCart();
+    this.renderPaypalButton();
+    this.currentStep = 'payment';
     this.onTabClick();
+    this.router.navigate(['/checkout'], { queryParams: { step: 'payment' } });
   }
 
   completeOrder() {
@@ -375,6 +398,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customer = this.userInfoFormGroup.value;
     if (save) {
       this.saveCustomerInformation();
+    } else {
+      this.removeSavedCustomer();
     }
 
     if (subscribe) {
@@ -390,7 +415,29 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   /** Save Customer Information to localStorage */
   saveCustomerInformation() {
-    localStorage.setItem('indoorplantsnz_customer', JSON.stringify(this.customer));
+    localStorage.setItem('thefoliagefixnz_customer', JSON.stringify(this.customer));
+  }
+
+  loadSavedCustomer() {
+    let tempCustomer = JSON.parse(localStorage.getItem('thefoliagefixnz_customer'));
+    if (tempCustomer) {
+      this.customer = tempCustomer;
+      this.userInfoFormGroup.setValue(this.customer);
+      this.countryIndex = this.countries.indexOf(this.customer.country);
+      this.selectCountry(this.countryIndex);
+      this.regionIndex = this.regions.indexOf(this.customer.region);
+      this.selectRegion(this.regionIndex);
+      this.cityIndex = this.cities.indexOf(this.customer.city);
+      this.selectCity(this.cityIndex);
+      this.userInfoFormGroup.get('country').setValue(this.countryIndex);
+      this.userInfoFormGroup.get('region').setValue(this.regionIndex);
+      this.userInfoFormGroup.get('city').setValue(this.cityIndex);
+    }
+    
+  }
+
+  removeSavedCustomer() {
+    localStorage.removeItem('thefoliagefixnz_customer');
   }
 
   createOrder() {

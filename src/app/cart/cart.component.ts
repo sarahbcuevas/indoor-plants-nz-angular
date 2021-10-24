@@ -121,6 +121,6 @@ export class CartComponent implements OnInit {
     localStorage.setItem('cart', JSON.stringify(cart));
 
     // Go to checkout page
-    this.router.navigate(['/checkout'], { queryParams: { step: 'contact_information' } });
+    this.router.navigate(['/checkout'], { queryParams: { step: 'customer-information' } });
   }
 }

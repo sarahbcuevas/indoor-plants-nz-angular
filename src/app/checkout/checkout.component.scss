@@ -105,6 +105,10 @@
   color: #6c9f7f !important;
 }
 
+.login {
+  font-size: 0.9rem;
+}
+
 @media only screen and (max-width:700px) {
 
   .continueBtn {
@@ -116,12 +120,8 @@
 
     a.btn {
       width: 100%;
-      padding: 12px;
     }
 
-    .login {
-      font-size: 0.9rem;
-    }
   }
 
 }

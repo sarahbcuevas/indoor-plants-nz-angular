@@ -8,6 +8,7 @@ import { finalize, tap, map } from 'rxjs/operators/';
 import { SettingsService } from '../_services/settings.service';
 import { Settings } from '../_models/settings';
 import { AppComponent } from 'app/app.component';
+import { Router, NavigationEnd, Event } from '@angular/router';
 
 @Component({
   providers: [AppComponent],
@@ -22,6 +23,7 @@ export class ProductDetailComponent implements OnInit {
   noOfItemsCart = 1;
 
   constructor(
+    private router: Router,
     private productService: ProductService,
     private settingsService: SettingsService,
     private appComponent: AppComponent,
@@ -31,6 +33,13 @@ export class ProductDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.router.events.subscribe(
+      (event: Event) => {
+        if (event instanceof NavigationEnd) {
+          this.getProductDetails();
+        }
+      }
+    );
     this.getProductDetails();
   }
 

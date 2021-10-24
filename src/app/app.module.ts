@@ -26,6 +26,7 @@ import { FilterPipe } from './_helpers/filter.pipe';
 import { OrderFilterPipe } from './_helpers/filterOrder.pipe';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { ClickOutsideDirective } from './_helpers/clickoutside';
 import * as $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 import { AdminAccountDetailComponent } from './admin-account-detail/admin-account-detail.component';
@@ -67,6 +68,7 @@ import { AdminOrderFulfillmentComponent } from './admin-order-fulfillment/admin-
     AdminProductDetailComponent,
     FilterPipe,
     OrderFilterPipe,
+    ClickOutsideDirective,
     ProductDetailComponent,
     ContactUsComponent,
     AdminContentComponent,
