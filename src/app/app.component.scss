@@ -208,7 +208,7 @@
     letter-spacing: 2px;
 
     @media (max-width: 767.98px) {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
         padding-left: 10px;
         padding-right: 10px;
     }
@@ -303,9 +303,65 @@ div.search.show {
     background-color: whitesmoke;
 }
 
+#justAddedModal {
+
+    .modal-dialog {
+        margin: 0;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 380px;
+    }
+  
+    .modal-header {
+        padding: 0.5rem 1rem;
+    }
+  
+    .modal-title {
+        font-size: 1rem;
+    }
+  
+    .modal-body {
+        padding: 0.5rem;
+    }
+  
+    .modal-footer {
+        border-top: 0;
+    }
+  
+    .product-name {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+  
+    .btn {
+        border-color: #6c9f7f;
+        color: #6c9f7f;
+        width: 100%;
+        padding: 5px;
+    }
+  
+    .continue-shopping {
+        color: #6c9f7f;
+        text-decoration: underline;
+    }
+  }
+
 @media only screen and (max-width:700px) {
 
     .navbar {
         padding: 0;
     }
+
+    #justAddedModal {
+
+        .modal-dialog {
+            margin: 3px;
+            width: 100%;
+            margin: 0;
+            position: fixed;
+            top: 0;
+        }
+    }
+
 }

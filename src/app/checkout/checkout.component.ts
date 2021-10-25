@@ -182,7 +182,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.totalShippingFee = 0;
     this.itemTotal = 0;
     this.itemList = [];
-    let totalBill = 0;
+    // let totalBill = 0;
     let cart = localStorage.getItem('cart');
     if (cart) {
       cart = JSON.parse(cart);
@@ -195,9 +195,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.productService.getProductById(item.product)
         .pipe(finalize(() => {
           if (this.itemList.length == cart.length) {
-            totalBill = this.subTotal;
-            if (this.isShippingAllowed) {
-              totalBill += this.totalShippingFee + this.baseShippingFee;
+            // totalBill = this.subTotal;
+            // if (this.isShippingAllowed) {
+            //   totalBill += this.totalShippingFee + this.baseShippingFee;
+            // }
+            if (this.currentStep == 'payment') {
+              this.renderPaypalButton();
             }
           }
         }))
@@ -374,7 +377,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   continueToPayment() {
     this.loadCart();
-    this.renderPaypalButton();
     this.currentStep = 'payment';
     this.onTabClick();
     this.router.navigate(['/checkout'], { queryParams: { step: 'payment' } });

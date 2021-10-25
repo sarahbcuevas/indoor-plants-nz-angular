@@ -147,7 +147,6 @@ export class AppComponent implements OnInit {
   public loadCart() {
     this.noOfItemsCart = 0;
     let cart = localStorage.getItem('cart');
-    console.log('cart: ', cart);
     if (cart) {
       cart = JSON.parse(cart);
     } else {
@@ -158,5 +157,19 @@ export class AppComponent implements OnInit {
       this.noOfItemsCart += item.quantity;
     }
     $('span.shopping-cart-badge').text(this.noOfItemsCart);
+  }
+
+  public showJustAddedModal(product: Product, productCount: number) {
+    $('#justAddedModal').modal('show');
+    let imgSrc = '';
+    if (product.images.length > 0) {
+      imgSrc = product.images[0].url;
+    } else {
+      imgSrc = '../../assets/default-plant.jpg';
+    }
+
+    $('#plantImg').attr('src',imgSrc);
+    $('span.product-name').text(product.name);
+    $('span.quantity').text(productCount);
   }
 }

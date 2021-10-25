@@ -22,6 +22,7 @@ export class ProductsComponent implements OnInit {
 
   categories: Category[];
   products: Product[];
+  outOfStockProducts: Product[];
   noOfProducts: number;
   isCategoriesLoading = false;
   isProductsLoading = false;
@@ -73,9 +74,11 @@ export class ProductsComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['category'] === undefined || params['category'] === '' || params['category'] === null) {
         this.getAllProducts();
+        this.getOutOfStock();
       } else {
         const category_id = params['category'];
         this.getProductsByCategory(category_id);
+        this.getOutOfStockProductsByCategory(category_id);
       }
     });
     this.filterBestseller = true;
@@ -129,7 +132,7 @@ export class ProductsComponent implements OnInit {
     $('.modal-backdrop').remove();
     this.noOfItemsCart = 1;
     this.appComponent.loadCart();
-    this.showJustAddedModal();
+    this.appComponent.showJustAddedModal(this.selectedProduct, this.selectedProductCount);
   }
 
   loadCart() {
@@ -252,6 +255,10 @@ export class ProductsComponent implements OnInit {
       .pipe(
           map((products) => {
             return products.filter(product => {
+              if (product.stock <= 0) {
+                return false;
+              }
+
               let isFiltered = true;
               if (!this.isCheckAllCategories) {
                 const isCategoryChecked = $('#' + product.category[0]._id + '.form-check-input').prop('checked');
@@ -312,15 +319,118 @@ export class ProductsComponent implements OnInit {
       );
   }
 
+  getOutOfStock() {
+    this.isProductsLoading = true;
+    this.productService.getProducts()
+      .pipe(
+          map((products) => {
+            return products.filter(product => {
+
+              if (product.stock > 0) {
+                return false;
+              }
+
+              let isFiltered = true;
+              if (!this.isCheckAllCategories) {
+                const isCategoryChecked = $('#' + product.category[0]._id + '.form-check-input').prop('checked');
+                if (!isCategoryChecked) {
+                  isFiltered = false;
+                }
+              }
+              if ((!this.isBestsellerChecked || !this.filterBestseller) && product.isBestseller) {
+                isFiltered = false;
+              }
+              if ((!this.isSoldoutChecked || !this.filterOutOfStock) && product.stock <= 0) {
+                isFiltered = false;
+              }
+              if (!this.filterForPickUpOnly && product.forPickupOnly) {
+                isFiltered = false;
+              }
+              return isFiltered;
+            });
+          }
+        ),
+        tap(products => {
+          // products.filter();
+            products.sort((a, b) => {
+            switch (this.sortBy) {
+              case this.SORT_BY_PRODUCT_A_TO_Z:
+                if (a.name < b.name) {
+                  return -1;
+                } else if (a.name > b.name) {
+                  return 1;
+                }
+                return 0;
+              case this.SORT_BY_PRODUCT_Z_TO_A:
+                if (a.name > b.name) {
+                  return -1;
+                } else if (a.name < b.name) {
+                  return 1;
+                }
+                return 0;
+              case this.SORT_BY_PRICE_LOW_TO_HIGH:
+                return a.price - b.price;
+              case this.SORT_BY_PRICE_HIGH_TO_LOW:
+                return b.price - a.price;
+              default:
+                if (a.name < b.name) {
+                  return -1;
+                } else if (a.name > b.name) {
+                  return 1;
+                }
+            }
+          });
+        }),
+        finalize(() => this.isProductsLoading = false)
+      ).subscribe(
+        products => {
+          this.outOfStockProducts = products;
+        }
+      );
+  }
+
   getProductsByCategory(category_id: number): void {
     this.isProductsLoading = true;
     this.productService.getProductsByCategory(category_id)
       .pipe(
+        map(products => {
+          return products.filter(product => {
+
+            if (product.stock > 0) {
+              return true;
+            }
+
+            return false;
+          });
+        }),
         tap(products => this.noOfProducts = products.length),
         finalize(() => this.isProductsLoading = false)
       ).subscribe(
         products => {
           this.products = products;
+        }
+      );
+  }
+
+  getOutOfStockProductsByCategory(category_id: number): void {
+    this.isProductsLoading = true;
+    this.productService.getProductsByCategory(category_id)
+      .pipe(
+        map(products => {
+          return products.filter(product => {
+
+            if (product.stock > 0) {
+              return false;
+            }
+
+            return true;
+          });
+        }),
+        tap(products => this.noOfProducts = products.length),
+        finalize(() => this.isProductsLoading = false)
+      ).subscribe(
+        products => {
+          this.outOfStockProducts = products;
         }
       );
   }
@@ -386,9 +496,5 @@ export class ProductsComponent implements OnInit {
 
   toggleView() {
     this.viewAsList = !this.viewAsList;
-  }
-
-  showJustAddedModal() {
-    $('#justAddedModal').modal('show');
   }
 }

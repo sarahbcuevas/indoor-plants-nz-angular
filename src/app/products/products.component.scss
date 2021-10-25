@@ -43,6 +43,10 @@
   }
 }
 
+.dimmed {
+  opacity: 0.5;
+}
+
 .img-thumbnail {
   width: 100px;
   height: 100px;
@@ -63,16 +67,14 @@
 
 .media-body .media-button {
   position: absolute;
+  top: 0;
+  right: 0;
 
-  @media (max-width: 575px) {
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
+  @media (max-width: 700px) {
+    position: relative;
+    margin-top: 10px;
   }
-  @media (min-width: 576px) {
-    top: 0;
-    right: 0;
-  }
+
 }
 
 p.description {

@@ -21,6 +21,7 @@ export class ProductDetailComponent implements OnInit {
   product: Product;
   settings: Settings;
   noOfItemsCart = 1;
+  selectedProductCount = 1;
 
   constructor(
     private router: Router,
@@ -61,6 +62,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart() {
+    this.selectedProductCount = this.noOfItemsCart;
+
     const orderItem: OrderItem = {
       product: this.product._id,
       quantity: this.noOfItemsCart
@@ -99,6 +102,7 @@ export class ProductDetailComponent implements OnInit {
     $('.modal-backdrop').remove();
     this.noOfItemsCart = 1;
     this.appComponent.loadCart();
+    this.appComponent.showJustAddedModal(this.product, this.selectedProductCount);
   }
 
 }

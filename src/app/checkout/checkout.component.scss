@@ -66,7 +66,6 @@
 .card-body,
 .card-body:hover {
   background-color: #fafafa;
-  padding: 25px 40px;
 }
 
 .fa-paypal {
@@ -120,6 +119,7 @@
 
     a.btn {
       width: 100%;
+      padding: 12px;
     }
 
   }

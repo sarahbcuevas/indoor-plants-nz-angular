@@ -84,7 +84,7 @@
 <button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
 
 <!-- Delete Product Modal -->
-<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true">
+<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true" data-backdrop="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -105,7 +105,7 @@
 </div>
 
 <!-- Delete All Products Modal -->
-<div class="modal fade" id="deleteAllProductsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllProductsTitle" aria-hidden="true">
+<div class="modal fade" id="deleteAllProductsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllProductsTitle" aria-hidden="true" data-backdrop="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -126,7 +126,7 @@
 </div>
 
 <!-- Sort / Filter Modal -->
-<div class="modal fade" id="sortFilterModal" tabindex="-1" role="dialog" aria-labelledby="sortFilterTitle" aria-hidden="true">
+<div class="modal fade" id="sortFilterModal" tabindex="-1" role="dialog" aria-labelledby="sortFilterTitle" aria-hidden="true" data-backdrop="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">

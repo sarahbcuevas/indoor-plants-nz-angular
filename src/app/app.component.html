@@ -16,10 +16,10 @@
                 <div class="dropdown-menu pt-0 pb-0 ml-1" aria-labelledby="searchDropdown" tabindex="-1">
                   <div class="container" *ngIf="(products)?.length > 0 && !isProductsLoading">
                     <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | filter : searchProductText" [routerLink]="['/products', product._id]">
-                      <div *ngIf="product?.image !== null && product?.image !== '' && product?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
-                        <img src="{{ product?.image }}" class="img-thumbnail">
+                      <div *ngIf="product?.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                        <img src="{{ product?.images[0].url }}" class="img-thumbnail">
                       </div>
-                      <div *ngIf="product?.image === null || product?.image === '' || product?.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                      <div *ngIf="product?.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
                         <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                       </div>
                       <div class="col text-left">
@@ -221,3 +221,36 @@
 <ng-template #template>
   <router-outlet></router-outlet>
 </ng-template>
+
+<!-- Just Added to your Cart -->
+<div class="modal fade" id="justAddedModal" tabindex="-1" role="dialog" aria-labelledby="justAddedTitle" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title text-uppercase" id="justAddedTitle">Just added to your cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-3 px-1">
+              <img class="align-self-center img-thumbnail" id="plantImg" alt="Plant image">
+            </div>
+            <div class="col px-2" style="margin: auto;">
+              <span class="product-name">{{ product?.name }}</span>
+            </div>
+            <div class="col-auto px-0">
+              Qty: <span class="quantity">{{ selectedProductCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center pt-0 pb-1">
+        <a type="button" class="btn text-uppercase" [routerLink]="['/cart']" data-dismiss="modal">View Cart</a>
+        <a class="continue-shopping" data-dismiss="modal" role="button">Continue shopping</a>
+      </div>
+    </div>
+  </div>
+</div>

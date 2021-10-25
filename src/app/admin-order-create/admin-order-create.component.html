@@ -58,10 +58,10 @@
                               <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchDropdown">
                                 <div class="container" *ngIf="(products)?.length > 0">
                                     <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | filter : searchProductText" (click)="selectProduct(product)">
-                                        <div *ngIf="product?.image !== null && product?.image !== '' && product?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
-                                            <img src="{{ product?.image }}" class="img-thumbnail">
+                                        <div *ngIf="product?.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <img src="{{ product?.images[0].url }}" class="img-thumbnail">
                                         </div>
-                                        <div *ngIf="product?.image === null || product?.image === '' || product?.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                        <div *ngIf="product?.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
                                             <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                                         </div>
                                         <div class="col text-left">
@@ -384,7 +384,7 @@
 </div>
 
 <!-- Add discount popup -->
-<div class="modal fade" id="addDiscountPopup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="addDiscountPopup" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <form [formGroup]="addDiscountFormGroup">
             <div class="modal-content">
@@ -441,7 +441,7 @@
 </div>
 
 <!-- Add Shipping Popup -->
-<div class="modal fade" id="addShippingPopup" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="addShippingPopup" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
         <form [formGroup]="addShippingFormGroup">
             <div class="modal-content">
@@ -502,7 +502,7 @@
 </div>
 
 <!-- Create a new customer Dialog -->
-<div class="modal fade" id="createCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="createCustomerModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered regular-text" role="document">
         <form [formGroup]="createCustomerFormGroup" class="container">
             <div class="modal-content">
@@ -638,7 +638,7 @@
 </div>
 
 <!-- Edit Customer Dialog -->
-<div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered regular-text" role="document">
         <form [formGroup]="editCustomerFormGroup" class="container">
             <div class="modal-content">
@@ -702,7 +702,7 @@
 </div>
 
 <!-- Edit Shipping Address -->
-<div class="modal fade" id="editShippingAddressModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="editShippingAddressModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered regular-text" role="document">
         <form [formGroup]="editShippingAddressFormGroup" class="container">
             <div class="modal-content">
@@ -798,7 +798,7 @@
 </div>
 
 <!-- View All Tags Dialog -->
-<div class="modal fade" id="viewAllTagsModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="viewAllTagsModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog modal-dialog-centered regular-text" role="document">
         <div class="modal-content">
             <div class="modal-header">
