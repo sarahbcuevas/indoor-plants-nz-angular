@@ -89,7 +89,7 @@
                     </div>
                     <div class="form-group row mb-2 justify-content-center">
                       <div class="col-12 pl-0 pr-0">
-                        <select class="form-control" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
+                        <select class="custom-select" id="country" formControlName="country" (change)="selectCountry($event.target.value)">
                           <option value="" disabled selected>Select Country</option>
                           <option *ngFor="let country of countries; let i=index" [value]="i">{{ country }}</option>
                         </select>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="form-group row mb-2 justify-content-center">
                       <div class="col-12 pl-0 pr-0">
-                        <select class="form-control" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
+                        <select class="custom-select" id="region" formControlName="region" (change)="selectRegion($event.target.value)">
                           <option value="" disabled selected>Select Region</option>
                           <option *ngFor="let region of regions; let i=index" [value]="i">{{ region }}</option>
                         </select>
@@ -105,7 +105,7 @@
                     </div>
                     <div class="form-group row mb-2 justify-content-center">
                       <div class="col-12 pl-0 pr-0">
-                        <select class="form-control" id="city" formControlName="city" (change)="selectCity($event.target.value)">
+                        <select class="custom-select" id="city" formControlName="city" (change)="selectCity($event.target.value)">
                           <option value="" disabled selected>Select City</option>
                           <option *ngFor="let city of cities; let i=index" [value]="i">{{ city }}</option>
                         </select>
@@ -160,23 +160,24 @@
                   <div class="col-12 col-lg-10 justify-content-center">
                     <div class="row border mb-3 justify-content-around">
                       <div class="container px-0 py-0">
-                        <div class="row mx-0 py-1 align-items-center">
+                        <div class="row mx-0 py-1 align-items-center flex-nowrap">
                           <div class="col-auto px-2">
                             <span class="text-muted">Contact</span>
                           </div>
-                          <div class="col px-2 text-left">
-                            <span>{{ userInfoFormGroup.controls.email.value }}<br>{{ userInfoFormGroup.controls.contact.value }}</span>
+                          <div class="col flex-grow-1 px-2 text-left text-truncate">
+                            <span>{{ userInfoFormGroup.controls.email.value }}</span><br>
+                            <span>{{ userInfoFormGroup.controls.contact.value }}</span>
                           </div>
                           <div class="col-auto px-2 text-left">
                             <a class="btn btn-link py-0 px-0 text-green nav-link" href="#customer-information" data-toggle="tab" (click)="continueToInformation()"><u>Change</u></a>
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row px-3 py-1 align-items-center">
+                        <div class="row px-3 py-1 align-items-center flex-nowrap">
                           <div class="col-auto px-2">
                             <span class="text-muted">Ship to</span>
                           </div>
-                          <div class="col px-2 text-left">
+                          <div class="col flex-grow-1 px-2 text-left">
                             <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
                           </div>
                           <div class="col-auto px-2 text-left">
@@ -261,11 +262,11 @@
                   <div class="col-12 col-lg-10 justify-content-center">
                     <div class="row border mb-3 justify-content-around">
                       <div class="container px-0 py-0">
-                        <div class="row px-3 py-1 align-items-center">
+                        <div class="row px-3 py-1 align-items-center flex-nowrap">
                           <div class="col-auto px-2">
                             <span class="text-muted">Contact</span>
                           </div>
-                          <div class="col px-2 text-left">
+                          <div class="col flex-grow-1 px-2 text-left text-truncate">
                             <span>
                               {{ userInfoFormGroup.controls.email.value }}<br>
                               {{ userInfoFormGroup.controls.contact.value }}
@@ -276,11 +277,11 @@
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row px-3 py-1 align-items-center">
+                        <div class="row px-3 py-1 align-items-center flex-nowrap">
                           <div class="col-auto px-2">
                             <span class="text-muted">Ship to</span>
                           </div>
-                          <div class="col px-2 text-left">
+                          <div class="col flex-grow-1 px-2 text-left">
                             <span>{{ userInfoFormGroup.controls.address.value }}, {{ cities[userInfoFormGroup.controls.city.value] }}, {{ regions[userInfoFormGroup.controls.region.value] }}, {{ countries[userInfoFormGroup.controls.country.value] }} {{ userInfoFormGroup.controls.postal.value }}</span>
                           </div>
                           <div class="col-auto px-2 text-left">
@@ -288,11 +289,11 @@
                           </div>
                         </div>
                         <hr class="mt-2 mb-2">
-                        <div class="row px-3 py-1 align-items-center">
+                        <div class="row px-3 py-1 align-items-center flex-nowrap">
                           <div class="col-auto px-2">
                             <span class="text-muted">Method</span>
                           </div>
-                          <div class="col px-2 text-left">
+                          <div class="col  flex-grow-1 px-2 text-left">
                             <span *ngIf="shippingFormGroup.controls.forShipping.value">Standard Shipping <strong>{{ ((baseShippingFee + totalShippingFee)/100).toFixed(2) }} NZD</strong></span>
                             <span *ngIf="!shippingFormGroup.controls.forShipping.value">For Pick Up</span>
                           </div>
