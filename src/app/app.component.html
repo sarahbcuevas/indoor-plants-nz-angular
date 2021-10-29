@@ -142,7 +142,6 @@
   <div class="header">
     <nav class="navbar navbar-expand-md">
       <div class="navbar-brand">
-        <!-- <h6 class="title">Indoor Plants NZ</h6> -->
       </div>
     </nav>
   </div>
@@ -155,27 +154,65 @@
 <div class="wrapper" *ngIf="isAdmin">
     <div class="header">
       <nav class="navbar navbar-expand-md navbar-dark bg-gradient py-2">
-        <div class="navbar-brand">
-          <img src="../assets/white_logo_transparent_background.png" alt="The Foliage Fix">
-        </div>
-        <div class="navbar-profile d-flex align-items-center">
-          <ul class="navbar-nav ml-auto mt-lg-0">
-            <li class="nav-item">
-              <a class="nav-link text-white text-center font-weight-light" href="#">Hello, <u>{{ currentUser?.username }}</u>!</a>
-            </li>
-          </ul>
+        <div class="row mx-0 w-100">
+          <!-- <div class="col-auto py-2" id="sidebar-toggler">
+            <button type="button" class="btn bg-transparent text-dark float-left navbar-toggler navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false">
+              <i class="fas fa-bars py-1 text-white"></i>
+            </button>
+          </div> -->
+          <div class="dropdown" id="sidebar-toggler">
+            <button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-bars py-1 text-white"></i>
+            </button>
+            <div class="dropdown-menu px-3" aria-labelledby="dropdownMenu2">
+              <div class="container-fluid bg-white text-center wrapper">
+                <div class="row content">
+                  <div class="col text-left dashboard pt-3 pl-lg-4" id="sidebar">
+                    <h5 class="head">Dashboard</h5>
+                    <ul class="list-group list-unstyled">
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}"><i class="fas fa-home text-muted mr-1"></i> Overview</li>
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/accounts']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" *ngIf="currentUser?.role === 'superuser'"><i class="fas fa-users-cog text-muted mr-1"></i> Admin Accounts</li>
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/content']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-info-circle text-muted mr-1"></i> Website Content</li>
+                    </ul>
+                    <h5 class="head mt-4">Store</h5>
+                    <ul class="list-group list-unstyled">
+                      <li class="list-group-item bg-transparent"><i class="fas fa-download text-muted mr-1"></i> Orders</li>
+                        <ul class="list-group list-unstyled sub-list mb-1">
+                          <li class="list-group-item bg-transparent sub-list-item" [routerLink]="['/admin/orders']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info" [routerLinkActiveOptions]="{exact:true}">All orders</li>
+                          <li class="list-group-item bg-transparent sub-list-item" [routerLink]="['/admin/orders']" [queryParams]="{archived: 'true'}" routerLinkActive="router-link-active" routerLinkActive="active-link text-info">Archived</li>
+                        </ul>
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/categories']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fab fa-elementor text-muted mr-1"></i> Categories</li>
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/products']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-tags text-muted mr-1"></i> Products</li>
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/customers']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-user text-muted mr-1"></i> Customers</li>
+                    </ul>
+                    <h5 class="head mt-4">Account</h5>
+                    <ul class="list-group list-unstyled">
+                      <li class="list-group-item bg-transparent" [routerLink]="['/admin/settings']" routerLinkActive="router-link-active" routerLinkActive="active-link text-info"><i class="fas fa-cog text-muted mr-1"></i> Settings</li>
+                      <li class="list-group-item bg-transparent" (click)="logout()"><i class="fas fa-sign-out-alt text-muted mr-1"></i> Logout</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col navbar-brand pl-1">
+            <img src="../assets/white_logo_transparent_background_horizontal.png" alt="The Foliage Fix">
+          </div>
+          <div class="col-auto align-items-center px-1">
+            <ul class="navbar-nav ml-auto mt-lg-0">
+              <li class="nav-item">
+                <a class="text-white text-center align-middle" [routerLink]="['/admin/settings']"><i class="fas fa-cog"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="text-white text-center align-middle" (click)="logout()"><i class="fas fa-sign-out-alt"></i></a>
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
     </div>
     <div class="content">
       <div class="container-fluid bg-white text-center wrapper">
-        <div class="row" id="sidebar-row">
-          <div class="col-12 col-md-4 col-lg-3 bg-white py-2" id="sidebar-toggler">
-            <button type="button" class="btn bg-transparent text-dark float-left navbar-toggler navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false">
-              <i class="fas fa-bars"></i>
-            </button>
-          </div>
-        </div>
         <div class="row content">
           <div class="col-12 col-md-4 col-lg-3 text-left dashboard pt-3 pl-lg-4 bg-light collapse navbar-collapse" id="sidebar">
             <h5 class="head">Dashboard</h5>

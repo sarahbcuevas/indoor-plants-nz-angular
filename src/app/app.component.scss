@@ -60,16 +60,6 @@
   }
 }
 
-.navbar-profile {
-  display: flex!important;
-  flex-basis: auto;
-  flex-grow: 1;
-
-  .nav-link {
-    letter-spacing: 2px;
-  }
-}
-
 .nav-link {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
@@ -123,10 +113,10 @@
     .navbar-brand {
         padding-top: 1px;
         padding-bottom: 1px;
+        margin: auto;
 
         img {
-            width: 30%;
-            max-width: 200px;
+            max-width: 120px;
         }
     }
 
@@ -138,6 +128,19 @@
         .nav-link:hover {
             background: #262626;
             text-decoration: none;
+        }
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+        height: 100%;
+
+        .nav-item {
+            padding: 8px;
+
+            a {
+                font-size: 1.1rem;
+            }
         }
     }
 }
@@ -167,27 +170,30 @@
     }
 }
 
-// #sidebar .collapse {
+#sidebar .collapse {
 
-//   @media (min-width: 768px) {
-//       display: block;
-//   }
-// }
+  @media (min-width: 768px) {
+      display: block;
+  }
+}
 
-// #sidebar-row {
-//   @media (min-width: 768px) {
-//       display: none;
-//   }
-// }
+#sidebar-toggler {
+  display: block;
+  margin: auto;
 
-// #sidebar-toggler {
-//   @media (max-width: 767.98px) {
-//       visibility: visible;
-//   }
-//   @media (min-width: 768px) {
-//       visibility: collapse;
-//   }
-// }
+ .dropdown-toggle::after {
+    display: none;
+  }
+
+  div.dropdown-menu {
+      width: max-content;
+  }
+
+  @media (min-width: 768px) {
+      display: none;
+  }
+}
+
 
 #subscribeEmailInput {
     border: none;
