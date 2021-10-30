@@ -1,8 +1,11 @@
-<h6 class="admin-title mb-3">Manage Orders</h6>
+<h6 class="admin-title mb-1 mb-md-3">Manage Orders</h6>
 <div class="container mb-3">
+  <div class="d-block d-md-none" id="createOrderBtn">
+    <button type="button" class="btn btn-info btn-sm pointer" [routerLink]="['/admin/orders/create']"><i class="fas fa-plus"></i></button>
+  </div>
   <div class="row">
-    <div class="col text-left">
-      <a class="btn btn-link text-muted mr-2 regular-text"><i class="fas fa-download mr-2"></i> Export</a>
+    <div class="col text-left px-0">
+      <a class="btn btn-link text-muted mr-2 pl-0 regular-text"><i class="fas fa-download mr-2"></i> Export</a>
       <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         More actions
       </button>
@@ -18,27 +21,29 @@
         <a class="dropdown-item" (click)="permanentlyDeleteOrders()"><i class="fas fa-trash-alt mr-2"></i> Permanently delete order</a>
       </div>
     </div>
-    <div class="col-auto text-right">
+    <div class="col-auto text-right px-0 d-none d-md-block">
       <button type="button" class="btn btn-info btn-sm" [routerLink]="['/admin/orders/create']"><i class="fas fa-plus"></i> Create Order</button>
     </div>
   </div>
   <div class="row mt-3 bg-white border">
-    <nav>
-      <div class="nav" id="nav-tab" role="tablist">
-        <a class="nav-link pl-4 pr-4" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" [ngClass]="{'active' : FilterMode == FilterType.ALL}" [attr.aria-selected]="FilterMode == FilterType.ALL" (click)="selectFilter(FilterType.ALL)">All</a>
-        <a class="nav-link pl-4 pr-4" id="nav-open-tab" data-toggle="tab" href="#nav-open" role="tab" aria-controls="nav-open" [ngClass]="{'active' : FilterMode == FilterType.OPEN}" [attr.aria-selected]="FilterMode == FilterType.OPEN" *ngIf="!isArchived" (click)="selectFilter(FilterType.OPEN)">Open</a>
-        <a class="nav-link pl-4 pr-4" id="nav-unfulfilled-tab" data-toggle="tab" href="#nav-unfulfilled" role="tab" aria-controls="nav-unfulfilled" [ngClass]="{'active' : FilterMode == FilterType.UNFULFILLED}" [attr.aria-selected]="FilterMode == FilterType.UNFULFILLED" (click)="selectFilter(FilterType.UNFULFILLED)">Unfulfilled</a>
-        <a class="nav-link pl-4 pr-4" id="nav-unpaid-tab" data-toggle="tab" href="#nav-unpaid" role="tab" aria-controls="nav-unpaid" [ngClass]="{'active' : FilterMode == FilterType.UNPAID}" [attr.aria-selected]="FilterMode == FilterType.UNPAID" (click)="selectFilter(FilterType.UNPAID)">Unpaid</a>
-        <a class="nav-link pl-4 pr-4" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" [ngClass]="{'active' : FilterMode == FilterType.COMPLETED}" [attr.aria-selected]="FilterMode == FilterType.COMPLETED" (click)="selectFilter(FilterType.COMPLETED)">Completed</a>
-      </div>
-    </nav>
+    <div class="nav-scroller">
+      <nav>
+        <div class="nav" id="nav-tab" role="tablist">
+          <a class="nav-link px-3 px-md-4" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" [ngClass]="{'active' : FilterMode == FilterType.ALL}" [attr.aria-selected]="FilterMode == FilterType.ALL" (click)="selectFilter(FilterType.ALL)">All</a>
+          <a class="nav-link px-3 px-md-4" id="nav-open-tab" data-toggle="tab" href="#nav-open" role="tab" aria-controls="nav-open" [ngClass]="{'active' : FilterMode == FilterType.OPEN}" [attr.aria-selected]="FilterMode == FilterType.OPEN" *ngIf="!isArchived" (click)="selectFilter(FilterType.OPEN)">Open</a>
+          <a class="nav-link px-3 px-md-4" id="nav-unfulfilled-tab" data-toggle="tab" href="#nav-unfulfilled" role="tab" aria-controls="nav-unfulfilled" [ngClass]="{'active' : FilterMode == FilterType.UNFULFILLED}" [attr.aria-selected]="FilterMode == FilterType.UNFULFILLED" (click)="selectFilter(FilterType.UNFULFILLED)">Unfulfilled</a>
+          <a class="nav-link px-3 px-md-4" id="nav-unpaid-tab" data-toggle="tab" href="#nav-unpaid" role="tab" aria-controls="nav-unpaid" [ngClass]="{'active' : FilterMode == FilterType.UNPAID}" [attr.aria-selected]="FilterMode == FilterType.UNPAID" (click)="selectFilter(FilterType.UNPAID)">Unpaid</a>
+          <a class="nav-link px-3 px-md-4" id="nav-completed-tab" data-toggle="tab" href="#nav-completed" role="tab" aria-controls="nav-completed" [ngClass]="{'active' : FilterMode == FilterType.COMPLETED}" [attr.aria-selected]="FilterMode == FilterType.COMPLETED" (click)="selectFilter(FilterType.COMPLETED)">Completed</a>
+        </div>
+      </nav>
+    </div>
   </div>
   <div class="row pt-4 bg-white border border-bottom-0">
-    <div class="col">
+    <div class="col-12 col-lg">
       <div class="input-group">
         <div class="input-group-prepend">
           <div class="dropdown">
-            <button class="btn regular-input dropdown-toggle" type="button" type="button" id="filterButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter orders</button>
+            <button class="btn regular-input dropdown-toggle" type="button" type="button" id="filterButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter</button>
             <div class="dropdown-menu pl-2 pr-2" aria-labelledby="filterButton">
               <a class="dropdown-item form-check" (click)="filterBy(ORDER_ID)">
                 <input class="form-check-input" type="radio" name="filterBy" id="orderId" [value]="ORDER_ID" checked>
@@ -62,12 +67,12 @@
           </div>
         </div>
         <div class="input-group-prepend">
-            <span class="input-group-text text-muted" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
+            <span class="input-group-text text-muted border-right-0" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
         </div>
         <div class="custom-file">
           <input type="text" class="search custom-input pl-1" placeholder="Search orders" [(ngModel)]="searchText" autocomplete="off">
         </div>
-        <div class="input-group-append">
+        <!-- <div class="input-group-append">
           <div class="dropdown" *ngIf="!isArchived">
             <button class="btn regular-input dropdown-toggle border-right-0" type="button" id="orderStatusButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Order status</button>
             <div class="dropdown-menu pl-2 pr-2" aria-labelledby="orderStatusButton">
@@ -120,15 +125,15 @@
               </a>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="col-auto text-right">
-      <div class="row align-items-center">
+    <div class="col-12 pt-2 pt-lg-0 col-lg-auto text-right">
+      <div class="row justify-content-around justify-content-md-start">
         <form [formGroup]="sortFormGroup">
           <div class="col-auto">
-            <label for="sortBy" class="mr-2">Sort by</label>
-            <select class="btn regular-input pl-3 pr-4" id="sortBy" formControlName="sortBy" (change)="sortOrders()">
+            <label for="sortBy" class="mr-2 d-none d-md-inline-block">Sort by</label>
+            <select class="btn regular-input px-2 pl-md-3 pr-md-4" id="sortBy" formControlName="sortBy" (change)="sortOrders()">
               <option class="mt-2 mb-3 regular-text text-muted font-weight-bold" disabled>Sort by</option>
               <option [value]="SortType.NEWEST">{{ SortType.NEWEST }}</option>
               <option [value]="SortType.OLDEST">{{ SortType.OLDEST }}</option>
@@ -137,11 +142,81 @@
             </select>
           </div>
         </form>
+        <div class="col-auto d-inline-block d-md-none">
+          <button type="button" class="btn btn-outline-dark" (click)="showSelect()">
+            <i class="far fa-check-square mr-1" *ngIf="!isSelectVisible"></i>
+            <i class="far fa-square mr-1" *ngIf="isSelectVisible"></i> Select
+          </button>
+        </div>
       </div>
     </div>
   </div>
   <div class="row pt-1 bg-white border border-top-0">
-    <div class="table-responsive">
+    <div class="container-fluid d-block d-md-none pt-3">
+      <div class="row border-top py-3 on-hover order-listitem" [routerLink]="isSelectVisible ? [] : ['/admin/orders', order._id]" *ngFor="let order of orders | filterOrder : SearchBarFilter : searchText; let i=index" [id]="order._id">
+        <div class="col-auto" *ngIf="isSelectVisible">
+          <input type="checkbox" [id]="order?._id" class="checkbox" [value]="isOrderSelected(order?._id)" (click)="toggleSelection(order)">
+        </div>
+        <div class="col text-left">
+          <a class="underline pointer text-primary"><strong>#{{ order.code }}</strong></a>
+          <br>
+          <span style="font-weight: 500;">{{ order.customer.firstname }} {{ order.customer.lastname }}</span>
+          <br>
+          <span class="badge-pill badge-light align-middle" *ngIf="order.paymentStatus == Payment_Status.PAID"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.paymentStatus }}</span>
+          <span class="badge-pill badge-pending align-middle" *ngIf="order.paymentStatus == Payment_Status.PENDING"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.paymentStatus }}</span>
+          <br>
+          <div class="mt-1">
+            <span class="badge-pill badge-light align-middle" *ngIf="order.fulfillmentStatus == Fulfillment_Status.FULFILLED"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+            <span class="badge-pill badge-warning align-middle" *ngIf="order.fulfillmentStatus == Fulfillment_Status.UNFULFILLED"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+          </div>
+        </div>
+        <div class="col text-right text-muted">
+          <span>{{ order.createdAt | date:'MMM d, y' }}</span>
+          <br>
+          <span>NZD {{ (order.total/100).toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid d-none d-md-block d-lg-none pt-3">
+      <div class="row justify-content-around">
+        <div class="col-auto">
+          <input type="checkbox" id="toggleAll" (click)="toggleAll()">
+        </div>
+        <div class="col text-left">
+          <strong>Order</strong>
+        </div>
+        <div class="col text-left">
+          <strong>Fulfillment</strong>
+        </div>
+        <div class="col text-right">
+          <strong>Total</strong>
+        </div>
+      </div>
+      <div class="row border-top py-3 on-hover" *ngFor="let order of orders | filterOrder : SearchBarFilter : searchText; let i=index">
+        <div class="col-auto">
+          <input type="checkbox" [id]="order?._id" class="checkbox" [value]="isOrderSelected(order?._id)" (click)="toggleSelection(order)">
+        </div>
+        <div class="col text-left">
+          <a class="underline pointer text-primary"><strong>#{{ order.code }}</strong></a>
+          <br>
+          <span style="font-weight: 500;">{{ order.customer.firstname }} {{ order.customer.lastname }}</span>
+          <br>
+          <span class="badge-pill badge-light align-middle" *ngIf="order.paymentStatus == Payment_Status.PAID"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.paymentStatus }}</span>
+          <span class="badge-pill badge-pending align-middle" *ngIf="order.paymentStatus == Payment_Status.PENDING"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.paymentStatus }}</span>
+          <br>
+        </div>
+        <div class="col">
+          <span class="badge-pill badge-light align-middle height-fit-content" *ngIf="order.fulfillmentStatus == Fulfillment_Status.FULFILLED"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+          <span class="badge-pill badge-warning align-middle height-fit-content" *ngIf="order.fulfillmentStatus == Fulfillment_Status.UNFULFILLED"><i class="far fa-circle text-danger small-text mr-1"></i>{{ order.fulfillmentStatus }}</span>
+        </div>
+        <div class="col text-right text-muted">
+          <span>{{ order.createdAt | date:'MMM d, y' }}</span>
+          <br>
+          <span>NZD {{ (order.total/100).toFixed(2) }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive d-none d-lg-block">
       <table class="table table-hover">
         <thead>
           <tr>
@@ -155,10 +230,10 @@
           </tr>
         </thead>
         <tbody *ngIf="(orders)?.length > 0">
-          <tr *ngFor="let order of orders | filterOrder : SearchBarFilter : searchText; let i=index">
+          <tr class="on-hover" *ngFor="let order of orders | filterOrder : SearchBarFilter : searchText; let i=index">
             <td class="pr-0"><input type="checkbox" [id]="order?._id" class="checkbox" [value]="isOrderSelected(order?._id)" (click)="toggleSelection(order)"></td>
             <td scope="row" [routerLink]="['/admin/orders', order._id]" routerLinkActive="router-link-active" routerLink="/admin/orders/{{order._id}}" routerLinkActive="router-link-active" class="underline pointer text-primary"><strong>#{{ order.code }}</strong></td>
-            <td>{{ order.createdAt | date:'MM/dd/yyyy h:mma' }}</td>
+            <td>{{ order.createdAt | date:'MMM d, y' }}</td>
             <td>{{ order.customer.firstname }} {{ order.customer.lastname }}</td>
             <td>
               <span class="badge-pill badge-light align-middle" *ngIf="order.paymentStatus == Payment_Status.PAID"><i class="fas fa-circle text-light-gray small-text mr-1"></i>{{ order.paymentStatus }}</span>

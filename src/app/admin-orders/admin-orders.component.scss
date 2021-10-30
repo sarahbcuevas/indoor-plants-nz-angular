@@ -8,6 +8,35 @@
     border-bottom: 3px solid #17a2b8;
 }
 
+.nav-scroller {
+    height: 2.75rem;
+    overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    margin-top: -1px;
+    text-align: center;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.on-hover:hover {
+    background-color: whitesmoke;
+}
+
+.on-hover:active:hover {
+    background-color: whitesmoke;
+}
+
+.height-fit-content {
+    height: fit-content;
+}
+
 .table th {
     border-top: 0;
 }
@@ -29,11 +58,29 @@
     height: 100%;
     border: 1px solid #6c757d;
     border-left: 0pt;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
 }
 
 .regular-input {
     border: 1px solid #6c757d;
     background-color: white;
+}
+
+#createOrderBtn {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 18px;
+    z-index: 1000;
+
+    button {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background-color: #17a2b8;
+        opacity: 1;
+    }
 }
 
 #filterButton {

@@ -32,6 +32,7 @@ export class AdminOrdersComponent implements OnInit {
   OrderItems: [OrderItem];
   orders: Order[];
   isOrdersLoading: boolean;
+  isSelectVisible = false;
 
   Payment_Status = PaymentStatus;
   Fulfillment_Status = FulfillmentStatus;
@@ -391,6 +392,10 @@ export class AdminOrdersComponent implements OnInit {
   selectFilter(filter: string) {
     this.FilterMode = filter;
     this.getOrders();
+  }
+
+  showSelect() {
+    this.isSelectVisible = !this.isSelectVisible;
   }
 
   sortOrders() {
