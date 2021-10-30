@@ -57,9 +57,13 @@
     width: 100%;
     height: 100%;
     border: 1px solid #6c757d;
-    border-left: 0pt;
+    border-left: 0;
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     border-top-right-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
+    background-color: white;
 }
 
 .regular-input {
