@@ -42,6 +42,23 @@
     border-right: 0pt;
 }
 
+#searchCustomerDropdown {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    margin-left: -1px;
+}
+
+#searchDropdown {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
 #searchInput, #discountInput {
     border-top-right-radius: .25rem;
     border-bottom-right-radius: .25rem;

@@ -1,4 +1,4 @@
-<div class="container bg-gray pl-2 pr-2 pt-2 pb-3 border-bottom">
+<div class="container bg-gray px-0 px-md-2 pt-md-2 pb-3 border-bottom">
     <div class="row bg-white border pt-1 pb-1 ml-1 mr-1 mb-3">
         <div class="col text-left">
             <span class="title text-secondary align-middle">Unsaved order</span>
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="row text-left">
-        <div class="col-sm-12 col-md">
+        <div class="col-sm-12 col-lg">
             <div class="container bg-white border pt-3">
                 <div class="row mb-3">
                     <div class="col">
@@ -54,36 +54,36 @@
                                 <span class="input-group-text" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
                             </div>
                             <div class="custom-file dropdown">
-                              <input type="text" class="search custom-input pl-2 dropdown-toggle" id="searchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search products" [(ngModel)]="searchProductText">
-                              <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchDropdown">
-                                <div class="container" *ngIf="(products)?.length > 0">
-                                    <a class="row border-bottom pl-3 pr-3 pt-2 pb-2 product-item" *ngFor="let product of products | filter : searchProductText" (click)="selectProduct(product)">
-                                        <div *ngIf="product?.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
-                                            <img src="{{ product?.images[0].url }}" class="img-thumbnail">
+                                <input type="text" class="search custom-input pl-2 dropdown-toggle" id="searchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search products" [(ngModel)]="searchProductText">
+                                <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchDropdown">
+                                    <div class="container" *ngIf="(products)?.length > 0">
+                                        <a class="row border-bottom px-2 py-2 product-item" *ngFor="let product of products | filter : searchProductText" (click)="selectProduct(product)">
+                                            <div *ngIf="product?.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="{{ product?.images[0].url }}" class="img-thumbnail">
+                                            </div>
+                                            <div *ngIf="product?.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                                <img src="../../assets/default-plant.jpg" class="img-thumbnail">
+                                            </div>
+                                            <div class="col flex-grow-1 text-left">
+                                                <span class="h6 text-blue">{{ product?.name }}</span><br>
+                                                <span class="text-muted" *ngIf="product?.forPickupOnly"><em>For Pickup Only</em><br></span>
+                                                <span class="text-danger regular-text" *ngIf="product?.stock <= 0"><em><strong>Out of Stock!</strong></em></span>
+                                            </div>
+                                            <div class="col-auto text-center px-0 px-md-2">
+                                                <span class="text-muted ml-2 align-self-center">{{ (product?.price/100).toFixed(2) }}</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="container pt-2 pb-2" *ngIf="(products)?.length === 0">
+                                        <div class="row justify-content-center">
+                                            <span class="align-middle">No products yet.</span>
                                         </div>
-                                        <div *ngIf="product?.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
-                                            <img src="../../assets/default-plant.jpg" class="img-thumbnail">
-                                        </div>
-                                        <div class="col text-left">
-                                            <span class="h6 text-blue">{{ product?.name }}</span><br>
-                                            <span class="text-muted" *ngIf="product?.forPickupOnly"><em>For Pickup Only</em><br></span>
-                                            <span class="text-danger regular-text" *ngIf="product?.stock <= 0"><em><strong>Out of Stock!</strong></em></span>
-                                        </div>
-                                        <div class="col text-center">
-                                            <span class="text-muted ml-2 align-self-center">{{ (product?.price/100).toFixed(2) }}</span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="container pt-2 pb-2" *ngIf="(products)?.length === 0">
-                                    <div class="row justify-content-center">
-                                        <span class="align-middle">No products yet.</span>
                                     </div>
                                 </div>
-                              </div>
                             </div>
-                            <div class="input-group-append">
+                            <!-- <div class="input-group-append">
                                <button class="btn btn-outline-secondary regular-text" type="button">Browse products</button>
-                            </div>
+                            </div> -->
                           </div>
                     </div>
                 </div>
@@ -94,60 +94,54 @@
                                 <div class="col pl-0 pr-0">
                                     <div class="container">
                                         <div class="row border-bottom pl-3 pr-3 pt-2 pb-3" *ngFor="let orderItem of orderItems; let i=index">
-                                            <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <div *ngIf="orderItem?.product.image !== null && orderItem?.product.image !== '' && orderItem?.product.image !== undefined" class="col-2 px-0">
                                                 <img src="{{ orderItem?.product.image }}" class="img-thumbnail">
                                             </div>
-                                            <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <div *ngIf="orderItem?.product.image === null || orderItem?.product.image === '' || orderItem?.product.image === undefined" class="col-2 px-0">
                                                 <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                                             </div>
-                                            <div class="col text-left">
+                                            <div class="col flex-grow-1 text-left pr-2">
                                                 <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
                                                 <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em><br></span>
                                                 <span class="text-muted" *ngIf="!orderItem?.product.forPickupOnly && orderItem?.product.deliveryFee"><em>Shipping Fee: {{ (orderItem?.product.deliveryFee/100).toFixed(2) }}</em><br></span>
+                                                <span class="text-muted regular-text">NZD {{ (orderItem?.product.price/100).toFixed(2) }}</span><br>
+                                                <u><a class="text-green pointer regular-text" (click)="unselectProduct(i, orderItem?.product)">Remove</a></u>
+                                            </div>
+                                            <div class="col-3 col-md-2 text-left px-2">
+                                                <span class="regular-text">Qty</span><br>
+                                                <input type="number" class="form-control form-control-sm regular-input text-center" id="orderitem-quantity" [value]="orderItem?.quantity" [(ngModel)]="orderItem.quantity" (change)="calculateBill()" min="0" [max]="orderItem?.product.stock">
                                                 <span class="text-muted regular-text">Stock: {{ orderItem?.product.stock }}</span>
                                             </div>
-                                            <div class="col-1 text-center">
-                                                <span class="text-muted ml-2 align-self-center">{{ (orderItem?.product.price/100).toFixed(2) }}</span>
-                                            </div>
-                                            <div class="col-1 text-center pl-0 pr-0">
-                                                <span>x</span>
-                                            </div>
-                                            <div class="col-1 text-center pl-0 pr-0">
-                                                <input type="text" class="form-control form-control-sm regular-input text-center" id="orderitem-quantity" [value]="orderItem?.quantity" [(ngModel)]="orderItem.quantity" (change)="calculateBill()" min="0" [max]="orderItem?.product.stock">
-                                            </div>
-                                            <div class="col-1">
-                                                {{ ((orderItem?.product.price * orderItem?.quantity)/100).toFixed(2) }}
-                                            </div>
-                                            <div class="col-1 text-right pl-0 pr-0">
-                                                <button type="button" class="btn btn-sm btn-link text-danger pt-0" (click)="unselectProduct(i, orderItem?.product)"><i class="fas fa-minus-circle"></i></button>
+                                            <div class="col-2 text-right pl-1">
+                                                <span>{{ ((orderItem?.product.price * orderItem?.quantity)/100).toFixed(2) }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row pt-2">
-                                <div class="col pl-0 pr-0">
+                            <div class="row flex-column-reverse flex-md-row">
+                                <div class="col-12 col-md pl-0 pr-0">
                                     <div class="container">
                                         <div class="row justify-content-center mb-1">
                                             <label for="notes" class="col text-left mb-0 regular-text">Notes</label>
                                         </div>
                                         <div class="row">
-                                            <div class="col pr-0">
+                                            <div class="col">
                                               <input type="text" class="custom-input regular-input" id="notes" [(ngModel)]="notes" placeholder="Add a note">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col text-right pr-0">
+                                <div class="col-12 col-md text-right pt-2 pt-md-0">
                                     <div class="container">
                                         <div class="row mb-2">
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <button class="btn btn-link text-blue pl-0 pr-0 pt-0 pb-0" data-toggle="modal" data-target="#addDiscountPopup">Add discount</button>
                                                 <div class="row text-right mt-0" *ngIf="discountReason">
                                                     <span class="col text-muted regular-text"><em>{{ discountReason }}</em></span>
                                                 </div>
                                             </div>
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <span *ngIf="discountInput <= 0 || addDiscountError != ''">--</span>
                                                 <div *ngIf="(discountInput > 0 && addDiscountError == '')">
                                                     (
@@ -159,29 +153,29 @@
                                             </div>
                                         </div>
                                         <div class="row mb-2">
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <span class="text-muted">Subtotal</span>
                                             </div>
-                                            <div class="col">NZ$ {{ (subTotal/100).toFixed(2) }}</div>
+                                            <div class="col px-0">NZ$ {{ (subTotal/100).toFixed(2) }}</div>
                                         </div>
                                         <div class="row mb-2">
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <button class="btn btn-link text-blue pl-0 pr-0 pt-0 pb-0" data-toggle="modal" data-target="#addShippingPopup">Add shipping</button>
                                                 <div class="row text-right mt-0" *ngIf="customShippingName">
                                                     <span class="col text-muted regular-text"><em>{{ customShippingName }}</em></span>
                                                 </div>
                                             </div>
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <span *ngIf="shippingFeeMethod == Shipping_Fee_Method.PICKUP" class="text-muted"><em>(For pickup)</em></span>
                                                 <span *ngIf="shippingFeeMethod == Shipping_Fee_Method.FREE" class="text-muted"><em>(Free shipping)</em></span>
                                                 <span *ngIf="totalShippingFee > 0">NZ$ {{ (totalShippingFee/100).toFixed(2) }} </span>
                                             </div>
                                         </div>
                                         <div class="row mb-2">
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <strong>Total</strong>
                                             </div>
-                                            <div class="col">
+                                            <div class="col px-0">
                                                 <strong>NZ$ {{ (totalBill/100).toFixed(2) }}</strong>
                                             </div>
                                         </div>
@@ -191,30 +185,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="row border-bottom pt-3 pb-3">
-                    <div class="col">
+                <!-- <div class="row border-bottom pt-3 pb-3">
+                    <div class="col-auto">
                         <i class="far fa-file-alt mr-3"></i><span class="text-uppercase sub-title">Email Invoice</span>
                     </div>
                     <div class="col text-right">
                         <button tyoe="button" class="btn btn-sm btn-light btn-outline-secondary" disabled>Email Invoice</button>
                     </div>
-                </div>
+                </div> -->
                 <div class="row border-bottom pt-3 pb-3 align-items-center">
-                    <div class="col align-items-center">
+                    <div class="col-auto align-items-center">
                         <i class="far fa-file-alt mr-3"></i><span class="text-uppercase sub-title">Accept Payment</span>
                     </div>
-                    <div class="col pl-0 pr-0 text-muted regular-text">
-                        <span *ngIf="paymentStatus == PAYMENT_STATUS.PENDING"><i class="fas fa-check text-green mr-1"></i> Marked as pending</span>
-                        <span *ngIf="paymentStatus == PAYMENT_STATUS.PAID"><i class="fas fa-check text-green mr-1"></i> Marked as paid</span>
-                    </div>
-                    <div class="col-5 text-right">
-                        <button type="button" class="btn btn-sm mr-2" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PAID) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPaid()">Mark as paid</button>
-                        <button type="button" class="btn btn-sm" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PENDING) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPending()">Mark as pending</button>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-sm my-1 mr-2" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PAID) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPaid()">Mark as paid</button>
+                        <button type="button" class="btn btn-sm my-1" [ngClass]="[(paymentStatus === PAYMENT_STATUS.PENDING) ? 'btn-primary' : 'btn-light']" [disabled]="(orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined)" (click)="markAsPending()">Mark as pending</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-4 pl-0">
+        <div class="col-sm-12 col-lg-5 col-xl-4 pl-lg-0 pt-3 pt-lg-0">
             <div class="container bg-white border pl-3 pt-3" *ngIf="selectedCustomer">
                 <div class="row mb-3">
                     <div class="col">
@@ -271,7 +261,7 @@
                 </div>
                 <div class="row pt-3 pb-2 align-items-center">
                     <div class="col text-uppercase sub-title text-left"><strong>Billing Address</strong></div>
-                    <div class="col-2 text-right text-primary">Edit</div>
+                    <!-- <div class="col-2 text-right text-primary">Edit</div> -->
                 </div>
                 <div class="row pb-3 border-bottom">
                     <div class="col text-muted">
@@ -295,24 +285,24 @@
                                 <input type="text" class="search custom-input pl-2" id="searchCustomerDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Search customers" required>
                                 <div class="dropdown-menu pt-0 pb-0" aria-labelledby="searchCustomerDropdown">
                                     <div class="container pt-2 pb-2 border-bottom bg-info text-white" data-toggle="modal" data-target="#createCustomerModal">
-                                        <div class="row justify-content-center">
-                                            <div class="col-3 col-sm-3 col-md-2 col-lg-2 pl-4 pr-4">
+                                        <div class="row px-2 align-items-center">
+                                            <div class="col-2 px-0 text-center">
                                                 <span><i class="fas fa-user-plus"></i></span>
                                             </div>
-                                            <div class="col text-left">
+                                            <div class="col-10 pr-0 text-left">
                                                 <span class="regular-text">Create a new customer</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="container" *ngIf="(customers)?.length > 0">
-                                        <a class="row border-bottom pl-2 pr-2 pt-2 pb-3 product-item align-items-center" (click)="selectCustomer(customer)" *ngFor="let customer of customers | filter : searchCustomerText">
-                                            <div *ngIf="customer?.image !== null && customer?.image !== '' && customer?.image !== undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                        <a class="row border-bottom pl-2 pr-2 py-2 product-item align-items-center" (click)="selectCustomer(customer)" *ngFor="let customer of customers | filter : searchCustomerText">
+                                            <div *ngIf="customer?.image !== null && customer?.image !== '' && customer?.image !== undefined" class="col-2 pl-0 pr-0">
                                                 <img src="{{ customer?.image }}" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
                                             </div>
-                                            <div *ngIf="customer?.image === null || customer?.image === '' || customer?.image === undefined" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                                            <div *ngIf="customer?.image === null || customer?.image === '' || customer?.image === undefined" class="col-2 pl-0 pr-0">
                                                 <img src="../../assets/defaultprofileimage.svg" class="img-thumbnail border-0 pl-0 pr-0 pt-0 pb-0">
                                             </div>
-                                            <div class="col text-left pl-0 pr-0">
+                                            <div class="col-10 text-left px-1">
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col">
@@ -460,7 +450,7 @@
                                 <input class="form-check-input" type="radio" name="shippingFeeMethod" formControlName="shippingFeeMethod" id="standard" [value]="Shipping_Fee_Method.STANDARD">
                                 <label class="form-check-label" for="standard">
                                 Standard shipping<br>
-                                <span class="text-muted regular-text"><em>Based on per item's shipping fee <strong>NZ$ {{ (baseShippingFee/100).toFixed(2) }}</strong></em></span>
+                                <span class="text-muted regular-text"><em>Base shipping fee plus item's shipping fee <strong>NZ$ {{ (baseShippingFee/100).toFixed(2) }}</strong></em></span>
                                 </label>
                             </div>
                         </li>
