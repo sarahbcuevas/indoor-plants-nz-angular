@@ -81,11 +81,11 @@
             <div class="col pt-3">
               <div class="container">
               <div class="row">
-                <div class="col pl-0">
+                <div class="col-12 col-lg pl-0">
                   <span class="title">Order Details</span>
                   <span class="title text-muted"> / #{{ order?.code }}</span>
                 </div>
-                <div class="col pr-0 text-right text-blue">
+                <div class="col-12 col-lg px-0 text-left text-lg-right text-blue">
                   <span class="order-id">Order ID No.: {{ order?._id }}</span>
                 </div>
               </div>
@@ -96,10 +96,10 @@
                 </div>
               </div>
               <div class="row mt-3 mb-3">
-                <div class="col">
+                <div class="col px-0">
                   <i class="fas fa-clipboard-check text-blue mr-2"></i><span class="status"><strong> {{ order?.fulfillmentStatus }}</strong></span>
                 </div>
-                <div class="col text-right">
+                <div class="col px-0 text-right">
                   <div class="dropdown">
                     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       More Actions
@@ -128,40 +128,41 @@
                 <div class="row justify-content-center align-items-center" *ngIf="orderItems?.length > 0">
                   <div class="container">
                     <div class="row justify-content-around align-items-center mb-1 pb-1 border-bottom" *ngFor="let orderItem of orderItems; let i=index">
-                      <div *ngIf="orderItem?.product.images.length > 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                      <div *ngIf="orderItem?.product.images.length > 0" class="col-2 pl-0 pr-0">
                         <img src="{{ orderItem?.product.images[0].url }}" class="img-thumbnail">
                       </div>
-                      <div *ngIf="orderItem?.product.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2 pl-0 pr-0">
+                      <div *ngIf="orderItem?.product.images.length == 0" class="col-2 pl-0 pr-0">
                         <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                       </div>
                       <div class="col text-left">
                         <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
                         <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em></span>
+                        <span class="text-muted regular-text d-inline-block d-md-none">{{ (orderItem?.product.price/100).toFixed(2) }} x {{ orderItem?.quantity }}</span>
                       </div>
-                      <div class="col text-center">
+                      <div class="col text-center d-none d-md-block">
                         <span class="text-muted ml-2">{{ (orderItem?.product.price/100).toFixed(2) }} x {{ orderItem?.quantity }}</span>
                       </div>
-                      <div class="col-3 align-middle text-right">NZD {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}</div>
+                      <div class="col-4 col-md-3 pl-0 pr-2 align-middle text-right">NZD {{ (orderItem?.product.price * orderItem?.quantity / 100).toFixed(2) }}</div>
                     </div>
                   </div>
                 </div>
                 <div class="row justify-content-center mt-2">
                   <div class="col-12 col-md-7 col-lg-7 offset-md-5 offset-lg-5 pr-0">
-                    <table class="table table-borderless text-right regular-text">
+                    <table class="table table-borderless text-right">
                       <tbody>
                         <tr>
-                          <td scope="row" class="regular-text pt-1 pb-1">Sub-total</td>
-                          <td class="pt-1 pb-1">NZD {{ (subTotal/100).toFixed(2) }}</td>
+                          <td scope="row" class="pt-1 pb-1">Sub-total</td>
+                          <td class="pt-1 pb-1 pr-2">NZD {{ (subTotal/100).toFixed(2) }}</td>
                         </tr>
                         <tr>
-                          <td scope="row" class="regular-text pt-1 pb-1 text-right">
+                          <td scope="row" class="pt-1 pb-1 text-right">
                             <span class="text-blue">Discount</span>
                             <div class="row text-right" *ngIf="order?.discount">
                               <span class="col text-muted"><em>{{ order?.discount.reason }}</em></span>
                             </div>
                           </td>
-                          <td class="pt-1 pb-1" *ngIf="!order?.discount">--</td>
-                          <td class="pt-1 pb-1" *ngIf="order?.discount">
+                          <td class="pt-1 pb-1 pr-2" *ngIf="!order?.discount">--</td>
+                          <td class="pt-1 pb-1 pr-2" *ngIf="order?.discount">
                             ( 
                             <span *ngIf="order?.discount?.mode == Discount_Method.DOLLAR">NZ$ </span>
                             {{ order?.discount?.discount }}
@@ -170,18 +171,18 @@
                           </td>
                         </tr>
                         <tr>
-                          <td scope="row" class="regular-text pt-1 pb-1">
+                          <td scope="row" class="pt-1 pb-1">
                             <span class="text-blue">Shipping Fee</span>
                             <div class="row text-right" *ngIf="order?.shipping?.customName">
                               <span class="col text-muted"><em>{{ order?.shipping?.customName }}</em></span>
                             </div>
                           </td>
-                          <td class="pt-1 pb-1" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP">NZD {{ (shippingFee/100).toFixed(2) }}</td>
-                          <td class="pt-1 pb-1 text-muted" *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><em>(For pickup)</em></td>
+                          <td class="pt-1 pb-1 pr-2" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP">NZD {{ (shippingFee/100).toFixed(2) }}</td>
+                          <td class="pt-1 pb-1 pr-2 text-muted" *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><em>(For pickup)</em></td>
                         </tr>
                         <tr>
                           <td scope="row" class="h5 pt-1 pb-1">Total</td>
-                          <td class="h6 pt-1 pb-1">NZD {{ (totalAmount/100).toFixed(2) }}</td>
+                          <td class="h6 pt-1 pb-1 pr-2">NZD {{ (totalAmount/100).toFixed(2) }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -192,33 +193,39 @@
           </div>
           <div class="row border justify-content-around align-items-center pt-3 pb-3 bg-white" *ngIf="order?.paymentStatus == Payment_Status.PENDING">
             <div class="col">
-              <span class="h6 align-middle"><i class="fas fa-credit-card text-blue mr-3"></i> Accept Payment</span>
+              <span class="h6 align-middle"><i class="fas fa-credit-card text-blue mr-2 mr-md-3"></i> Accept Payment</span>
             </div>
-            <div class="col text-right">
-              <button class="btn btn-primary" data-toggle="modal" data-target="#markAsPaidModal" [disabled]="isOrderCanceled() || isOrderArchived()">Mark as paid</button>
+            <div class="col-auto pl-0 pr-2 pr-md-3 text-right">
+              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#markAsPaidModal" [disabled]="isOrderCanceled() || isOrderArchived()">Mark as paid</button>
             </div>
           </div>
           <div class="row border justify-content-around align-items-center pt-3 pb-3 bg-light-gray" *ngIf="order?.paymentStatus == Payment_Status.PAID">
-            <div class="col">
-              <span><i class="fas fa-check text-green mr-3"></i> Payment of NZ${{ (totalAmount/100).toFixed(2) }} was accepted.</span>
+            <div class="col-auto">
+              <i class="fas fa-check text-green"></i>
             </div>
-            <div class="col-auto text-right">
+            <div class="col pl-0">
+              <span>Payment of NZ${{ (totalAmount/100).toFixed(2) }} was accepted.</span>
+            </div>
+            <!-- <div class="col-auto pl-0 pr-2 pr-md-3 text-right">
               <button class="btn btn-link text-blue" [disabled]="isOrderCanceled() || isOrderArchived()">Refund</button>
-            </div>
+            </div> -->
           </div>
           <div class="row border pt-3 pb-3 bg-light-gray" *ngIf="order?.fulfillmentStatus == Fulfillment_Status.FULFILLED">
-            <div class="col">
-              <span *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP"><i class="fas fa-check text-green mr-3"></i> All items were shipped.</span>
-              <span *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><i class="fas fa-check text-green mr-3"></i> All items were fulfilled and ready for pick up.</span>
+            <div class="col-auto">
+              <i class="fas fa-check text-green"></i>
+            </div>
+            <div class="col pl-0">
+              <span *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP">All items were shipped.</span>
+              <span *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP">All items were fulfilled and ready for pick up.</span>
             </div>
           </div>
           <div class="row border justify-content-around align-items-center pt-3 pb-3 bg-white" *ngIf="order?.fulfillmentStatus == Fulfillment_Status.UNFULFILLED">
             <div class="col">
-              <span class="h6 align-middle" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP"><i class="fas fa-truck text-blue mr-3"></i> Ship Order</span>
+              <span class="h6 align-middle" *ngIf="order?.shipping.mode != Shipping_Fee_Method.PICKUP"><i class="fas fa-truck text-blue mr-2 mr-md-3"></i> Ship Order</span>
               <span class="h6 align-middle" *ngIf="order?.shipping.mode == Shipping_Fee_Method.PICKUP"><i class="fas fa-people-carry text-blue mr-3"></i> Ready for Pickup</span>
             </div>
-            <div class="col text-right">
-              <button class="btn btn-primary" (click)="fulfillItems()" [disabled]="isOrderCanceled() || isOrderArchived()">Fulfill items</button>
+            <div class="col-auto pl-0 pr-2 pr-md-3 text-right">
+              <button class="btn btn-sm btn-primary" (click)="fulfillItems()" [disabled]="isOrderCanceled() || isOrderArchived()">Fulfill items</button>
             </div>
           </div>
           <div class="row bg-gray">
