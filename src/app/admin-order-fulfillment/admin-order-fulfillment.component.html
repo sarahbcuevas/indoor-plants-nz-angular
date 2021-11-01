@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="row d-flex justify-content-between text-left">
-        <div class="col-sm-12 col-md-8 pl-1 pr-1">
+        <div class="col-sm-12 col-lg pl-1 pr-1">
             <div class="container">
                 <div class="row">
                     <div class="container block pl-3 pr-3 pt-3 pb-3">
@@ -31,8 +31,8 @@
                                         <div class="col-3 col-sm-3 col-md-2 col-lg-2">
                                             <span class="regular-text"><em><strong>Item</strong></em></span>
                                         </div>
-                                        <div class="col text-left"></div>
-                                        <div class="col-2 align-middle text-center">
+                                        <div class="col px-0 text-left"></div>
+                                        <div class="col-3 align-middle text-center">
                                             <span class="regular-text"><em><strong>Quantity</strong></em></span>
                                         </div>
                                     </div>
@@ -43,11 +43,11 @@
                                         <div *ngIf="orderItem?.product.images.length == 0" class="col-3 col-sm-3 col-md-2 col-lg-2">
                                             <img src="../../assets/default-plant.jpg" class="img-thumbnail">
                                         </div>
-                                        <div class="col text-left">
+                                        <div class="col px-0 text-left">
                                             <span class="h6 text-blue">{{ orderItem?.product.name }}</span><br>
                                             <span class="text-muted" *ngIf="orderItem?.product.forPickupOnly"><em>For Pickup Only</em></span>
                                         </div>
-                                        <div class="col-2 text-center align-middle">
+                                        <div class="col-3 text-center align-middle">
                                             <input type="text" class="form-control form-control-sm text-center" [value]="orderItem.quantity" disabled>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-4 pl-1 pr-1">
+        <div class="col-sm-12 col-lg-5 pl-1 pr-1 mt-3 mt-lg-0">
             <div class="container">
                 <div class="row">
                     <div class="container block pt-2 pb-3">
