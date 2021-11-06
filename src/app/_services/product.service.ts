@@ -64,6 +64,16 @@ export class ProductService {
       );
   }
 
+  /** DELETE multiple products by id */
+  deleteProducts(productIds: string[]) {
+    const url = this.productsUrl + 'delete';
+    return this.http.put(url, productIds)
+      .pipe(
+        tap((deleted_products: Product[]) => console.log(`deleted ${deleted_products.length} products`)),
+        catchError(this.handleError(`deleteProducts`, []))
+      );
+  }
+
   /** DELETE all products */
   deleteAllProducts() {
     return this.http.delete(this.productsUrl)

@@ -24,6 +24,7 @@ import { AdminOverviewComponent } from './admin-overview/admin-overview.componen
 import { AdminAccountsComponent } from './admin-accounts/admin-accounts.component';
 import { FilterPipe } from './_helpers/filter.pipe';
 import { OrderFilterPipe } from './_helpers/filterOrder.pipe';
+import { ProductFilterPipe } from './_helpers/filterProduct.pipe';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { ClickOutsideDirective } from './_helpers/clickoutside';
@@ -68,6 +69,7 @@ import { AdminOrderFulfillmentComponent } from './admin-order-fulfillment/admin-
     AdminProductDetailComponent,
     FilterPipe,
     OrderFilterPipe,
+    ProductFilterPipe,
     ClickOutsideDirective,
     ProductDetailComponent,
     ContactUsComponent,

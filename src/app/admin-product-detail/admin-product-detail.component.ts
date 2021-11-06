@@ -91,12 +91,9 @@ export class AdminProductDetailComponent implements OnInit {
             }
           }
         }
+        this.categories = tempCategories;
       })
-    ).subscribe(
-      categories => {
-        this.categories = categories;
-      }
-    );
+    ).subscribe();
   }
 
   getProductDetails() {

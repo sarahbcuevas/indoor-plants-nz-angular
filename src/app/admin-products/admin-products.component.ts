@@ -4,7 +4,12 @@ import { Category } from '../_models/category';
 import { ProductService } from '../_services/product.service';
 import { Product } from '../_models/product';
 import { finalize, tap, filter, map } from 'rxjs/operators/';
-import { FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+export const Sort = {
+  'PRODUCT_A_TO_Z': 'Product (A to Z)',
+  'PRODUCT_Z_TO_A': 'Product (Z to A)'
+};
 
 @Component({
   selector: 'app-admin-products',
@@ -22,24 +27,39 @@ export class AdminProductsComponent implements OnInit {
   selectedProductName: string;
   isCheckAllFilters = true;
   isCheckAllCategories = true;
-  viewAsList = true;
   isBestsellerChecked = true;
   isSoldoutChecked = true;
   isCategoryChecked: boolean[] = [];
+  isSelectVisible = false;
+  selectedProducts: string[] = [];
+  sortFormGroup: FormGroup;
+
+  SortMode = Sort.PRODUCT_A_TO_Z;
+  SortType = Sort;
+
+  PRODUCT_NAME = 'Product name';
+  CATEGORY_NAME = 'Category name';
+  SearchBarFilter = this.PRODUCT_NAME;
 
   /** For sort by */
-  SORT_BY_PRODUCT_A_TO_Z = 0;
-  SORT_BY_PRODUCT_Z_TO_A = 1;
-  SORT_BY_PRICE_LOW_TO_HIGH = 2;
-  SORT_BY_PRICE_HIGH_TO_LOW = 3;
-  sortBy = this.SORT_BY_PRODUCT_A_TO_Z;
+  // SORT_BY_PRODUCT_A_TO_Z = 0;
+  // SORT_BY_PRODUCT_Z_TO_A = 1;
+  // SORT_BY_PRICE_LOW_TO_HIGH = 2;
+  // SORT_BY_PRICE_HIGH_TO_LOW = 3;
+  // sortBy = this.SORT_BY_PRODUCT_A_TO_Z;
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private formBuilder: FormBuilder,
     @Inject('BaseURL') public BaseURL
-  ) { }
+  ) {
+
+    this.sortFormGroup = this.formBuilder.group({
+      sortBy: [Sort.PRODUCT_A_TO_Z, Validators.required]
+    });
+
+  }
 
   ngOnInit() {
     this.getAllProducts();
@@ -93,17 +113,20 @@ export class AdminProductsComponent implements OnInit {
       );
   }
 
-  deleteAllProducts() {
-    this.productService.deleteAllProducts()
+  deleteProducts() {
+    this.productService.deleteProducts(this.selectedProducts)
       .pipe(finalize(() => {
-        $('#deleteAllProductsModal').hide();
-        $('.modal-backdrop').remove();
+        $('#deleteProductsModal').hide();
       }))
       .subscribe(
         data => {
           this.getAllProducts();
         }
       );
+  }
+
+  filterBy(filter) {
+    this.SearchBarFilter = filter;
   }
 
   getAllCategories() {
@@ -137,6 +160,7 @@ export class AdminProductsComponent implements OnInit {
 
   getAllProducts() {
     this.isProductsLoading = true;
+    this.resetSelectedProducts();
     this.productService.getProducts()
       .pipe(
           map((products) => {
@@ -161,32 +185,49 @@ export class AdminProductsComponent implements OnInit {
         tap(products => {
           this.noOfProducts = products.length;
             products.sort((a, b) => {
-            switch (this.sortBy) {
-              case this.SORT_BY_PRODUCT_A_TO_Z:
-                if (a.name < b.name) {
-                  return -1;
-                } else if (a.name > b.name) {
-                  return 1;
-                }
-                return 0;
-              case this.SORT_BY_PRODUCT_Z_TO_A:
-                if (a.name > b.name) {
-                  return -1;
-                } else if (a.name < b.name) {
-                  return 1;
-                }
-                return 0;
-              case this.SORT_BY_PRICE_LOW_TO_HIGH:
-                return a.price - b.price;
-              case this.SORT_BY_PRICE_HIGH_TO_LOW:
-                return b.price - a.price;
-              default:
-                if (a.name < b.name) {
-                  return -1;
-                } else if (a.name > b.name) {
-                  return 1;
-                }
-            }
+
+              switch(this.SortMode) {
+                case Sort.PRODUCT_A_TO_Z:
+                  if (a.name < b.name) {
+                    return -1;
+                  } else if (a.name > b.name) {
+                    return 1;
+                  }
+                  return 0;
+                case Sort.PRODUCT_Z_TO_A:
+                  if (a.name > b.name) {
+                    return -1;
+                  } else if (a.name < b.name) {
+                    return 1;
+                  }
+                  return 0;
+              }
+            // switch (this.sortBy) {
+            //   case this.SORT_BY_PRODUCT_A_TO_Z:
+            //     if (a.name < b.name) {
+            //       return -1;
+            //     } else if (a.name > b.name) {
+            //       return 1;
+            //     }
+            //     return 0;
+            //   case this.SORT_BY_PRODUCT_Z_TO_A:
+            //     if (a.name > b.name) {
+            //       return -1;
+            //     } else if (a.name < b.name) {
+            //       return 1;
+            //     }
+            //     return 0;
+            //   case this.SORT_BY_PRICE_LOW_TO_HIGH:
+            //     return a.price - b.price;
+            //   case this.SORT_BY_PRICE_HIGH_TO_LOW:
+            //     return b.price - a.price;
+            //   default:
+            //     if (a.name < b.name) {
+            //       return -1;
+            //     } else if (a.name > b.name) {
+            //       return 1;
+            //     }
+            // }
           });
         }),
         finalize(() => this.isProductsLoading = false)
@@ -213,23 +254,56 @@ export class AdminProductsComponent implements OnInit {
     return isAllCategoriesChecked;
   }
 
+  isProductSelected(id) {
+    return this.selectedProducts.indexOf(id) >= 0;
+  }
+
+  resetSelectedProducts() {
+    this.selectedProducts = [];
+  }
+
+  toggleAll(target) {
+    const isChecked = target.type === 'checkbox' ? target.checked : target.value;
+    this.selectedProducts = [];
+
+    for (let product of this.products) {
+      $('#' + product._id + '.checkbox').prop('checked', isChecked);
+      if (isChecked) {
+        this.selectedProducts.push(product._id);
+      }
+    }
+  }
+
+  toggleSelection(product: Product) {
+    if (this.isProductSelected(product._id)) {
+      this.selectedProducts.splice(this.selectedProducts.indexOf(product._id), 1);
+    } else {
+      this.selectedProducts.push(product._id);
+    }
+  }
+
   selectProduct(id: string, name: string) {
     this.selectedProductId = id;
     this.selectedProductName = name;
   }
 
-  selectSortBy(sortBy: number) {
-    this.sortBy = sortBy;
-    for (let i = 0; i < 4; i++) {
-      if (this.sortBy === i) {
-        $('#sortByOptions .page-item#' + i).addClass('active');
-      } else {
-        $('#sortByOptions .page-item#' + i).removeClass('active');
-      }
-    }
+  // selectSortBy(sortBy: number) {
+  //   this.sortBy = sortBy;
+  //   for (let i = 0; i < 4; i++) {
+  //     if (this.sortBy === i) {
+  //       $('#sortByOptions .page-item#' + i).addClass('active');
+  //     } else {
+  //       $('#sortByOptions .page-item#' + i).removeClass('active');
+  //     }
+  //   }
+  // }
+
+  showSelect() {
+    this.isSelectVisible = !this.isSelectVisible;
   }
 
-  toggleView() {
-    this.viewAsList = !this.viewAsList;
+  sortProducts() {
+    this.SortMode = this.sortFormGroup.get('sortBy').value;
+    this.getAllProducts();
   }
 }

@@ -71,12 +71,9 @@ export class AdminProductCreateComponent implements OnInit {
             }
           }
         }
+        this.categories = tempCategories;
       })
-    ).subscribe(
-      categories => {
-        this.categories = categories;
-      }
-    );
+    ).subscribe();
   }
 
   makePrimaryPhoto(index) {
@@ -180,6 +177,7 @@ export class AdminProductCreateComponent implements OnInit {
     this.productService.addProduct(product)
       .pipe(finalize(() => {
         this.loading = false;
+        window.scroll(0, 0);
       }))
       .subscribe(
         (prod: Product) => {

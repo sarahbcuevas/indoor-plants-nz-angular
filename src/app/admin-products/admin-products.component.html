@@ -1,188 +1,184 @@
-<h6 class="admin-title mb-3">Manage Products</h6>
-
-<div class="container">
-  <div class="row d-flex justify-content-between align-items-center">
-    <div class="col-sm-8 col-lg-7 col-xl-5 pl-0">
-      <div class="row no-gutters">
-        <div class="search input-group col mr-1">
-          <label for="searchInput" class="sr-only">Search Product</label>
-          <input type="search" class="form-control form-control-sm border-right-0" id="searchInput" aria-describedby="searchProduct" placeholder="Search Product Name" [(ngModel)]="searchText">
-          <span class="input-group-append">
-            <div class="input-group-text bg-transparent"><i class="fas fa-search"></i></div>
-          </span>
+<h6 class="admin-title mb-1 mb-md-3">Manage Products</h6>
+<div class="container mb-3">
+  <div class="d-block d-md-none" id="createProductBtn">
+    <button type="button" class="btn btn-info btn-sm pointer" [routerLink]="['/admin/products/create']"><i class="fas fa-plus"></i></button>
+  </div>
+  <div class="row">
+    <div class="col text-left px-0">
+      <a class="btn btn-link text-muted mr-2 pl-0 regular-text"><i class="fas fa-download mr-2"></i> Export</a>
+      <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        More actions
+      </button>
+      <div class="dropdown-menu" id="more-actions" aria-labelledby="dropdownMenuButton">
+        <!-- <a class="dropdown-item" data-toggle="modal" data-target="#deleteProductsModal">Delete</a> -->
+        <a class="dropdown-item">Import</a>
+      </div>
+    </div>
+    <div class="col-auto text-right px-0 d-none d-md-block">
+      <button type="button" class="btn btn-info btn-sm" [routerLink]="['/admin/products/create']"><i class="fas fa-plus"></i> Create Product</button>
+    </div>
+  </div>
+  <div class="row mt-3 bg-white border">
+    <div class="nav-scroller">
+      <nav>
+        <div class="nav" id="nav-tab" role="tablist">
+          <a class="nav-link px-3 px-md-4 active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="true">All Products</a>
         </div>
-        <div class="btn-group col-auto" role="group">
-          <button type="button" class="btn btn-outline-secondary btn-sm btn-light bg-transparent text-dark border rounded-border-25" data-toggle="modal" data-target="#sortFilterModal"><i class="fas fa-sort"></i></button>
-          <button type="button" class="btn btn-outline-secondary btn-sm btn-light bg-transparent text-dark border rounded-border-25" (click)="toggleView()">
-            <i class="fas fa-list" *ngIf="!viewAsList"></i>
-            <i class="fas fa-th" *ngIf="viewAsList"></i>
+      </nav>
+    </div>
+  </div>
+  <div class="row pt-4 bg-white border border-bottom-0">
+    <div class="col-12 col-lg">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="dropdown">
+            <button class="btn regular-input dropdown-toggle" type="button" type="button" id="filterButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter</button>
+            <div class="dropdown-menu pl-2 pr-2" aria-labelledby="filterButton">
+              <a class="dropdown-item form-check" (click)="filterBy(PRODUCT_NAME)">
+                <input class="form-check-input" type="radio" name="filterBy" id="productName" [value]="PRODUCT_NAME" checked>
+                <label class="form-check-label" for="productName">
+                  {{ PRODUCT_NAME }}
+                </label>
+              </a>
+              <a class="dropdown-item form-check" (click)="filterBy(CATEGORY_NAME)">
+                <input class="form-check-input" type="radio" name="filterBy" id="categoryName" [value]="CATEGORY_NAME">
+                <label class="form-check-label" for="categoryName">
+                  {{ CATEGORY_NAME }}
+                </label>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="input-group-prepend">
+            <span class="input-group-text text-muted border-right-0" id="validatedInputGroupPrepend"><i class="fas fa-search"></i></span>
+        </div>
+        <div class="custom-file">
+          <input type="text" class="search custom-input pl-1" placeholder="Search products" [(ngModel)]="searchText" autocomplete="off">
+        </div>
+      </div>
+    </div>
+    <div class="col-12 pt-2 pt-lg-0 col-lg-auto text-right">
+      <div class="row justify-content-around justify-content-md-start">
+        <form [formGroup]="sortFormGroup">
+          <div class="col-auto">
+            <label for="sortBy" class="mr-2 d-none d-md-inline-block">Sort by</label>
+            <select class="btn regular-input px-2 pl-md-3 pr-md-4" id="sortBy" formControlName="sortBy" (change)="sortProducts()">
+              <option class="mt-2 mb-3 regular-text text-muted font-weight-bold" disabled>Sort by</option>
+              <option [value]="SortType.PRODUCT_A_TO_Z">{{ SortType.PRODUCT_A_TO_Z }}</option>
+              <option [value]="SortType.PRODUCT_Z_TO_A">{{ SortType.PRODUCT_Z_TO_A }}</option>
+            </select>
+          </div>
+        </form>
+        <div class="col-auto d-inline-block d-md-none">
+          <button type="button" class="btn btn-sm btn-outline-dark" (click)="showSelect()">
+            <i class="far fa-check-square mr-1" *ngIf="!isSelectVisible"></i>
+            <i class="far fa-square mr-1" *ngIf="isSelectVisible"></i> Select
           </button>
         </div>
       </div>
     </div>
-    <div class="col-3 text-right">
-      <a class="btn btn-info btn-sm" [routerLink]="['/admin/products/create']"><i class="fas fa-plus"></i> Add Product</a>
+  </div>
+  <div class="row pt-1 bg-white border border-top-0">
+    <div class="container-fluid d-block d-md-none pt-3">
+      <div class="row border-top py-3 on-hover" [routerLink]="isSelectVisible ? [] : ['/admin/products', product?._id]" *ngFor="let product of products | filterProduct : SearchBarFilter: searchText; let i=index">
+        <div class="col-auto" *ngIf="isSelectVisible">
+          <input type="checkbox" [id]="product?._id" class="checkbox" [value]="isProductSelected(product?._id)" (click)="toggleSelection(product)">
+        </div>
+        <div class="col-3">
+          <img class="img-thumbnail" [src]="product?.images[0].url" *ngIf="product?.images.length > 0">
+          <img class="img-thumbnail" src="../../assets/default-plant.jpg" *ngIf="product?.images.length <= 0">
+        </div>
+        <div class="col text-left">
+          <a class="underline pointer text-primary"><strong>{{ product?.name }}</strong></a>
+          <br>
+          <span>Stocks: {{ product?.stock }}</span>
+        </div>
+        <div class="col text-right text-muted">
+          <span>NZD {{ (product.price/100).toFixed(2) }}</span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="row mt-3">
-    <span class="results-text text-uppercase text-nowrap">Showing all {{ noOfProducts }} results</span>
-  </div>
-  <div class="row mt-1 bg-white">
-    <div class="table-responsive" *ngIf="viewAsList">
+    <div class="table-responsive d-none d-md-block d-lg-none">
       <table class="table table-hover">
         <thead>
           <tr>
+            <th scope="col" class="col-auto"><input type="checkbox" id="toggleAll" (click)="toggleAll()"></th>
+            <th scope="col"></th>
             <th scope="col">Product</th>
-            <th scope="col">Category</th>
-            <th scope="col">Price</th>
             <th scope="col">Stock</th>
-            <th scope="col">Bestseller</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Price</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let product of products | filter : searchText">
-            <th scope="row" [routerLink]="['/admin/products', product._id]" routerLinkActive="router-link-active" routerLink="/admin/products/{{product._id}}" routerLinkActive="router-link-active" class="underline pointer">{{ product.name }}</th>
-            <td>{{ product.category[0].name }}</td>
-            <td>{{ (product.price/100) | currency:'NZD' }}</td>
-            <td class="text-truncate" style="max-width: 150px;">{{ product.stock }}</td>
-            <td><i class="far fa-check-square" *ngIf="product.isBestseller"></i></td>
-            <td class="text-danger"><i class="fas fa-minus-circle pointer" (click)="selectProduct(product._id, product.name)" data-toggle="modal" data-target="#deleteProductModal"></i></td>
+        <tbody *ngIf="(products)?.length > 0">
+          <tr class="on-hover" *ngFor="let product of products | filterProduct : SearchBarFilter : searchText; let i=index">
+            <td class="col-auto"><input type="checkbox" [id]="product?._id" class="checkbox" [value]="isProductSelected(product?._id)" (click)="toggleSelection(product)"></td>
+            <td class="col-2">
+              <img class="img-thumbnail" [src]="product?.images[0].url" *ngIf="product?.images.length > 0">
+              <img class="img-thumbnail" src="../../assets/default-plant.jpg" *ngIf="product?.images.length <= 0">
+            </td>
+            <td>
+              <span [routerLink]="['/admin/products', product?._id]" routerLinkActive="router-link-active" routerLink="/admin/products/{{product?._id}}" routerLinkActive="router-link-active" class="underline pointer text-primary"><strong>{{ product?.name }}</strong></span><br>
+            </td>
+            <td>{{ product?.stock }}</td>
+            <td class="col-auto text-nowrap">NZD {{ (product?.price/100).toFixed(2) }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div class="container d-flex flex-wrap justify-content-around mt-3" *ngIf="!viewAsList">
-      <div class="card border-light" *ngFor="let product of products | filter : searchText">
-        <img class="card-img-top img-fluid" *ngIf="product.image" src="{{ product.image }}" alt="Plant image">
-        <img class="card-img-top img-fluid" *ngIf="!product.image" src="../../assets/default-plant.jpg" alt="Plant image">
-        <div class="card-badge" *ngIf="product.isBestseller">
-          <span class="badge badge-secondary float-right">Bestseller</span>
-        </div>
-        <div class="card-badge" *ngIf="product.stock <= 0">
-          <span class="badge badge-danger float-right">Out of Stock</span>
-        </div>
-        <div class="card-body">
-          <h6 class="card-title text-truncate">{{ product.name }} | <small class="text-muted">{{ product.category[0].name }}</small></h6>
-          <span class="price">{{ (product.price/100) | currency:'NZD' }}</span>
-          <p class="card-text text-muted text-truncate">{{ product.description }}</p>
-          <a [routerLink]="['/admin/products', product._id]" routerLinkActive="router-link-active" routerLink="/admin/products/{{product._id}}" routerLinkActive="router-link-active" class="btn btn-black text-uppercase">Edit Plant</a>
-          &nbsp;<a (click)="selectProduct(product._id, product.name)" data-toggle="modal" data-target="#deleteProductModal" class="text-muted bg-transparent"><i class="fas fa-trash-alt"></i></a>
-        </div>
-      </div>
+    <div class="table-responsive d-none d-lg-block">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" class="pr-0"><input type="checkbox" id="toggleAll" (click)="toggleAll($event.target)"></th>
+            <th scope="col"></th>
+            <th scope="col">Product</th>
+            <th scope="col">Category</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="(products)?.length > 0">
+          <tr class="on-hover" *ngFor="let product of products | filterProduct : SearchBarFilter : searchText; let i=index">
+            <td class="pr-0"><input type="checkbox" [id]="product?._id" class="checkbox" [value]="isProductSelected(product?._id)" (click)="toggleSelection(product)"></td>
+            <td class="col-2">
+              <img class="img-thumbnail" [src]="product?.images[0].url" *ngIf="product?.images.length > 0">
+              <img class="img-thumbnail" src="../../assets/default-plant.jpg" *ngIf="product?.images.length <= 0">
+            </td>
+            <td [routerLink]="['/admin/products', product?._id]" routerLinkActive="router-link-active" routerLink="/admin/products/{{product?._id}}" routerLinkActive="router-link-active" class="underline pointer text-primary"><strong>{{ product?.name }}</strong></td>
+            <td>{{ product?.category[0].name }}</td>
+            <td>{{ product?.stock }}</td>
+            <td class="col-auto text-nowrap">NZD {{ (product?.price/100).toFixed(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
+    <div class="row pb-3" *ngIf="(products)?.length === 0" style="width:100%;">
+      <span class="col-12">
+        No products available.
+      </span>
+    </div>
+  </div>
+  <div class="justify-content-center bg-white" *ngIf="isProductsLoading">
+    <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving products
   </div>
 </div>
-<div class="justify-content-center bg-white" *ngIf="isProductsLoading">
-  <img class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving products
-</div>
-<div class="justify-content-center bg-white" *ngIf="(products)?.length === 0">
-  No products available.
-</div>
-<button type="button" class="btn btn-danger btn-sm add-btn my-4" *ngIf="(products)?.length > 0" data-toggle="modal" data-target="#deleteAllProductsModal"><i class="fas fa-trash-alt"></i> Delete All Products</button>
 
-<!-- Delete Product Modal -->
-<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductTitle" aria-hidden="true" data-backdrop="false">
+<!-- Delete Products Modal -->
+<div class="modal fade" id="deleteProductsModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductsTitle" aria-hidden="true" data-backdrop="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteProductTitle">Delete Product</h5>
+        <h5 class="modal-title" id="deleteProductsTitle">Delete Product</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete product <strong>{{ selectedProductName }}</strong>?</p>
+        <p>Are you sure you want to delete products?</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="deleteProduct()">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Delete All Products Modal -->
-<div class="modal fade" id="deleteAllProductsModal" tabindex="-1" role="dialog" aria-labelledby="deleteAllProductsTitle" aria-hidden="true" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteAllProductsTitle">Delete All Products</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete all products?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="deleteAllProducts()">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Sort / Filter Modal -->
-<div class="modal fade" id="sortFilterModal" tabindex="-1" role="dialog" aria-labelledby="sortFilterTitle" aria-hidden="true" data-backdrop="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="sortFilterTitle">Refine Results</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h6 class="text-uppercase text-left">Sort by</h6>
-        <div class="sort-by">
-          <nav aria-label="Pagination">
-            <ul class="pagination" id="sortByOptions">
-              <li class="page-item active text-nowrap" id="{{ SORT_BY_PRODUCT_A_TO_Z }}" (click)="selectSortBy(SORT_BY_PRODUCT_A_TO_Z)"><a class="page-link">Product Name (a - z)</a></li>
-              <li class="page-item text-nowrap" id="{{ SORT_BY_PRODUCT_Z_TO_A }}" (click)="selectSortBy(SORT_BY_PRODUCT_Z_TO_A)"><a class="page-link">Product Name (z - a)</a></li>
-              <li class="page-item text-nowrap" id="{{ SORT_BY_PRICE_LOW_TO_HIGH }}" (click)="selectSortBy(SORT_BY_PRICE_LOW_TO_HIGH)"><a class="page-link">Price (low - high)</a></li>
-              <li class="page-item text-nowrap" id="{{ SORT_BY_PRICE_HIGH_TO_LOW }}" (click)="selectSortBy(SORT_BY_PRICE_HIGH_TO_LOW)"><a class="page-link">Price (high - low)</a></li>
-            </ul>
-          </nav>
-        </div>
-        <hr>
-        <h6 class="text-left">
-          <span class="text-uppercase">Plant Category</span>
-          <small>
-            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(false)" *ngIf="isCheckAllCategories">Remove All</a>
-            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllCategories(true)" *ngIf="!isCheckAllCategories">Select All</a>
-          </small>
-        </h6>
-        <div class="form-check justify-content-between text-left mr-3 my-2" *ngFor="let category of categories; index as i">
-          <label class="form-check-label" for="checkBox">
-            <span *ngIf="category.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span *ngIf="category.parent!==null && category.parent.parent!==null">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            {{ category.name }}
-          </label>
-          <input class="form-check-input checkbox-category" type="checkbox" id="{{ category._id }}" (click)="clickCategory(category._id, i)" [(ngModel)]="isCategoryChecked[i]">
-        </div>
-        <hr>
-        <h6 class="text-left">
-          <span class="text-uppercase">Filter</span>
-          <small>
-            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllFilters(false)" *ngIf="isCheckAllFilters">Remove All</a>
-            <a class="float-right underline text-dark pointer" tabindex="-1" (click)="checkAllFilters(true)" *ngIf="!isCheckAllFilters">Select All</a>
-          </small>
-        </h6>
-        <div class="form-check justify-content-between text-left mr-3 my-2">
-          <label class="form-check-label" for="checkBox">Bestseller</label>
-          <input class="form-check-input" type="checkbox" id="checkbox-bestseller" [(ngModel)]="isBestsellerChecked" (click)="clickFilter()">
-        </div>
-        <div class="form-check justify-content-between text-left mr-3 my-2">
-          <label class="form-check-label" for="checkBox">Out of Stock</label>
-          <input class="form-check-input" type="checkbox" id="checkbox-soldout" [(ngModel)]="isSoldoutChecked" (click)="clickFilter()">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply Filters</button>
+        <button type="button" class="btn btn-primary" (click)="deleteProducts()">Delete</button>
       </div>
     </div>
   </div>

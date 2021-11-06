@@ -53,3 +53,12 @@ input[type="file"] {
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
 }
+
+.saveBtn {
+
+  padding: 10px;
+  
+  @media (max-width: 767.98px) {
+      width: 100%;
+  }
+}

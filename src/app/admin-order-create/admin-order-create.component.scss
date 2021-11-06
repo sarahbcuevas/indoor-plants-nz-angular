@@ -42,6 +42,15 @@
     border-right: 0pt;
 }
 
+.saveBtn {
+
+    padding: 10px;
+    
+    @media (max-width: 767.98px) {
+        width: 100%;
+    }
+}
+
 #searchCustomerDropdown {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

@@ -21,7 +21,7 @@
     </div>
     <form [formGroup]="createProductFormGroup">
     <div class="row d-flex justify-content-between text-left">
-        <div class="col-sm-12 col-md-8 pl-1 pr-1">
+        <div class="col-sm-12 col-lg-8 pl-1 pr-1">
             <div class="container">
                 <div class="row">
                     <div class="container block">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-4 pl-1 pr-1">
+        <div class="col-sm-12 col-lg-4 pl-1 pr-1">
             <div class="container">
                 <div class="row">
                     <div class="container block pb-2">
@@ -176,7 +176,7 @@
     <div class="row">
         <div class="col text-right">
             <img *ngIf="loading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
-            <button type="button" class="btn btn-sm btn-primary" [disabled]="createProductFormGroup.invalid || isImageUploading" (click)="createNewProduct()">Save New Product</button>
+            <button type="button" class="btn btn-sm btn-primary saveBtn text-uppercase" [disabled]="createProductFormGroup.invalid || isImageUploading" (click)="createNewProduct()">Save New Product</button>
         </div>
     </div>
 </div>

@@ -368,7 +368,7 @@
 <div class="container bg-gray pt-3 pb-5">
     <div class="row">
         <div class="col text-right">
-            <button type="button" class="btn btn-sm btn-primary" [disabled]="orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined" (click)="createOrder()">Save New Order</button>
+            <button type="button" class="btn btn-sm btn-primary saveBtn text-uppercase" [disabled]="orderItems.length == 0 || totalBill == 0 || selectedCustomer == null || selectedCustomer == undefined" (click)="createOrder()">Save New Order</button>
         </div>
     </div>
 </div>

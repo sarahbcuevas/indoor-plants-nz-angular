@@ -28,64 +28,66 @@
       <label for="jumbotronImage" class="col-lg-2 col-form-label col-form-label-sm">Slide Show</label>
       <div class="col-lg-10">
         <div class="container">
-          <div class="row text-bold">
-            <div class="col-1 pl-1 pr-1 text-center" style="margin: 0 auto">
+          <div class="row text-bold d-none d-md-flex">
+            <div class="col-md-1 pl-1 pr-1 text-center" style="margin: 0 auto">
               <span class="regular-text">Image</span>
             </div>
-            <div class="col pl-1 pr-1 text-center">
+            <div class="col-md pl-1 pr-1 text-center">
               <span class="regular-text">Title / Desription</span>
             </div>
-            <div class="col-3 pl-1 pr-1 text-center">
+            <div class="col-md-3 pl-1 pr-1 text-center">
               <span class="regular-text">URL</span>
             </div>
-            <div class="col-2 pl-1 pr-1 text-center">
+            <div class="col-md-2 pl-1 pr-1 text-center">
               <span class="regular-text">Action</span>
             </div>
-            <div class="col-auto pl-1 pr-1"></div>
+            <div class="col-md-auto pl-1 pr-1"></div>
           </div>
           <div class="row border-bottom pt-3 pb-3" *ngFor="let item of slideShowItems; let i=index">
-            <div class="col-1 pl-1 pr-1" style="margin: 0 auto">
+            <div class="col-12 col-md-1 pl-1 pr-1 my-1 my-md-0" style="margin: 0 auto">
               <img src="{{ item?.image }}" class="img-fluid" *ngIf="item?.image != null || item?.image != ''" name="image" id="jumbotronPreview">
             </div>
-            <div class="col pl-1 pr-1">
+            <div class="col-12 col-md pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" name="title" id="title" placeholder="Title" value="{{ item?.title }}" [(ngModel)]="slideShowItems[i].title" [ngModelOptions]="{standalone:true}">
               <textarea rows="2" class="form-control form-control-sm mt-1" name="description" id="description" placeholder="Description" value="{{ item?.description }}" [(ngModel)]="slideShowItems[i].description" [ngModelOptions]="{standalone:true}"></textarea>
             </div>
-            <div class="col-3 pl-1 pr-1">
+            <div class="col-12 col-md-3 pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" name="url" id="url" placeholder="URL" [value]="item?.url" [(ngModel)]="slideShowItems[i].url" [ngModelOptions]="{standalone:true}">
             </div>
-            <div class="col-2 pl-1 pr-1">
+            <div class="col-12 col-md-2 pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" name="action" id="action" placeholder="Action" [value]="item?.action" [(ngModel)]="slideShowItems[i].action" [ngModelOptions]="{standalone:true}">
             </div>
-            <div class="col-auto pl-1 pr-1">
-              <button type="button" class="close regular-text" (click)="removeSlideShowItem(i)">
+            <div class="col-12 col-md-auto pl-1 pr-1 mt-1 mt-md-0 text-center">
+              <button type="button" class="close regular-text d-none d-md-inline-block" (click)="removeSlideShowItem(i)">
                 <span aria-hidden="true"><i class="fas fa-times"></i></span>
               </button>
+              <a class="d-inline-block d-md-none text-green underline pointer" (click)="removeSlideShowItem(i)">Remove</a>
             </div>
           </div>
           <div class="row border-bottom pt-3 pb-3" *ngFor="let item of tempSlideShowItems; let i=index">
-            <div class="col-1 pl-1 pr-1" style="margin: 0 auto">
+            <div class="col-12 col-md-1 pl-1 pr-1 my-1 my-md-0" style="margin: 0 auto">
               <img src="{{ item?.image }}" class="img-fluid" *ngIf="item?.image != null || item?.image != ''" id="jumbotronPreview">
             </div>
-            <div class="col pl-1 pr-1">
+            <div class="col-12 col-md pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" id="title" placeholder="Title" value="{{ item?.title }}" [(ngModel)]="tempSlideShowItems[i].title" [ngModelOptions]="{standalone:true}">
               <textarea rows="2" class="form-control form-control-sm mt-1" id="description" placeholder="Description" value="{{ item?.description }}" [(ngModel)]="tempSlideShowItems[i].description" [ngModelOptions]="{standalone:true}"></textarea>
             </div>
-            <div class="col-3 pl-1 pr-1">
+            <div class="col-12 col-md-3 pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" id="url" placeholder="URL" [value]="item?.url" [(ngModel)]="tempSlideShowItems[i].url" [ngModelOptions]="{standalone:true}">
             </div>
-            <div class="col-2 pl-1 pr-1">
+            <div class="col-12 col-md-2 pl-1 pr-1 mt-1 mt-md-0">
               <input type="text" class="form-control form-control-sm" id="action" placeholder="Action" [value]="item?.action" [(ngModel)]="tempSlideShowItems[i].action" [ngModelOptions]="{standalone:true}">
             </div>
-            <div class="col-auto pl-1 pr-1">
-              <button type="button" class="close regular-text" (click)="removeTempSlideShowItem(i)">
+            <div class="col-12 col-md-auto pl-1 pr-1 mt-1 mt-md-0 text-center">
+              <button type="button" class="close regular-text d-none d-md-inline-block" (click)="removeTempSlideShowItem(i)">
                 <span aria-hidden="true"><i class="fas fa-times"></i></span>
               </button>
+              <a class="d-inline-block d-md-none text-green underline pointer" (click)="removeSlideShowItem(i)">Remove</a>
             </div>
           </div>
           <form [formGroup]="slideShowFormGroup">
             <div class="row pt-3 pb-0">
-              <div class="col-1 pl-1 pr-1 text-center" style="margin: 0 auto">
+              <div class="col-12 col-md-1 pl-1 pr-1 text-center my-1 my-md-0" style="margin: 0 auto">
                 <label for="image" class="custom-file-upload">
                   <span class="btn btn-light pt-1 pb-1 pl-2 pr-2" *ngIf="slideShowFormGroup.controls.image.value === null || slideShowFormGroup.controls.image.value === '' || slideShowFormGroup.controls.image.value === undefined"><i class="fas fa-image" style="font-size: 1.5rem;"></i></span>
                   <img src="{{ slideShowFormGroup.controls.image.value }}" id="image" class="img-fluid" *ngIf="slideShowFormGroup.controls.image.value !== null && slideShowFormGroup.controls.image.value !== '' && slideShowFormGroup.controls.image.value !== undefined">
@@ -93,18 +95,18 @@
                 <input type="file" class="form-control form-control-sm image-upload-input pb-0" id="image" placeholder="Image" accept="image/*" (change)="onFileChange($event)">
                 <img *ngIf="isImageUploading" class="loading-img" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==">
               </div>
-              <div class="col pl-1 pr-1">
+              <div class="col-12 col-md pl-1 pr-1 mt-1 mt-md-0">
                 <input type="text" class="form-control form-control-sm" formControlName="title" id="title" placeholder="Title">
                 <textarea rows="2" class="form-control form-control-sm mt-1" formControlName="description" id="description" placeholder="Description"></textarea>
               </div>
-              <div class="col-3 pl-1 pr-1">
+              <div class="col-12 col-md-3 pl-1 pr-1 mt-1 mt-md-0">
                 <input type="text" class="form-control form-control-sm" formControlName="url" id="url" placeholder="URL">
               </div>
-              <div class="col-2 pl-1 pr-1">
+              <div class="col-12 col-md-2 pl-1 pr-1 mt-1 mt-md-0">
                 <input type="text" class="form-control form-control-sm" formControlName="action" id="action" placeholder="Action">
               </div>
-              <div class="col-auto pl-1 pr-1">
-                <button type="button" class="close regular-text" style="visibility: hidden;">
+              <div class="col-12 col-md-auto pl-1 pr-1 mt-1 mt-md-0">
+                <button type="button" class="close regular-text d-none d-md-inline-block" style="visibility: hidden;">
                   <span aria-hidden="true"><i class="fas fa-times"></i></span>
                 </button>
               </div>
