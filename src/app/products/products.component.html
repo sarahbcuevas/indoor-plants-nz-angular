@@ -114,8 +114,11 @@
                 </div>
             </div>
 
-            <div class="container d-flex justify-content-center" *ngIf="(products | filter: searchText)?.length == 0 && (outOfStockProducts | filter: searchText)?.length == 0">
+            <div class="container d-flex justify-content-center" *ngIf="!isProductsLoading && (products | filter: searchText)?.length == 0 && (outOfStockProducts | filter: searchText)?.length == 0">
                 <p>No available products.</p>
+            </div>
+            <div *ngIf="isProductsLoading" class="container d-flex justify-content-center py-3">
+              <img class="mr-1" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="> Retrieving products
             </div>
             <div class="container px-0 px-lg-3" *ngIf="(products | filter: searchText)?.length > 0 && !viewAsList">
               <!-- Available products -->
@@ -159,7 +162,7 @@
               <hr>
               <!-- Out of stock -->
               <div class="row justify-content-center">
-                <h6 class="text-muted">Out of Stock</h6>
+                <h6 class="text-muted">Restocking Soon</h6>
               </div>
               <div class="row d-flex flex-wrap justify-content-center px-1 mx-0 mx-lg-2 mb-3">
                 <div class="card border-light my-3 mx-2 mx-lg-4 dimmed" *ngFor="let product of outOfStockProducts | filter : searchText">
@@ -190,7 +193,7 @@
                   </div>
                   <div class="card-body">
                     <h6 class="card-title text-truncate">{{ product?.name }}</h6>
-                    <span class="price">{{ (product?.price/100) | currency:'NZD' }}</span>
+                    <!-- <span class="price">{{ (product?.price/100) | currency:'NZD' }}</span> -->
                   </div>
                 </div>
               </div>
@@ -228,7 +231,7 @@
               <hr>
               <!-- Out of stock -->
               <div class="row justify-content-center">
-                <h6 class="text-muted">Out of Stock</h6>
+                <h6 class="text-muted">Restocking Soon</h6>
               </div>
               <ul class="list-unstyled mx-md-1 mx-lg-5">
                 <li class="media my-3 my-md-4 my-lg-5 dimmed" *ngFor="let product of outOfStockProducts | filter : searchText">
@@ -243,7 +246,7 @@
                         </div>
                       </div>
                     </h5>
-                    <small class="font-weight-light text-muted">{{ product?.category[0].name }} | {{ (product?.price/100) | currency:'NZD' }}</small>
+                    <small class="font-weight-light text-muted">{{ product?.category[0].name }}</small>
                   </div>
                 </li>
               </ul>
