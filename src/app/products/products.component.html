@@ -151,7 +151,7 @@
                   </div>
                   <div class="card-body">
                     <h6 class="card-title text-truncate" [routerLink]="['/products', product?._id]">{{ product?.name }}</h6>
-                    <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span>
+                    <span class="price" [routerLink]="['/products', product?._id]">{{ (product?.price/100) | currency:'NZD' }}</span><br>
                     <a class="btn btn-black text-uppercase text-white mt-2" (click)="selectProduct(product)" data-toggle="modal" data-target="#addToCartModal" *ngIf="product?.stock > 0">Add to Cart</a>
                   </div>
                 </div>
